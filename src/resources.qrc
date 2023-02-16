@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/mauikit/terminal">
+        <file alias="Terminal.qml">controls/Terminal.qml</file>
+        <file alias="QMLTermScrollBar.qml">controls/QMLTermScrollbar.qml</file>
+        <file alias="private/TerminalInputArea.qml">controls/private/TerminalInputArea.qml</file>
+    </qresource>
+</RCC>

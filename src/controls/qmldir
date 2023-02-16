@@ -1,4 +1,4 @@
-module org.mauikit.filebrowsing
-plugin MauiKitFileBrowsing
-classname FileBrowsingPlugin
+module org.mauikit.terminal
+plugin MauiKitTerminal
+classname TerminalPlugin
 typeinfo plugins.qmltypes

@@ -1,10 +1,10 @@
 
-import QMLTermWidget 1.0
 import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.3
 
 import org.mauikit.controls 1.3 as Maui
+import org.mauikit.terminal 1.0 as Term
 import "private" as Private
 
 /**
@@ -96,7 +96,7 @@ Maui.Page
     Action
     {
         id: _copyAction
-        text: i18nd("mauikit", "Copy")
+        text: i18nd("mauikitterminal", "Copy")
         icon.name: "edit-copy"
         onTriggered:  kterminal.copyClipboard();
         //shortcut: "Ctrl+Shift+C"
@@ -105,7 +105,7 @@ Maui.Page
     Action
     {
         id: _pasteAction
-        text: i18nd("mauikit", "Paste")
+        text: i18nd("mauikitterminal", "Paste")
         icon.name: "edit-paste"
         onTriggered: kterminal.pasteClipboard()
         //         shortcut: "Ctrl+Shift+V"
@@ -114,7 +114,7 @@ Maui.Page
     Action
     {
         id: _findAction
-        text: i18nd("mauikit", "Find")
+        text: i18nd("mauikitterminal", "Find")
         icon.name: "edit-find"
         //         shortcut: "Ctrl+Shift+F"
         onTriggered: footBar.visible = !footBar.visible
@@ -196,12 +196,12 @@ Maui.Page
     {
         id: findBar
         Layout.fillWidth: true
-        placeholderText: i18nd("mauikit", "Find...")
+        placeholderText: i18nd("mauikitterminal", "Find...")
         horizontalAlignment: Qt.Left
         onAccepted: ksession.search(text)
     }    
     
-    QMLTermWidget
+    Term.QMLTermWidget
     {
         id: kterminal
         anchors.fill: parent
@@ -213,7 +213,7 @@ Maui.Page
         font.family: "Monospace"
         font.pixelSize: 12
         
-        // backgroundOpacity: 0
+         backgroundOpacity: 1
         
         onTerminalUsesMouseChanged: console.log(terminalUsesMouse);
         
@@ -237,7 +237,7 @@ Maui.Page
             control.keyPressed(event)
         }
         
-        session: QMLTermSession
+        session: Term.QMLTermSession
         {
             id: ksession
             initialWorkingDirectory: "$HOME"

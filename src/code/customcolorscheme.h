@@ -25,6 +25,9 @@ class CustomColorScheme : public QObject, public QQmlParserStatus
     Q_PROPERTY(QColor color4 READ color4 WRITE setColor4 NOTIFY color4Changed)
     Q_PROPERTY(QColor color5 READ color5 WRITE setColor5 NOTIFY color5Changed)
     Q_PROPERTY(QColor color6 READ color6 WRITE setColor6 NOTIFY color6Changed)
+    Q_PROPERTY(QColor color7 READ color7 WRITE setColor7 NOTIFY color7Changed)
+    Q_PROPERTY(QColor color8 READ color8 WRITE setColor8 NOTIFY color8Changed)
+    Q_PROPERTY(QColor color9 READ color9 WRITE setColor9 NOTIFY color9Changed)
 
     Q_PROPERTY(QString path READ path NOTIFY pathChanged)
 
@@ -55,6 +58,12 @@ public:
 
     QColor color6() const;
 
+    QColor color7() const;
+
+    QColor color8() const;
+
+    QColor color9() const;
+
 public slots:
     void setName(QString name);
 
@@ -73,6 +82,12 @@ public slots:
     void setColor5(QColor color5);
 
     void setColor6(QColor color6);
+
+    void setColor7(QColor color7);
+
+    void setColor8(QColor color8);
+
+    void setColor9(QColor color9);
 
 private:
     Konsole::ColorScheme* m_scheme;
@@ -99,6 +114,12 @@ private:
 
     QColor m_color6;
 
+    QColor m_color7;
+
+    QColor m_color8;
+
+    QColor m_color9;
+
 signals:
     void nameChanged(QString name);
     void descriptionChanged(QString description);
@@ -111,5 +132,8 @@ signals:
     void color4Changed(QColor color4);
     void color5Changed(QColor color5);
     void color6Changed(QColor color6);
+    void color7Changed(QColor color7);
+    void color8Changed(QColor color8);
+    void color9Changed(QColor color9);
 };
 

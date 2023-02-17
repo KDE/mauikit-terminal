@@ -55,6 +55,21 @@ CustomColorScheme::CustomColorScheme(QObject *parent) : QObject(parent)
         m_timer->start();
     });
 
+    connect(this, &CustomColorScheme::color7Changed, [this](QColor )
+    {
+        m_timer->start();
+    });
+
+    connect(this, &CustomColorScheme::color8Changed, [this](QColor )
+    {
+        m_timer->start();
+    });
+
+    connect(this, &CustomColorScheme::color9Changed, [this](QColor )
+    {
+        m_timer->start();
+    });
+
     connect(m_timer, &QTimer::timeout, [this]()
     {
        save();
@@ -129,6 +144,21 @@ QColor CustomColorScheme::color5() const
 QColor CustomColorScheme::color6() const
 {
     return m_color6;
+}
+
+QColor CustomColorScheme::color7() const
+{
+    return m_color7;
+}
+
+QColor CustomColorScheme::color8() const
+{
+    return m_color8;
+}
+
+QColor CustomColorScheme::color9() const
+{
+    return m_color9;
 }
 
 void CustomColorScheme::setName(QString name)
@@ -212,6 +242,33 @@ void CustomColorScheme::setColor6(QColor color6)
     emit color6Changed(m_color6);
 }
 
+void CustomColorScheme::setColor7(QColor color7)
+{
+    if (m_color7 == color7)
+        return;
+
+    m_color7 = color7;
+    emit color7Changed(m_color7);
+}
+
+void CustomColorScheme::setColor8(QColor color8)
+{
+    if (m_color8 == color8)
+        return;
+
+    m_color8 = color8;
+    emit color8Changed(m_color8);
+}
+
+void CustomColorScheme::setColor9(QColor color9)
+{
+    if (m_color9 == color9)
+        return;
+
+    m_color9 = color9;
+    emit color9Changed(m_color9);
+}
+
 void CustomColorScheme::save()
 {
     if(!m_config)
@@ -225,7 +282,21 @@ void CustomColorScheme::save()
     m_scheme->setColorTableEntry(4, Konsole::ColorEntry(m_color4, false));
     m_scheme->setColorTableEntry(5, Konsole::ColorEntry(m_color5, false));
     m_scheme->setColorTableEntry(6, Konsole::ColorEntry(m_color6, false));
+    m_scheme->setColorTableEntry(7, Konsole::ColorEntry(m_color7, false));
+    m_scheme->setColorTableEntry(8, Konsole::ColorEntry(m_color8, false));
+    m_scheme->setColorTableEntry(9, Konsole::ColorEntry(m_color9, false));
 
+    m_scheme->setColorTableEntry(10, Konsole::ColorEntry(QColor(m_foregroundColor).darker(120), false));
+    m_scheme->setColorTableEntry(11, Konsole::ColorEntry(QColor(m_backgroundColor).darker(120), false));
+
+    m_scheme->setColorTableEntry(12, Konsole::ColorEntry(QColor(m_color2).darker(120), false));
+    m_scheme->setColorTableEntry(13, Konsole::ColorEntry(QColor(m_color3).darker(120), false));
+    m_scheme->setColorTableEntry(14, Konsole::ColorEntry(QColor(m_color4).darker(120), false));
+    m_scheme->setColorTableEntry(15, Konsole::ColorEntry(QColor(m_color5).darker(120), false));
+    m_scheme->setColorTableEntry(16, Konsole::ColorEntry(QColor(m_color6).darker(120), false));
+    m_scheme->setColorTableEntry(17, Konsole::ColorEntry(QColor(m_color7).darker(120), false));
+    m_scheme->setColorTableEntry(18, Konsole::ColorEntry(QColor(m_color8).darker(120), false));
+    m_scheme->setColorTableEntry(19, Konsole::ColorEntry(QColor(m_color9).darker(120), false));
 
     m_scheme->write(*m_config);
     m_config->sync();

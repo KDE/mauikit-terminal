@@ -35,10 +35,10 @@
 
 // KDE
 //#include <KColorScheme>
-//#include <KConfig>
+#include <KConfig>
 //#include <KLocale>
 //#include <KDebug>
-//#include <KConfigGroup>
+#include <KConfigGroup>
 //#include <KStandardDirs>
 
 using namespace Konsole;
@@ -300,6 +300,8 @@ void ColorScheme::read(KConfig& config)
         readColorEntry(config,i);
     }
 }
+#endif
+
 void ColorScheme::write(KConfig& config) const
 {
     KConfigGroup configGroup = config.group("General");
@@ -313,7 +315,7 @@ void ColorScheme::write(KConfig& config) const
         writeColorEntry(config,colorNameForIndex(i),colorTable()[i],random);
     }
 }
-#endif
+
 
 QString ColorScheme::colorNameForIndex(int index)
 {
@@ -403,7 +405,7 @@ void ColorScheme::readColorEntry(QSettings * s , int index)
 
     s->endGroup();
 }
-#if 0
+
 // implemented upstream - user apps
 void ColorScheme::writeColorEntry(KConfig& config , const QString& colorName, const ColorEntry& entry , const RandomizationRange& random) const
 {
@@ -425,7 +427,6 @@ void ColorScheme::writeColorEntry(KConfig& config , const QString& colorName, co
         configGroup.writeEntry("MaxRandomSaturation",(int)random.saturation);
     }
 }
-#endif
 
 //
 // Work In Progress - A color scheme for use on KDE setups for users

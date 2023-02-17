@@ -449,12 +449,13 @@ Maui.Page
                 right: parent.right
                 top: parent.top
                 bottom: parent.bottom
+                rightMargin: Maui.Style.space.small
             }        
             sourceComponent: ScrollBar 
             {
                 Maui.Theme.colorSet: Maui.Theme.Complementary // text color of terminal is also complementary
                 Maui.Theme.inherit: false
-                width: 10
+                width: 6
                 
                 active: hovered || pressed
                 visible: true

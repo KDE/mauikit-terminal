@@ -6,6 +6,7 @@ include_directories(
 set(plugin_SRCS
     code/ksession.cpp
     code/colorschemesmodel.cpp
+    code/customcolorscheme.cpp
     code/terminal_plugin.cpp
 )
 
@@ -42,6 +43,7 @@ target_link_libraries(MauiKitTerminal
     Qt5::Quick
     Qt5::Gui
     Qt5::Widgets
+    KF5::ConfigCore
     MauiKit
 )
 

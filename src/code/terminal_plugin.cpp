@@ -3,6 +3,7 @@
 #include "lib/TerminalDisplay.h"
 #include "ksession.h"
 #include "colorschemesmodel.h"
+#include "customcolorscheme.h"
 
 #include <qqml.h>
 #include <QQmlEngine>
@@ -16,6 +17,7 @@ void TerminalPlugin::registerTypes(const char *uri)
     qmlRegisterType<TerminalDisplay>(uri, 1, 0, "QMLTermWidget");
     qmlRegisterType<KSession>(uri, 1, 0, "QMLTermSession");
     qmlRegisterType<ColorSchemesModel>(uri, 1, 0, "ColorSchemesModel");
+    qmlRegisterType<CustomColorScheme>(uri, 1, 0, "CustomColorScheme");
 
     qmlRegisterType(resolveFileUrl(QStringLiteral("Terminal.qml")), uri, 1, 0, "Terminal");
     qmlRegisterType(resolveFileUrl(QStringLiteral("QMLTermScrollBar.qml")), uri, 1, 0, "QMLTermScrollBar");

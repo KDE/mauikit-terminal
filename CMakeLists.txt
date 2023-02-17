@@ -70,7 +70,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/terminal_version.h"
 
 
 find_package(Qt5 ${REQUIRED_QT_VERSION} COMPONENTS Core Quick Widgets REQUIRED)
-find_package(KF5 ${REQUIRED_KF5_VERSION} REQUIRED COMPONENTS I18n CoreAddons)
+find_package(KF5 ${REQUIRED_KF5_VERSION} REQUIRED COMPONENTS I18n CoreAddons Config)
 find_package(MauiKit REQUIRED)
 
 if(QUICK_COMPILER)

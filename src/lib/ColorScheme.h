@@ -34,7 +34,7 @@
 #include "CharacterColor.h"
 
 class QIODevice;
-//class KConfig;
+class KConfig;
 
 namespace Konsole
 {
@@ -70,9 +70,10 @@ public:
 // Implemented upstream - in user apps
     /** Reads the color scheme from the specified configuration source */
     void read(KConfig& config);
+
+#endif
     /** Writes the color scheme to the specified configuration source */
     void write(KConfig& config) const;
-#endif
     void read(const QString & filename);
 
     /** Sets a single entry within the color palette. */
@@ -174,8 +175,9 @@ private:
     // and sets the palette entry at 'index' to the entry read.
     void readColorEntry(KConfig& config , int index);
     // writes a single colour entry to a KConfig source
-    void writeColorEntry(KConfig& config , const QString& colorName, const ColorEntry& entry,const RandomizationRange& range) const;
 #endif
+    void writeColorEntry(KConfig& config , const QString& colorName, const ColorEntry& entry,const RandomizationRange& range) const;
+
     void readColorEntry(QSettings *s, int index);
 
     // sets the amount of randomization allowed for a particular color

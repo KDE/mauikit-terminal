@@ -70,6 +70,7 @@ target_link_libraries(${PROJECT_NAME}
     Qt5::Quick
     Qt5::Gui
     Qt5::Widgets
+    KF5::ConfigCore
 )
 
 

@@ -9,12 +9,6 @@ Item
     property Term.QMLTermWidget terminal
     onTerminalChanged: terminalProxyFlickable.updateFromTerminal()
     
-    Label
-    {
-        color: "orange"
-        text: terminalProxyFlickable.contentHeight + " / .... " + terminalProxyFlickable.contentY
-    }    
-    
     Flickable 
     {
         id: terminalProxyFlickable

@@ -173,19 +173,6 @@ Maui.Page
         onClosed: control.forceActiveFocus()
     }
     
-    
-    function correctDistortion(x, y)
-    {
-        x = x / width;
-        y = y / height;
-        
-        var cc = Qt.size(0.5 - x, 0.5 - y);
-        var distortion = 0;
-        
-        return Qt.point((x - cc.width  * (1+distortion) * distortion) * kterminal.width,
-                        (y - cc.height * (1+distortion) * distortion) * kterminal.height)
-    }
-    
     function updateSources()
     {
         kterminal.update();
@@ -208,6 +195,8 @@ Maui.Page
         //         terminalUsesMouse: true
         enableBold: true
         fullCursorHeight: true
+        
+        property int totalLines: kterminal.scrollbarMaximum - kterminal.scrollbarMinimum + kterminal.lines
         // 		onKeyPressedSignal: console.log(e.key)
         
         font.family: "Monospace"
@@ -241,7 +230,8 @@ Maui.Page
         {
             id: ksession
             initialWorkingDirectory: "$HOME"
-            onFinished: Qt.quit()
+                    shellProgram: "$SHELL"
+            onFinished: kterminal.finished()
             
             // onFinished: control.terminalClosed()
             // initialWorkingDirectory: control.path
@@ -258,74 +248,10 @@ Maui.Page
         
         */
         }
-        
+       
         Loader
         {
             asynchronous: true
-            anchors.fill: parent
-            
-            sourceComponent:  MouseArea
-            {
-                propagateComposedEvents: true
-                cursorShape: kterminal.terminalUsesMouse ? Qt.ArrowCursor : Qt.IBeamCursor
-                acceptedButtons:  Qt.RightButton | Qt.LeftButton
-                
-                onDoubleClicked:
-                {
-                    var coord = correctDistortion(mouse.x, mouse.y);
-                    kterminal.simulateMouseDoubleClick(coord.x, coord.y, mouse.button, mouse.buttons, mouse.modifiers);
-                }
-                
-                onPressed:
-                {
-                    if((!kterminal.terminalUsesMouse || mouse.modifiers & Qt.ShiftModifier) && mouse.button == Qt.RightButton)
-                    {
-                        terminalMenu.show();
-                    } else
-                    {
-                        var coord = correctDistortion(mouse.x, mouse.y);
-                        kterminal.simulateMousePress(coord.x, coord.y, mouse.button, mouse.buttons, mouse.modifiers)
-                    }
-                }
-                
-                onReleased:
-                {
-                    var coord = correctDistortion(mouse.x, mouse.y);
-                    kterminal.simulateMouseRelease(coord.x, coord.y, mouse.button, mouse.buttons, mouse.modifiers);
-                }
-                
-                onPositionChanged:
-                {
-                    var coord = correctDistortion(mouse.x, mouse.y);
-                    kterminal.simulateMouseMove(coord.x, coord.y, mouse.button, mouse.buttons, mouse.modifiers);
-                }
-                
-                onClicked:
-                {
-                    if(mouse.button === Qt.RightButton)
-                    {
-                        terminalMenu.show()
-                        
-                    } else if(mouse.button === Qt.LeftButton)
-                    {                    
-                        kterminal.forceActiveFocus()
-                    }
-                    
-                    control.clicked()
-                }
-                
-                onPressAndHold:
-                {
-                    if(Maui.Handy.isTouch)
-                        terminalMenu.show()
-                }
-            }
-        }
-        
-        Loader
-        {
-            asynchronous: true
-            active: Maui.Handy.hasTransientTouchInput
             anchors.fill: parent
             
             sourceComponent: Private.TerminalInputArea
@@ -437,6 +363,7 @@ Maui.Page
                     //hiddenButton.x = x;
                     //hiddenButton.y = y;
                     terminalMenu.show()
+                    
                 }
             }
         }
@@ -444,34 +371,11 @@ Maui.Page
         Loader
         {
             asynchronous: true
-            // active: Maui.Handy.hasTransientTouchInput
-            anchors {
-                right: parent.right
-                top: parent.top
-                bottom: parent.bottom
-                rightMargin: Maui.Style.space.small
-            }        
-            sourceComponent: ScrollBar 
+            anchors.fill: parent
+            
+            sourceComponent:   Private.TerminalScrollBar
             {
-                Maui.Theme.colorSet: Maui.Theme.Complementary // text color of terminal is also complementary
-                Maui.Theme.inherit: false
-                width: 6
-                
-                active: hovered || pressed
-                visible: true
-                orientation: Qt.Vertical
-                size: (kterminal.lines / (kterminal.lines + kterminal.scrollbarMaximum - kterminal.scrollbarMinimum))
-                position: kterminal.scrollbarCurrentValue / (kterminal.lines + kterminal.scrollbarMaximum)
-                // interactive: false
-                property double oldPos
-                
-                        onPositionChanged: {
-                            var yPos =  (2* position * kterminal.scrollbarMaximum ) * (position > oldPos ? -1 : 1)
-                            console.log("Position changed", position, yPos, kterminal.scrollbarMaximum, kterminal.scrollbarCurrentValue)
-                            kterminal.simulateWheel(0, 0, 0, 0, Qt.point(0,yPos))
-                            oldPos = position
-                            
-                        }   
+                terminal: kterminal 
             }  
             
         }
@@ -479,7 +383,7 @@ Maui.Page
         Component.onCompleted:
         {
             ksession.startShellProgram();
-            //forceActiveFocus()
+            forceActiveFocus()
         }
     }
     

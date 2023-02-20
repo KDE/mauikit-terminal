@@ -3,5 +3,6 @@
         <file alias="Terminal.qml">controls/Terminal.qml</file>
         <file alias="QMLTermScrollBar.qml">controls/QMLTermScrollbar.qml</file>
         <file alias="private/TerminalInputArea.qml">controls/private/TerminalInputArea.qml</file>
+        <file alias="private/TerminalScrollBar.qml">controls/private/TerminalScrollBar.qml</file>
     </qresource>
 </RCC>

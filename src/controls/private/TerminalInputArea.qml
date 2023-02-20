@@ -17,7 +17,8 @@
  */
 import QtQuick 2.4
 
-Item{
+Item
+{
     property bool touchAreaPressed: false
     property real swipeDelta: units.gu(1)
 

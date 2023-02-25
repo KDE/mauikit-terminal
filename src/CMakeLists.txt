@@ -18,7 +18,6 @@ endif()
 
 ecm_generate_qmltypes(org.mauikit.terminal ${PROJECT_VERSION} DESTINATION ${KDE_INSTALL_QMLDIR}/org/mauikit/terminal)
 
-
 add_subdirectory(lib)
 
 add_library(MauiKitTerminal
@@ -30,6 +29,11 @@ add_library(MauiKitTerminal
 add_library(MauiKit::Terminal ALIAS MauiKitTerminal)
 
 generate_export_header(MauiKitTerminal BASE_NAME Terminal)
+set_target_properties(MauiKitTerminal PROPERTIES
+    VERSION ${Terminal_VERSION_STRING}
+    SOVERSION ${Terminal_SOVERSION}
+    EXPORT_NAME Terminal
+    )
 
 target_include_directories(MauiKitTerminal
     INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/MauiKit/Terminal>")

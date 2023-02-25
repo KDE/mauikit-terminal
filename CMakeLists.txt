@@ -56,9 +56,9 @@ install(FILES
         DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
         FILE MauiKitTerminalTargets.cmake
         NAMESPACE MauiKit::)
-        
+
 ecm_setup_version(${PROJECT_VERSION}
-    VARIABLE_PREFIX Accounts
+    VARIABLE_PREFIX Terminal
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/terminal_version.h"
     PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/MauiKitTerminalConfigVersion.cmake"
     SOVERSION ${PROJECT_VERSION_MAJOR}
@@ -83,7 +83,7 @@ endif()
 
     add_definitions(-DTRANSLATION_DOMAIN="mauikitterminal")
     ki18n_install(po)
-        
+
 add_subdirectory(src)
 
     file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)

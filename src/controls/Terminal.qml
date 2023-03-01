@@ -119,37 +119,7 @@ Maui.Page
         //         shortcut: "Ctrl+Shift+F"
         onTriggered: footBar.visible = !footBar.visible
     }
-    
-    onKeyPressed:
-    {
-        if ((event.key === Qt.Key_A)
-            && (event.modifiers & Qt.ControlModifier)
-            && (event.modifiers & Qt.ShiftModifier)) {
-            kterminal.selectAll()
-            event.accepted = true
-            }
-            
-            if ((event.key === Qt.Key_C)
-                && (event.modifiers & Qt.ControlModifier)
-                && (event.modifiers & Qt.ShiftModifier)) {
-                _copyAction.trigger()
-                event.accepted = true
-                }
-                
-                if ((event.key === Qt.Key_V)
-                    && (event.modifiers & Qt.ControlModifier)
-                    && (event.modifiers & Qt.ShiftModifier)) {
-                    _pasteAction.trigger()
-                    event.accepted = true
-                    }
-                    
-                    if ((event.key === Qt.Key_Q)
-                        && (event.modifiers & Qt.ControlModifier)
-                        && (event.modifiers & Qt.ShiftModifier)) {
-                        Qt.quit()
-                        }       
-    }
-    
+
     
     Maui.ContextualMenu
     {
@@ -186,7 +156,7 @@ Maui.Page
         placeholderText: i18nd("mauikitterminal", "Find...")
         horizontalAlignment: Qt.Left
         onAccepted: ksession.search(text)
-    }    
+    }
     
     Term.QMLTermWidget
     {
@@ -202,41 +172,21 @@ Maui.Page
         font.family: "Monospace"
         font.pixelSize: 12
         
-         backgroundOpacity: 1
+        backgroundOpacity: 1
         
         onTerminalUsesMouseChanged: console.log(terminalUsesMouse);
-        
-        Keys.enabled: true
-        Keys.onPressed: 
-        {
-            if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
-            {
-                _pasteAction.trigger()
-            }
-            
-            if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
-            {
-                _copyAction.trigger()
-            }
-            
-            if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
-            {
-                control.footBar.visible = !control.footBar.visible
-            }    
-            control.keyPressed(event)
-        }
-        
+
         session: Term.QMLTermSession
         {
             id: ksession
             initialWorkingDirectory: "$HOME"
-                    shellProgram: "$SHELL"
+            shellProgram: "$SHELL"
             onFinished: kterminal.finished()
             
             // onFinished: control.terminalClosed()
             // initialWorkingDirectory: control.path
             /* Disable search until implemented correctly
-             *             
+             *
              *            onMatchFound:
              *            {
              *              console.log("found at: %1 %2 %3 %4".arg(startColumn).arg(startLine).arg(endColumn).arg(endLine));
@@ -248,7 +198,40 @@ Maui.Page
         
         */
         }
-       
+
+        Keys.enabled: true
+
+        Keys.onPressed:
+        {
+            if ((event.key === Qt.Key_A)
+                    && (event.modifiers & Qt.ControlModifier)
+                    && (event.modifiers & Qt.ShiftModifier)) {
+                kterminal.selectAll()
+                event.accepted = true
+            }
+
+            if ((event.key === Qt.Key_C)
+                    && (event.modifiers & Qt.ControlModifier)
+                    && (event.modifiers & Qt.ShiftModifier)) {
+                _copyAction.trigger()
+                event.accepted = true
+            }
+
+            if ((event.key === Qt.Key_V)
+                    && (event.modifiers & Qt.ControlModifier)
+                    && (event.modifiers & Qt.ShiftModifier)) {
+                _pasteAction.trigger()
+                event.accepted = true
+            }
+
+
+            if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+            {
+                control.footBar.visible = !control.footBar.visible
+            }
+        }
+
+
         Loader
         {
             asynchronous: true
@@ -269,7 +252,7 @@ Maui.Page
                 // Mouse actions
                 onMouseMoveDetected: kterminal.simulateMouseMove(x, y, button, buttons, modifiers);
                 onDoubleClickDetected: kterminal.simulateMouseDoubleClick(x, y, button, buttons, modifiers);
-                onMousePressDetected: 
+                onMousePressDetected:
                 {
                     kterminal.forceActiveFocus();
                     kterminal.simulateMousePress(x, y, button, buttons, modifiers);
@@ -279,7 +262,7 @@ Maui.Page
                 onMouseWheelDetected: kterminal.simulateWheel(x, y, buttons, modifiers, angleDelta);
                 
                 // Touch actions
-                onTouchPress: 
+                onTouchPress:
                 {
                     kterminal.forceActiveFocus()
                     control.clicked()
@@ -292,7 +275,7 @@ Maui.Page
                     control.clicked()
                 }
                 
-                onTouchPressAndHold: 
+                onTouchPressAndHold:
                 {
                     alternateAction(x, y);
                 }
@@ -375,8 +358,8 @@ Maui.Page
             
             sourceComponent:   Private.TerminalScrollBar
             {
-                terminal: kterminal 
-            }  
+                terminal: kterminal
+            }
             
         }
         

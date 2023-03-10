@@ -8,7 +8,7 @@ CustomColorScheme::CustomColorScheme(QObject *parent) : QObject(parent)
   ,m_scheme( new Konsole::ColorScheme)
   ,m_timer(new QTimer(this))
 {
-    m_timer->setInterval(500);
+    m_timer->setInterval(100);
     m_timer->setSingleShot(true);
 
     connect(this, &CustomColorScheme::descriptionChanged, [this](QString description)
@@ -245,9 +245,20 @@ void CustomColorScheme::setColor9(QColor color9)
     emit color9Changed(m_color9);
 }
 
+static bool isLight(const QColor &color)
+{
+    auto luma = [](const QColor &color) {
+        return (0.299 * color.red() + 0.587 * color.green() + 0.114 * color.blue()) / 255;
+    };
+
+    return luma(color) > 0.5 ? true : false;
+}
+
 void CustomColorScheme::save()
 {
     qDebug() << "Changing color in custom intance";
+
+    const auto light = isLight(m_backgroundColor);
 
     m_scheme->setColor(0, m_foregroundColor);
     m_scheme->setColor(1, m_backgroundColor);
@@ -260,17 +271,17 @@ void CustomColorScheme::save()
     m_scheme->setColor(8, m_color8);
     m_scheme->setColor(9, m_color9);
 
-    m_scheme->setColor(10, QColor(m_foregroundColor).darker(120));
-    m_scheme->setColor(11, QColor(m_backgroundColor).darker(120));
+    m_scheme->setColor(10, light ? QColor(m_foregroundColor).darker(120) : QColor(m_foregroundColor).lighter(120));
+    m_scheme->setColor(11, light ? QColor(m_backgroundColor).darker(120) : QColor(m_foregroundColor).lighter(120));
 
-    m_scheme->setColor(12, QColor(m_color2).darker(120));
-    m_scheme->setColor(13, QColor(m_color3).darker(120));
-    m_scheme->setColor(14, QColor(m_color4).darker(120));
-    m_scheme->setColor(15, QColor(m_color5).darker(120));
-    m_scheme->setColor(16, QColor(m_color6).darker(120));
-    m_scheme->setColor(17, QColor(m_color7).darker(120));
-    m_scheme->setColor(18, QColor(m_color8).darker(120));
-    m_scheme->setColor(19, QColor(m_color9).darker(120));
+    m_scheme->setColor(12, light ? QColor(m_color2).darker(120) : QColor(m_color2).lighter(120));
+    m_scheme->setColor(13, light ? QColor(m_color3).darker(120) : QColor(m_color3).lighter(120));
+    m_scheme->setColor(14, light ? QColor(m_color4).darker(120) : QColor(m_color4).lighter(120));
+    m_scheme->setColor(15, light ? QColor(m_color5).darker(120) : QColor(m_color5).lighter(120));
+    m_scheme->setColor(16, light ? QColor(m_color6).darker(120) : QColor(m_color6).lighter(120));
+    m_scheme->setColor(17, light ? QColor(m_color7).darker(120) : QColor(m_color7).lighter(120));
+    m_scheme->setColor(18, light ? QColor(m_color8).darker(120) : QColor(m_color8).lighter(120));
+    m_scheme->setColor(19, light ? QColor(m_color9).darker(120) : QColor(m_color9).lighter(120));
 }
 
 

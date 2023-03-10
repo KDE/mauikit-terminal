@@ -20,7 +20,10 @@ import "private" as Private
 Maui.Page
 {
     id: control
-    
+
+    Maui.Theme.colorSet: Maui.Theme.Header
+    Maui.Theme.inherit: false
+
     title: ksession.title
     showTitle: false
     headBar.visible: false
@@ -198,8 +201,6 @@ Maui.Page
         
         */
         }
-        Maui.Theme.colorSet: Maui.Theme.Header
-        Maui.Theme.inherit: false
         customColorScheme
         {
             backgroundColor: Maui.Theme.backgroundColor
@@ -208,8 +209,8 @@ Maui.Page
             color3: Maui.Theme.negativeBackgroundColor
             color4: Maui.Theme.positiveBackgroundColor
             color5: Maui.Theme.neutralBackgroundColor
-            color6: Maui.Theme.highlightColor
-            color7: Maui.Theme.linkColor
+            color6: Maui.Theme.linkColor
+            color7: Maui.Theme.visitedLinkColor
             color8: Maui.Theme.highlightColor
             color9: Maui.Theme.textColor
         }

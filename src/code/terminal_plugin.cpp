@@ -17,11 +17,9 @@ void TerminalPlugin::registerTypes(const char *uri)
     qmlRegisterType<TerminalDisplay>(uri, 1, 0, "QMLTermWidget");
     qmlRegisterType<KSession>(uri, 1, 0, "QMLTermSession");
     qmlRegisterType<ColorSchemesModel>(uri, 1, 0, "ColorSchemesModel");
-    qmlRegisterType<CustomColorScheme>(uri, 1, 0, "CustomColorScheme");
+    qmlRegisterAnonymousType<CustomColorScheme>(uri, 1);
 
     qmlRegisterType(resolveFileUrl(QStringLiteral("Terminal.qml")), uri, 1, 0, "Terminal");
-    qmlRegisterType(resolveFileUrl(QStringLiteral("QMLTermScrollBar.qml")), uri, 1, 0, "QMLTermScrollBar");
-
 }
 
 void TerminalPlugin::initializeEngine(QQmlEngine *engine, const char *uri)

@@ -198,6 +198,21 @@ Maui.Page
         
         */
         }
+        Maui.Theme.colorSet: Maui.Theme.Header
+        Maui.Theme.inherit: false
+        customColorScheme
+        {
+            backgroundColor: Maui.Theme.backgroundColor
+            foregroundColor: Maui.Theme.textColor
+            color2: Maui.Theme.disabledTextColor
+            color3: Maui.Theme.negativeBackgroundColor
+            color4: Maui.Theme.positiveBackgroundColor
+            color5: Maui.Theme.neutralBackgroundColor
+            color6: Maui.Theme.highlightColor
+            color7: Maui.Theme.linkColor
+            color8: Maui.Theme.highlightColor
+            color9: Maui.Theme.textColor
+        }
 
         Keys.enabled: true
 

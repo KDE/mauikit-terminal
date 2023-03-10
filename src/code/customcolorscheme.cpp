@@ -6,16 +6,11 @@
 
 CustomColorScheme::CustomColorScheme(QObject *parent) : QObject(parent)
   ,m_scheme( new Konsole::ColorScheme)
-  ,m_config(nullptr)
   ,m_timer(new QTimer(this))
 {
     m_timer->setInterval(500);
     m_timer->setSingleShot(true);
 
-    connect(this, &CustomColorScheme::nameChanged, [this](QString name)
-    {
-        m_scheme->setName(name);
-    });
     connect(this, &CustomColorScheme::descriptionChanged, [this](QString description)
     {
         m_scheme->setDescription(description);
@@ -82,15 +77,7 @@ void CustomColorScheme::classBegin()
 
 void CustomColorScheme::componentComplete()
 {
-
-    if(!m_config)
-        m_config = new KConfig(QString("/tmp/%1/%2.colorscheme").arg(qAppName(),m_name));
-//    m_config = new KConfig(QString("/tmp/%2.colorscheme").arg(m_name));
-//    m_config = new KConfig(QString("%1.colorscheme").arg(m_name));
-
     save();
-
-    qDebug() << "CUSTOM COLOR SCHEME CONFIG SAVED TO "<< m_config->name();
 }
 
 QString CustomColorScheme::name() const
@@ -113,13 +100,6 @@ QColor CustomColorScheme::foregroundColor() const
     return m_foregroundColor;
 }
 
-QString CustomColorScheme::path() const
-{
-    if(!m_config)
-        return QString();
-
-    return m_config->name();
-}
 
 QColor CustomColorScheme::color2() const
 {
@@ -161,13 +141,9 @@ QColor CustomColorScheme::color9() const
     return m_color9;
 }
 
-void CustomColorScheme::setName(QString name)
+Konsole::ColorScheme *CustomColorScheme::getScheme()
 {
-    if (m_name == name)
-        return;
-
-    m_name = name;
-    emit nameChanged(m_name);
+    return m_scheme;
 }
 
 void CustomColorScheme::setDescription(QString description)
@@ -271,45 +247,30 @@ void CustomColorScheme::setColor9(QColor color9)
 
 void CustomColorScheme::save()
 {
-    if(!m_config)
-        return;
+    qDebug() << "Changing color in custom intance";
 
-    qDebug() << "trying to save "<< m_config->name();
-    m_scheme->setColorTableEntry(0, Konsole::ColorEntry(m_foregroundColor, false));
-    m_scheme->setColorTableEntry(1, Konsole::ColorEntry(m_backgroundColor, false));
-    m_scheme->setColorTableEntry(2, Konsole::ColorEntry(m_color2, false));
-    m_scheme->setColorTableEntry(3, Konsole::ColorEntry(m_color3, false));
-    m_scheme->setColorTableEntry(4, Konsole::ColorEntry(m_color4, false));
-    m_scheme->setColorTableEntry(5, Konsole::ColorEntry(m_color5, false));
-    m_scheme->setColorTableEntry(6, Konsole::ColorEntry(m_color6, false));
-    m_scheme->setColorTableEntry(7, Konsole::ColorEntry(m_color7, false));
-    m_scheme->setColorTableEntry(8, Konsole::ColorEntry(m_color8, false));
-    m_scheme->setColorTableEntry(9, Konsole::ColorEntry(m_color9, false));
+    m_scheme->setColor(0, m_foregroundColor);
+    m_scheme->setColor(1, m_backgroundColor);
+    m_scheme->setColor(2, m_color2);
+    m_scheme->setColor(3, m_color3);
+    m_scheme->setColor(4, m_color4);
+    m_scheme->setColor(5, m_color5);
+    m_scheme->setColor(6, m_color6);
+    m_scheme->setColor(7, m_color7);
+    m_scheme->setColor(8, m_color8);
+    m_scheme->setColor(9, m_color9);
 
-    m_scheme->setColorTableEntry(10, Konsole::ColorEntry(QColor(m_foregroundColor).darker(120), false));
-    m_scheme->setColorTableEntry(11, Konsole::ColorEntry(QColor(m_backgroundColor).darker(120), false));
+    m_scheme->setColor(10, QColor(m_foregroundColor).darker(120));
+    m_scheme->setColor(11, QColor(m_backgroundColor).darker(120));
 
-    m_scheme->setColorTableEntry(12, Konsole::ColorEntry(QColor(m_color2).darker(120), false));
-    m_scheme->setColorTableEntry(13, Konsole::ColorEntry(QColor(m_color3).darker(120), false));
-    m_scheme->setColorTableEntry(14, Konsole::ColorEntry(QColor(m_color4).darker(120), false));
-    m_scheme->setColorTableEntry(15, Konsole::ColorEntry(QColor(m_color5).darker(120), false));
-    m_scheme->setColorTableEntry(16, Konsole::ColorEntry(QColor(m_color6).darker(120), false));
-    m_scheme->setColorTableEntry(17, Konsole::ColorEntry(QColor(m_color7).darker(120), false));
-    m_scheme->setColorTableEntry(18, Konsole::ColorEntry(QColor(m_color8).darker(120), false));
-    m_scheme->setColorTableEntry(19, Konsole::ColorEntry(QColor(m_color9).darker(120), false));
-
-    m_scheme->write(*m_config);
-    m_config->sync();
-    reload();
-}
-
-void CustomColorScheme::reload()
-{
-    if(!m_config)
-        return;
-
-    Q_EMIT pathChanged(m_config->name());
-    Q_EMIT reloaded(m_config->name());
+    m_scheme->setColor(12, QColor(m_color2).darker(120));
+    m_scheme->setColor(13, QColor(m_color3).darker(120));
+    m_scheme->setColor(14, QColor(m_color4).darker(120));
+    m_scheme->setColor(15, QColor(m_color5).darker(120));
+    m_scheme->setColor(16, QColor(m_color6).darker(120));
+    m_scheme->setColor(17, QColor(m_color7).darker(120));
+    m_scheme->setColor(18, QColor(m_color8).darker(120));
+    m_scheme->setColor(19, QColor(m_color9).darker(120));
 }
 
 

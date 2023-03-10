@@ -338,6 +338,8 @@ TerminalDisplay::TerminalDisplay(QQuickItem *parent)
     , m_colorRole(QPalette::Background)
     , m_full_cursor_height(false)
     , m_backgroundOpacity(1.0)
+    ,m_customColorScheme(new CustomColorScheme(this))
+    ,m_scheme(Konsole::ColorSchemeManager::instance()->defaultColorScheme())
 {
     // terminal applications are not designed with Right-To-Left in mind,
     // so the layout is forced to Left-To-Right
@@ -401,6 +403,9 @@ TerminalDisplay::~TerminalDisplay()
 
     delete _outputSuspendedLabel;
     delete _filterChain;
+
+    if(m_scheme)
+        delete m_scheme;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2855,18 +2860,12 @@ void TerminalDisplay::setBackgroundOpacity(const qreal &backgroundOpacity)
     if (m_backgroundOpacity != backgroundOpacity) {
         m_backgroundOpacity = backgroundOpacity;
 
-        const ColorScheme *cs;
-        if (!availableColorSchemes().contains(_colorScheme))
-            cs = ColorSchemeManager::instance()->defaultColorScheme();
-        else
-            cs = ColorSchemeManager::instance()->findColorScheme(_colorScheme);
-
-        if (cs) {
-            QColor color = cs->backgroundColor();
+        if (m_scheme)
+        {
+            QColor color = m_scheme->backgroundColor();
             color.setAlphaF(m_backgroundOpacity);
             setFillColor(color);
         }
-
         emit backgroundOpacityChanged();
     }
 }
@@ -3271,47 +3270,54 @@ QStringList TerminalDisplay::availableColorSchemes()
 void TerminalDisplay::setColorScheme(const QString &name)
 {
 
-        const ColorScheme *cs;
-        // avoid legacy (int) solution
+    if ( name != _colorScheme )
+    {
+        qDebug() << "Setting color shcme as "<< name;
 
-        QFileInfo file(name);
-        if(file.isFile() &&file.exists())
+        if (m_scheme)
         {
-            ColorScheme* scheme = new ColorScheme();
-
-            const QString& schemeName = file.baseName();
-
-            scheme->setName(schemeName);
-            scheme->read(name);
-
-            cs = scheme;
-
-        }else
-        {
-
-            if (!availableColorSchemes().contains(name))
-                cs = ColorSchemeManager::instance()->defaultColorScheme();
-            else
-                cs = ColorSchemeManager::instance()->findColorScheme(name);
+            disconnect(m_scheme, 0, this, 0);
         }
 
-        qDebug() << "Trying to find colorshcme" << name << cs;
+        if(name == "Adaptive")
+        {
+            m_scheme = m_customColorScheme->getScheme();
+        }else
+        {
+            if (!availableColorSchemes().contains(name))
+                m_scheme = ColorSchemeManager::instance()->defaultColorScheme();
+            else
+                m_scheme = ColorSchemeManager::instance()->findColorScheme(name);
+        }
 
-        if (! cs) {
+
+        qDebug() << "Trying to find colorshcme" << name << m_scheme;
+
+        if (!m_scheme)
+        {
             qDebug() << "Cannot load color scheme: " << name;
             return;
         }
 
-        ColorEntry table[TABLE_COLORS];
-        cs->getColorTable(table);
-        setColorTable(table);
+        connect(m_scheme, SIGNAL(colorChanged(int)), this, SLOT(applyColorScheme()));
+        applyColorScheme();
 
-        QColor bgColor = cs->backgroundColor();
-        bgColor.setAlphaF(m_backgroundOpacity);
-        setFillColor(bgColor);
         _colorScheme = name;
         emit colorSchemeChanged();
+    }
+}
+void TerminalDisplay::applyColorScheme()
+{
+    qDebug() << "Colors CHANGED";
 
+    ColorEntry table[TABLE_COLORS];
+    m_scheme->getColorTable(table);
+    setColorTable(table);
+
+    QColor backgroundColor = m_scheme->backgroundColor();
+    backgroundColor.setAlphaF(m_backgroundOpacity);
+//    setBackgroundColor(backgroundColor);
+    setFillColor(backgroundColor);
 }
 
 QString TerminalDisplay::colorScheme() const

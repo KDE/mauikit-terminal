@@ -48,6 +48,7 @@ target_link_libraries(MauiKitTerminal
     Qt5::Gui
     Qt5::Widgets
     KF5::ConfigCore
+    KF5::ConfigGui
     MauiKit
 )
 

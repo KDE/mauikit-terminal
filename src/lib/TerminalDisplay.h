@@ -35,6 +35,8 @@
 #include "ksession.h"
 #include "ColorScheme.h"
 
+#include "customcolorscheme.h"
+
 class QDrag;
 class QDragEnterEvent;
 class QDropEvent;
@@ -98,6 +100,7 @@ class TerminalDisplay : public QQuickPaintedItem
     Q_PROPERTY(bool selectedText READ selectedText CONSTANT)
 
     Q_PROPERTY(qreal backgroundOpacity READ backgroundOpacity WRITE setBackgroundOpacity NOTIFY backgroundOpacityChanged)
+    Q_PROPERTY(CustomColorScheme* customColorScheme READ customColorScheme CONSTANT FINAL)
 
 public:
     /** Constructs a new terminal display widget with the specified parent. */
@@ -687,6 +690,7 @@ protected slots:
 private slots:
     void swapColorTable();
     void tripleClickTimeout();  // resets possibleTripleClick
+    void applyColorScheme();
 
 private:
 
@@ -922,9 +926,13 @@ private:
     int getScrollbarMaximum();
     int getScrollbarMinimum();
 
+
     QSize getFontMetrics();
 
     void setFullCursorHeight(bool val);
+
+    CustomColorScheme* m_customColorScheme;
+   const Konsole::ColorScheme *m_scheme;
 
 public:
     static void setTransparencyEnabled(bool enable)
@@ -932,6 +940,10 @@ public:
         HAVE_TRANSPARENCY = enable;
     }
     bool fullCursorHeight() const;
+    CustomColorScheme* customColorScheme() const
+    {
+        return m_customColorScheme;
+    }
 };
 
 }

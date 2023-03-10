@@ -2,7 +2,6 @@
 #include <QObject>
 #include <QQmlParserStatus>
 #include <QColor>
-#include <KConfig>
 
 class QTimer;
 
@@ -16,7 +15,7 @@ class CustomColorScheme : public QObject, public QQmlParserStatus
     Q_INTERFACES(QQmlParserStatus)
 
     Q_OBJECT
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged REQUIRED)
+    Q_PROPERTY(QString name READ name CONSTANT FINAL)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
     Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
     Q_PROPERTY(QColor foregroundColor READ foregroundColor WRITE setForegroundColor NOTIFY foregroundColorChanged)
@@ -28,8 +27,6 @@ class CustomColorScheme : public QObject, public QQmlParserStatus
     Q_PROPERTY(QColor color7 READ color7 WRITE setColor7 NOTIFY color7Changed)
     Q_PROPERTY(QColor color8 READ color8 WRITE setColor8 NOTIFY color8Changed)
     Q_PROPERTY(QColor color9 READ color9 WRITE setColor9 NOTIFY color9Changed)
-
-    Q_PROPERTY(QString path READ path NOTIFY pathChanged)
 
 
 public:
@@ -45,8 +42,6 @@ public:
     QColor backgroundColor() const;
 
     QColor foregroundColor() const;
-
-    QString path() const;
 
     QColor color2() const;
 
@@ -64,9 +59,9 @@ public:
 
     QColor color9() const;
 
-public slots:
-    void setName(QString name);
+    Konsole::ColorScheme * getScheme();
 
+public slots:
     void setDescription(QString description);
 
     void setBackgroundColor(QColor backgroundColor);
@@ -92,7 +87,7 @@ public slots:
 private:
     Konsole::ColorScheme* m_scheme;
     QTimer *m_timer;
-    QString m_name = "Custom";
+    QString m_name = "Adaptive";
 
     QString m_description;
 
@@ -101,8 +96,6 @@ private:
     QColor m_foregroundColor;
 
     void save();
-    void reload();
-    KConfig *m_config;
 
     QColor m_color2;
 
@@ -121,12 +114,9 @@ private:
     QColor m_color9;
 
 signals:
-    void nameChanged(QString name);
     void descriptionChanged(QString description);
     void backgroundColorChanged(QColor backgroundColor);
     void foregroundColorChanged(QColor foregroundColor);
-    void reloaded(QString path);
-    void pathChanged(QString path);
     void color2Changed(QColor color2);
     void color3Changed(QColor color3);
     void color4Changed(QColor color4);

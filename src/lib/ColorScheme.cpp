@@ -120,35 +120,13 @@ const char* const ColorScheme::translatedColorNames[TABLE_COLORS] =
     tr_NOOP("Color 8 (Intense)")
 };
 
-ColorScheme::ColorScheme()
+ColorScheme::ColorScheme(QObject *parent) : QObject(parent)
 {
     _table = 0;
     _randomTable = 0;
     _opacity = 1.0;
 }
-ColorScheme::ColorScheme(const ColorScheme& other)
-      : _opacity(other._opacity)
-       ,_table(0)
-       ,_randomTable(0)
-{
-    setName(other.name());
-    setDescription(other.description());
 
-    if ( other._table != 0 )
-    {
-        for ( int i = 0 ; i < TABLE_COLORS ; i++ )
-            setColorTableEntry(i,other._table[i]);
-    }
-
-    if ( other._randomTable != 0 )
-    {
-        for ( int i = 0 ; i < TABLE_COLORS ; i++ )
-        {
-            const RandomizationRange& range = other._randomTable[i];
-            setRandomizationRange(i,range.hue,range.saturation,range.value);
-        }
-    }
-}
 ColorScheme::~ColorScheme()
 {
     delete[] _table;
@@ -175,6 +153,17 @@ void ColorScheme::setColorTableEntry(int index , const ColorEntry& entry)
 
     _table[index] = entry;
 }
+
+void ColorScheme::setColor(int index, QColor color)
+{
+    ColorEntry colorEntry = ColorScheme::colorEntry(index);
+    if (colorEntry.color != color) {
+        colorEntry.color = color;
+        setColorTableEntry(index, colorEntry);
+        Q_EMIT colorChanged(index);
+    }
+}
+
 ColorEntry ColorScheme::colorEntry(int index , uint randomSeed) const
 {
     Q_ASSERT( index >= 0 && index < TABLE_COLORS );
@@ -315,7 +304,6 @@ void ColorScheme::write(KConfig& config) const
         writeColorEntry(config,colorNameForIndex(i),colorTable()[i],random);
     }
 }
-
 
 QString ColorScheme::colorNameForIndex(int index)
 {

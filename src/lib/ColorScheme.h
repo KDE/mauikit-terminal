@@ -45,15 +45,16 @@ namespace Konsole
  * The color scheme includes the palette of colors used to draw the text and character backgrounds
  * in the display and the opacity level of the display background.
  */
-class ColorScheme
+class ColorScheme : public QObject
 {
+    Q_OBJECT
+
 public:
     /**
      * Constructs a new color scheme which is initialised to the default color set
      * for Konsole.
      */
-    ColorScheme();
-    ColorScheme(const ColorScheme& other);
+    ColorScheme(QObject * parent = nullptr);
     ~ColorScheme();
 
     /** Sets the descriptive name of the color scheme. */
@@ -78,6 +79,7 @@ public:
 
     /** Sets a single entry within the color palette. */
     void setColorTableEntry(int index , const ColorEntry& entry);
+    void setColor(int index, QColor color);
 
     /**
      * Copies the color entries which form the palette for this color scheme
@@ -202,6 +204,9 @@ private:
     static const char* const translatedColorNames[TABLE_COLORS];
 
     static const ColorEntry defaultTable[]; // table of default color entries
+
+Q_SIGNALS:
+    void colorChanged(int index);
 };
 
 /**
@@ -278,7 +283,7 @@ public:
     /**
      * Returns the default color scheme for Konsole
      */
-    const ColorScheme* defaultColorScheme() const;
+    const ColorScheme *defaultColorScheme() const;
 
     /**
      * Returns the color scheme with the given name or 0 if no

@@ -172,8 +172,7 @@ Maui.Page
         property int totalLines: kterminal.scrollbarMaximum - kterminal.scrollbarMinimum + kterminal.lines
         // 		onKeyPressedSignal: console.log(e.key)
         
-        font.family: "Monospace"
-        font.pixelSize: 12
+        font: Maui.Style.monospacedFont
         
         backgroundOpacity: 1
         

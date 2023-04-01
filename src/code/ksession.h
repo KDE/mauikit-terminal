@@ -40,7 +40,7 @@ class KSession : public QObject
     Q_PROPERTY(QString  shellProgram WRITE setShellProgram)
     Q_PROPERTY(QStringList  shellProgramArgs WRITE setArgs)
     Q_PROPERTY(QString  history READ getHistory)
-    Q_PROPERTY(bool hasActiveProcess READ hasActiveProcess)
+    Q_PROPERTY(bool hasActiveProcess READ hasActiveProcess NOTIFY hasActiveProcessChanged)
     Q_PROPERTY(QString foregroundProcessName READ foregroundProcessName)
     Q_PROPERTY(QString currentDir READ currentDir)
 
@@ -131,6 +131,7 @@ signals:
 
     void matchFound(int startColumn, int startLine, int endColumn, int endLine);
     void noMatchFound();
+void hasActiveProcessChanged();
 
 public slots:
     /*! Set named key binding for given widget

@@ -26,6 +26,7 @@
 // Qt
 #include <QTextCodec>
 #include <QDir>
+#include <QDebug>
 
 // Konsole
 #include "KeyboardTranslator.h"
@@ -37,6 +38,43 @@ KSession::KSession(QObject *parent) :
     connect(m_session, SIGNAL(started()), this, SIGNAL(started()));
     connect(m_session, SIGNAL(finished()), this, SLOT(sessionFinished()));
     connect(m_session, SIGNAL(titleChanged()), this, SIGNAL(titleChanged()));
+    connect(m_session, &Session::stateChanged, [this](int state)
+    {
+        qDebug() << m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program();
+     Q_EMIT hasActiveProcessChanged();
+    });
+    
+    m_session->setMonitorSilence(true);
+    m_session->setMonitorSilenceSeconds(3);
+    connect(m_session, &Session::changeTabTextColorRequest, [this](int state)
+    {
+        qDebug() << "changeTabTextColorRequest" << state;
+    });
+    
+    connect(m_session, &Session::changeTabTextColorRequest, [this](int state)
+    {
+        qDebug() << "changeTabTextColorRequest" << state;
+    });
+    
+    connect(m_session, &Session::changeBackgroundColorRequest, [this](QColor state)
+    {
+        qDebug() << "changeBackgroundColorRequest" << state;
+    });
+    
+    connect(m_session, &Session::openUrlRequest, [this](QString state)
+    {
+        qDebug() << "openUrlRequest" << state;
+    });
+    
+    connect(m_session, &Session::activity, [this]()
+    {
+        qDebug() << "activity";
+    });
+    
+    connect(m_session, &Session::silence, [this]()
+    {
+        qDebug() << "silence";
+    });
 }
 
 KSession::~KSession()

@@ -1,0 +1,36 @@
+# translation of mauikitterminal.po to Slovak
+# Roman Paholik <wizzardsk@gmail.com>, 2023.
+msgid ""
+msgstr ""
+"Project-Id-Version: mauikitterminal\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2023-03-26 00:47+0000\n"
+"PO-Revision-Date: 2023-04-03 18:20+0200\n"
+"Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
+"Language-Team: Slovak <kde-sk@linux.sk>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 22.12.3\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: src/controls/Terminal.qml:102
+#, kde-format
+msgid "Copy"
+msgstr "Kopírovať"
+
+#: src/controls/Terminal.qml:111
+#, kde-format
+msgid "Paste"
+msgstr "Vložiť"
+
+#: src/controls/Terminal.qml:120
+#, kde-format
+msgid "Find"
+msgstr "Nájsť"
+
+#: src/controls/Terminal.qml:159
+#, kde-format
+msgid "Find..."
+msgstr "Nájsť..."

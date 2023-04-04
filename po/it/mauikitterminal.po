@@ -1,40 +1,38 @@
-# German translations for mauikit-terminal package.
-# Copyright (C) 2023 This file is copyright:
+# Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the mauikit-terminal package.
-# Frederik Schwarzer <schwarzer@kde.org>, 2023.
+# Vincenzo Reale <smart2128vr@gmail.com>, 2023.
 #
-# Automatically generated, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-26 00:47+0000\n"
-"PO-Revision-Date: 2023-03-29 20:43+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
-"Language-Team: German <kde-i18n-de@kde.org>\n"
-"Language: de\n"
+"PO-Revision-Date: 2023-03-29 15:34+0200\n"
+"Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
+"Language-Team: Italian <kde-i18n-it@kde.org>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.07.70\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: src/controls/Terminal.qml:102
 #, kde-format
 msgid "Copy"
-msgstr "Kopieren"
+msgstr "Copia"
 
 #: src/controls/Terminal.qml:111
 #, kde-format
 msgid "Paste"
-msgstr "Einfügen"
+msgstr "Incolla"
 
 #: src/controls/Terminal.qml:120
 #, kde-format
 msgid "Find"
-msgstr "Suchen"
+msgstr "Trova"
 
 #: src/controls/Terminal.qml:159
 #, kde-format
 msgid "Find..."
-msgstr "Suchen ..."
+msgstr "Trova..."

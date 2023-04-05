@@ -102,7 +102,11 @@ Maui.Page
         id: _copyAction
         text: i18nd("mauikitterminal", "Copy")
         icon.name: "edit-copy"
-        onTriggered:  kterminal.copyClipboard();
+        onTriggered: 
+        {
+            kterminal.copyClipboard();
+            control.forceActiveFocus()
+        }
         //shortcut: "Ctrl+Shift+C"
     }
     
@@ -111,7 +115,11 @@ Maui.Page
         id: _pasteAction
         text: i18nd("mauikitterminal", "Paste")
         icon.name: "edit-paste"
-        onTriggered: kterminal.pasteClipboard()
+        onTriggered:
+        {
+            kterminal.pasteClipboard()
+            control.forceActiveFocus()
+        }
         //         shortcut: "Ctrl+Shift+V"
     }
     
@@ -121,7 +129,7 @@ Maui.Page
         text: i18nd("mauikitterminal", "Find")
         icon.name: "edit-find"
         //         shortcut: "Ctrl+Shift+F"
-        onTriggered: footBar.visible = !footBar.visible
+        onTriggered:  toggleSearchBar()
     }
 
     
@@ -142,9 +150,7 @@ Maui.Page
         MenuItem
         {
             action: _findAction
-        }
-        
-        onClosed: control.forceActiveFocus()
+        }        
     }
     
     function updateSources()
@@ -153,13 +159,22 @@ Maui.Page
     }
     
     footBar.visible: false
-    footBar.middleContent: TextField
+    footBar.middleContent: Maui.SearchField
     {
         id: findBar
         Layout.fillWidth: true
         placeholderText: i18nd("mauikitterminal", "Find...")
-        horizontalAlignment: Qt.Left
-        onAccepted: ksession.search(text)
+        onAccepted: ksession.search(text, ksession.previousLineSearch, ksession.previousColumnSearch, false)
+        onVisibleChanged:
+        {
+            if(visible)
+            {
+                findBar.forceActiveFocus()
+            }else
+            {
+                control.forceActiveFocus()
+            }
+        }
     }
     
     Term.QMLTermWidget
@@ -181,28 +196,45 @@ Maui.Page
         backgroundOpacity: 1
         
         onTerminalUsesMouseChanged: console.log(terminalUsesMouse);
-
+        
         session: Term.QMLTermSession
         {
             id: ksession
             initialWorkingDirectory: "$HOME"
             shellProgram: "$SHELL"
-            onFinished: kterminal.finished()
+           
+            onFinished: 
+            {
+                console.log("Terminal finished")
+            }
+            // Disable search until implemented correctly
             
-            // onFinished: control.terminalClosed()
-            // initialWorkingDirectory: control.path
-            /* Disable search until implemented correctly
-             *
-             *            onMatchFound:
-             *            {
-             *              console.log("found at: %1 %2 %3 %4".arg(startColumn).arg(startLine).arg(endColumn).arg(endLine));
+            property int previousColumnSearch : 0
+            property int previousLineSearch: 0
+            
+                        onMatchFound:
+                        {
+                            previousColumnSearch = startColumn
+                            previousLineSearch = startLine
+                            
+                            
+                            _scrollBarLoader.item.highlightLine = startLine
+                            
+                            kterminal.matchFound(startColumn, startLine, endColumn, endLine)
+                           console.log("found at: %1 %2 %3 %4".arg(startColumn).arg(startLine).arg(endColumn).arg(endLine));
         }
+        
         onNoMatchFound:
         {
+            previousColumnSearch = 0
+            previousLineSearch = 0
+            _scrollBarLoader.item.highlightLine = -1
+            
+            kterminal.noMatchFound();
         console.log("not found");
         }
         
-        */
+        
         }
         customColorScheme
         {
@@ -372,10 +404,11 @@ Maui.Page
         
         Loader
         {
+            id: _scrollBarLoader
             asynchronous: true
             anchors.fill: parent
             
-            sourceComponent:   Private.TerminalScrollBar
+            sourceComponent: Private.TerminalScrollBar
             {
                 terminal: kterminal
             }
@@ -407,5 +440,10 @@ Maui.Page
     function forceActiveFocus()
     {
         kterminal.forceActiveFocus()
+    }
+    
+    function toggleSearchBar()
+    {
+        footBar.visible = !footBar.visible    
     }
 }

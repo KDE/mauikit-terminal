@@ -162,6 +162,7 @@ public slots:
     // Search history
     void search(const QString &regexp, int startLine = 0, int startColumn = 0, bool forwards = true );
 
+
 protected slots:
     void sessionFinished();
     void selectionChanged(bool textSelected);

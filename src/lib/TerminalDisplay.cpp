@@ -3461,3 +3461,35 @@ bool TerminalDisplay::readOnly() const
     return m_readOnly;
 }
 
+void TerminalDisplay::findNext(const QString& regexp)
+{
+//     int startColumn, startLine;
+//     
+//     screenWindow()->screen()->getSelectionEnd(startColumn, startLine);
+//     startColumn++;
+//     
+//     HistorySearch *history = new HistorySearch( QPointer<Emulation>(m_session->emulation()), QRegExp(regexp), forwards, startColumn, startLine, this);
+//     connect( history, SIGNAL(matchFound(int,int,int,int)), this, SIGNAL(matchFound(int,int,int,int)));
+//     connect( history, SIGNAL(noMatchFound()), this, SIGNAL(noMatchFound()));
+//     history->search();
+}
+
+void TerminalDisplay::findPrevious(const QString& regexp)
+{
+}
+
+void TerminalDisplay::matchFound(int startColumn, int startLine, int endColumn, int endLine)
+{
+    ScreenWindow* sw = screenWindow();
+    qDebug() << "Scroll to" << startLine;
+    sw->scrollTo(startLine);
+    sw->setTrackOutput(false);
+    sw->notifyOutputChanged();
+    sw->setSelectionStart(startColumn, startLine - sw->currentLine(), false);
+    sw->setSelectionEnd(endColumn, endLine - sw->currentLine());
+}
+
+void TerminalDisplay::noMatchFound()
+{
+    screenWindow()->clearSelection();
+}

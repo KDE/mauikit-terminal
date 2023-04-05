@@ -9,12 +9,24 @@ Item
     property Term.QMLTermWidget terminal
     onTerminalChanged: terminalProxyFlickable.updateFromTerminal()
     
+    property int highlightLine : -1
+    
     Flickable 
     {
         id: terminalProxyFlickable
         anchors.fill: parent
         // enabled: false
         interactive: false
+        
+        Rectangle
+        {
+            width: parent.width
+            height: kterminal.fontHeight()
+            color: Maui.Theme.highlightColor    
+            opacity: 0.2
+            y: Math.floor(height * control.highlightLine)     
+            visible: control.highlightLine > -1
+        }
         
         property bool updating: false
         

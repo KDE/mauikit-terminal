@@ -293,7 +293,7 @@ public:
     /**
      * Returns the height of the characters in the font used to draw the text in the display.
      */
-    int  fontHeight()   { return _fontHeight;   }
+    Q_INVOKABLE int  fontHeight()   { return _fontHeight;   }
     /**
      * Returns the width of the characters in the display.
      * This assumes the use of a fixed-width font.
@@ -564,6 +564,11 @@ public slots:
     void simulateMouseRelease(int x, int y, int button, int buttons, int modifiers);
     void simulateMouseDoubleClick(int x, int y, int button, int buttons, int modifiers);
 
+    void findNext(const QString &regexp);
+    void findPrevious(const QString &regexp);
+    void matchFound(int startColumn, int startLine, int endColumn, int endLine);
+    void noMatchFound();
+    
 signals:
     void backgroundOpacityChanged();
 

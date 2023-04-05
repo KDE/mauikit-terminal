@@ -2592,6 +2592,9 @@ void TerminalDisplay::emitSelection(bool useXselection,bool appendReturn)
 {
     if ( !m_screenWindow )
         return;
+    
+    if(m_readOnly)
+        return;
 
     // Paste Clipboard by simulating keypress events
     QString text = QApplication::clipboard()->text(useXselection ? QClipboard::Selection :
@@ -2685,6 +2688,9 @@ int TerminalDisplay::motionAfterPasting()
 
 void TerminalDisplay::keyPressEvent( QKeyEvent* event )
 {
+    if(m_readOnly)
+    return;
+    
     bool emitKeyPressSignal = true;
 
     // Keyboard-based navigation
@@ -3440,3 +3446,18 @@ void TerminalDisplay::itemChange(ItemChange change, const ItemChangeData & value
 
     QQuickPaintedItem::itemChange(change, value);
 }
+
+void TerminalDisplay::TerminalDisplay::setReadOnly(bool value)
+{
+    if(m_readOnly == value)
+        return;
+    
+    m_readOnly = value;
+    Q_EMIT readOnlyChanged();
+}
+
+bool TerminalDisplay::readOnly() const
+{
+    return m_readOnly;
+}
+

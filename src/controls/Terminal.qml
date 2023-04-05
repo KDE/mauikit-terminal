@@ -29,6 +29,7 @@ Maui.Page
     headBar.visible: false
     focus: true
     
+    property alias readOnly : kterminal.readOnly
     /**
      * virtualResolution : size
      */
@@ -166,6 +167,9 @@ Maui.Page
         id: kterminal
         anchors.fill: parent
         //         terminalUsesMouse: true
+        
+        // enabled: !control.readOnly
+        
         enableBold: true
         fullCursorHeight: true
         

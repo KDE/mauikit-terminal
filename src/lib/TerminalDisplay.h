@@ -101,6 +101,7 @@ class TerminalDisplay : public QQuickPaintedItem
 
     Q_PROPERTY(qreal backgroundOpacity READ backgroundOpacity WRITE setBackgroundOpacity NOTIFY backgroundOpacityChanged)
     Q_PROPERTY(CustomColorScheme* customColorScheme READ customColorScheme CONSTANT FINAL)
+    Q_PROPERTY(bool readOnly READ readOnly WRITE setReadOnly NOTIFY readOnlyChanged)
 
 public:
     /** Constructs a new terminal display widget with the specified parent. */
@@ -451,6 +452,9 @@ public:
     // of the character at that point.
 
     void getCharacterPosition(const QPoint& widgetPoint,int& line,int& column) const;
+    
+    void setReadOnly(bool value);
+    bool readOnly() const;
 
 public slots:
 
@@ -623,6 +627,8 @@ signals:
     void blinkingCursorStateChanged();
     void boldIntenseChanged();
 
+    void readOnlyChanged();
+    
 protected:
     bool event(QEvent *);
 
@@ -933,6 +939,8 @@ private:
 
     CustomColorScheme* m_customColorScheme;
    const Konsole::ColorScheme *m_scheme;
+   
+   bool m_readOnly = false;
 
 public:
     static void setTransparencyEnabled(bool enable)

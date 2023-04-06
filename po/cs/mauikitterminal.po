@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-26 00:47+0000\n"
+"POT-Creation-Date: 2023-04-06 00:46+0000\n"
 "PO-Revision-Date: 2023-03-29 16:24+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -17,22 +17,22 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Lokalize 22.12.3\n"
 
-#: src/controls/Terminal.qml:102
+#: src/controls/Terminal.qml:103
 #, kde-format
 msgid "Copy"
 msgstr "Kopírovat"
 
-#: src/controls/Terminal.qml:111
+#: src/controls/Terminal.qml:116
 #, kde-format
 msgid "Paste"
 msgstr "Vložit"
 
-#: src/controls/Terminal.qml:120
+#: src/controls/Terminal.qml:129
 #, kde-format
 msgid "Find"
 msgstr "Najít"
 
-#: src/controls/Terminal.qml:159
+#: src/controls/Terminal.qml:166
 #, kde-format
 msgid "Find..."
 msgstr "Najít..."

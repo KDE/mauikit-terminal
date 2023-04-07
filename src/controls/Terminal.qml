@@ -163,6 +163,8 @@ Maui.Page
     {
         id: findBar
         Layout.fillWidth: true
+        Layout.alignment: Qt.AlignHCenter
+        Layout.maximumWidth: 500
         placeholderText: i18nd("mauikitterminal", "Find...")
         onAccepted: ksession.search(text, ksession.previousLineSearch, ksession.previousColumnSearch, false)
         onVisibleChanged:
@@ -175,7 +177,37 @@ Maui.Page
                 control.forceActiveFocus()
             }
         }
+        
+        rightContent: Maui.ToolButtonMenu
+        {
+            icon.name: "overflow-menu"
+            
+            MenuItem
+            {
+                id: _findCaseSensitively
+                checkable: true
+                text: i18nd("mauikittexteditor","Case Sensitive")
+            }
+            
+            MenuItem
+            {
+                id: _findWholeWords
+                checkable: true
+                text: i18nd("mauikittexteditor","Whole Words Only")
+            }
+        }
+        
+        Keys.enabled: true
+        
+        Keys.onPressed:
+        {
+            if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+                        {
+                            control.toggleSearchBar()
+                        }
+        }
     }
+    
     
     Term.QMLTermWidget
     {
@@ -278,10 +310,9 @@ Maui.Page
 
             if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
             {
-                control.footBar.visible = !control.footBar.visible
+                control.toggleSearchBar()
             }
         }
-
 
         Loader
         {

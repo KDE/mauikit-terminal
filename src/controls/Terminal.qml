@@ -26,8 +26,11 @@ Maui.Page
 
     title: ksession.title
     showTitle: false
+    
     headBar.visible: false
+    
     focus: true
+    clip: true
     
     property alias readOnly : kterminal.readOnly
     /**

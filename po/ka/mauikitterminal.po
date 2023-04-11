@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-06 00:46+0000\n"
+"POT-Creation-Date: 2023-04-11 00:47+0000\n"
 "PO-Revision-Date: 2023-03-29 05:27+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -18,22 +18,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: src/controls/Terminal.qml:103
+#: src/controls/Terminal.qml:106
 #, kde-format
 msgid "Copy"
 msgstr "კოპირება"
 
-#: src/controls/Terminal.qml:116
+#: src/controls/Terminal.qml:119
 #, kde-format
 msgid "Paste"
 msgstr "ჩასმა"
 
-#: src/controls/Terminal.qml:129
+#: src/controls/Terminal.qml:132
 #, kde-format
 msgid "Find"
 msgstr "მოძებნა"
 
-#: src/controls/Terminal.qml:166
+#: src/controls/Terminal.qml:171
 #, kde-format
 msgid "Find..."
 msgstr "მოძებნა…"
+
+#: src/controls/Terminal.qml:192
+#, kde-format
+msgid "Case Sensitive"
+msgstr ""
+
+#: src/controls/Terminal.qml:199
+#, kde-format
+msgid "Whole Words Only"
+msgstr ""

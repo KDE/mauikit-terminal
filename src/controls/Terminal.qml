@@ -162,7 +162,7 @@ Maui.Page
     }
     
     footBar.visible: false
-    
+    footBar.forceCenterMiddleContent: false
     footBar.rightContent: Maui.ToolButtonMenu
     {
         icon.name: "overflow-menu"

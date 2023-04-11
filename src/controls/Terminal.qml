@@ -162,6 +162,25 @@ Maui.Page
     }
     
     footBar.visible: false
+    
+    footBar.rightContent: Maui.ToolButtonMenu
+    {
+        icon.name: "overflow-menu"
+        
+        MenuItem
+        {
+            id: _findCaseSensitively
+            checkable: true
+            text: i18nd("mauikittexteditor","Case Sensitive")
+        }
+        
+        MenuItem
+        {
+            id: _findWholeWords
+            checkable: true
+            text: i18nd("mauikittexteditor","Whole Words Only")
+        }
+    }
     footBar.middleContent: Maui.SearchField
     {
         id: findBar
@@ -181,24 +200,15 @@ Maui.Page
             }
         }
         
-        rightContent: Maui.ToolButtonMenu
-        {
-            icon.name: "overflow-menu"
+        actions: [
             
-            MenuItem
+            Action
             {
-                id: _findCaseSensitively
-                checkable: true
-                text: i18nd("mauikittexteditor","Case Sensitive")
+                icon.name: "go-up"
+                // text: i18n("Previous")
+                onTriggered: ksession.search(findBar.text, ksession.previousLineSearch, ksession.previousColumnSearch, false)
             }
-            
-            MenuItem
-            {
-                id: _findWholeWords
-                checkable: true
-                text: i18nd("mauikittexteditor","Whole Words Only")
-            }
-        }
+        ]    
         
         Keys.enabled: true
         
@@ -209,16 +219,13 @@ Maui.Page
                             control.toggleSearchBar()
                         }
         }
-    }
-    
+    }    
     
     Term.QMLTermWidget
     {
         id: kterminal
         anchors.fill: parent
         //         terminalUsesMouse: true
-        
-        // enabled: !control.readOnly
         
         enableBold: true
         fullCursorHeight: true
@@ -242,8 +249,8 @@ Maui.Page
             {
                 console.log("Terminal finished")
             }
-            // Disable search until implemented correctly
             
+            // Disable search until implemented correctly            
             property int previousColumnSearch : 0
             property int previousLineSearch: 0
             
@@ -271,6 +278,7 @@ Maui.Page
         
         
         }
+        
         customColorScheme
         {
             backgroundColor: Maui.Theme.backgroundColor
@@ -349,14 +357,14 @@ Maui.Page
                 // Touch actions
                 onTouchPress:
                 {
-                    kterminal.forceActiveFocus()
-                    control.clicked()
+                    // kterminal.forceActiveFocus()
+                    // control.clicked()
                 }
                 
                 onTouchClick:
                 {
                     kterminal.forceActiveFocus()
-                    kterminal.simulateKeyPress(Qt.Key_Tab, Qt.NoModifier, true, 0, "");
+                    // kterminal.simulateKeyPress(Qt.Key_Tab, Qt.NoModifier, true, 0, "");
                     control.clicked()
                 }
                 

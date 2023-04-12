@@ -181,6 +181,7 @@ Maui.Page
             text: i18nd("mauikittexteditor","Whole Words Only")
         }
     }
+    
     footBar.middleContent: Maui.SearchField
     {
         id: findBar
@@ -453,7 +454,28 @@ Maui.Page
             sourceComponent: Private.TerminalScrollBar
             {
                 terminal: kterminal
-            }
+            }            
+        }
+        
+        Maui.FloatingButton
+        {
+            visible: Maui.Handy.isMobile
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: Maui.Style.space.big
+                icon.name: "input-keyboard-virtual"
+                text: i18n("Toggle Virtual Keyboard")
+                onClicked:
+                {
+                    if (Qt.inputMethod.visible)
+                    {
+                        Qt.inputMethod.hide();
+                    } else
+                    {
+                       control.forceActiveFocus();
+                        Qt.inputMethod.show();
+                    }
+                }
             
         }
         

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-11 00:47+0000\n"
+"POT-Creation-Date: 2023-04-12 00:48+0000\n"
 "PO-Revision-Date: 2023-03-28 15:18+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -29,17 +29,22 @@ msgstr "Coller"
 msgid "Find"
 msgstr "Rechercher"
 
-#: src/controls/Terminal.qml:171
-#, kde-format
-msgid "Find..."
-msgstr "Rechercher..."
-
-#: src/controls/Terminal.qml:192
+#: src/controls/Terminal.qml:174
 #, kde-format
 msgid "Case Sensitive"
 msgstr ""
 
-#: src/controls/Terminal.qml:199
+#: src/controls/Terminal.qml:181
 #, kde-format
 msgid "Whole Words Only"
+msgstr ""
+
+#: src/controls/Terminal.qml:191
+#, kde-format
+msgid "Find..."
+msgstr "Rechercher..."
+
+#: src/controls/Terminal.qml:467
+#, kde-format
+msgid "Toggle Virtual Keyboard"
 msgstr ""

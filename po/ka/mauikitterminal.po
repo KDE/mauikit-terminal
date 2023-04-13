@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-12 00:48+0000\n"
-"PO-Revision-Date: 2023-03-29 05:27+0200\n"
+"PO-Revision-Date: 2023-04-12 06:20+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -36,12 +36,12 @@ msgstr "მოძებნა"
 #: src/controls/Terminal.qml:174
 #, kde-format
 msgid "Case Sensitive"
-msgstr ""
+msgstr "რეგისტრზე-დამოკიდებული"
 
 #: src/controls/Terminal.qml:181
 #, kde-format
 msgid "Whole Words Only"
-msgstr ""
+msgstr "მხოლოდ მთლიანი სიტყვები"
 
 #: src/controls/Terminal.qml:191
 #, kde-format
@@ -51,4 +51,4 @@ msgstr "მოძებნა…"
 #: src/controls/Terminal.qml:467
 #, kde-format
 msgid "Toggle Virtual Keyboard"
-msgstr ""
+msgstr "ვირტუალური კლავიატურის გადართვა"

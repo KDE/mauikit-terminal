@@ -35,12 +35,12 @@ msgstr "Najít"
 #: src/controls/Terminal.qml:174
 #, kde-format
 msgid "Case Sensitive"
-msgstr ""
+msgstr "Rozlišovat velikost písmen"
 
 #: src/controls/Terminal.qml:181
 #, kde-format
 msgid "Whole Words Only"
-msgstr ""
+msgstr "Pouze celá slova"
 
 #: src/controls/Terminal.qml:191
 #, kde-format
@@ -50,4 +50,4 @@ msgstr "Najít..."
 #: src/controls/Terminal.qml:467
 #, kde-format
 msgid "Toggle Virtual Keyboard"
-msgstr ""
+msgstr "Zapnout virtuální klávesnici"

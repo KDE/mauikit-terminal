@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-12 00:48+0000\n"
-"PO-Revision-Date: 2023-03-29 15:34+0200\n"
+"PO-Revision-Date: 2023-04-13 10:47+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -35,12 +35,12 @@ msgstr "Trova"
 #: src/controls/Terminal.qml:174
 #, kde-format
 msgid "Case Sensitive"
-msgstr ""
+msgstr "Distingui maiuscole"
 
 #: src/controls/Terminal.qml:181
 #, kde-format
 msgid "Whole Words Only"
-msgstr ""
+msgstr "Solo parole intere"
 
 #: src/controls/Terminal.qml:191
 #, kde-format
@@ -50,4 +50,4 @@ msgstr "Trova..."
 #: src/controls/Terminal.qml:467
 #, kde-format
 msgid "Toggle Virtual Keyboard"
-msgstr ""
+msgstr "Commuta la tastiera virtuale"

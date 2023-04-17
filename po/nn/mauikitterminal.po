@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-26 00:47+0000\n"
+"POT-Creation-Date: 2023-04-12 00:48+0000\n"
 "PO-Revision-Date: 2023-03-31 21:12+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -19,22 +19,37 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#: src/controls/Terminal.qml:102
+#: src/controls/Terminal.qml:106
 #, kde-format
 msgid "Copy"
 msgstr "Kopier"
 
-#: src/controls/Terminal.qml:111
+#: src/controls/Terminal.qml:119
 #, kde-format
 msgid "Paste"
 msgstr "Lim inn"
 
-#: src/controls/Terminal.qml:120
+#: src/controls/Terminal.qml:132
 #, kde-format
 msgid "Find"
 msgstr "Finn"
 
-#: src/controls/Terminal.qml:159
+#: src/controls/Terminal.qml:174
+#, kde-format
+msgid "Case Sensitive"
+msgstr ""
+
+#: src/controls/Terminal.qml:181
+#, kde-format
+msgid "Whole Words Only"
+msgstr ""
+
+#: src/controls/Terminal.qml:191
 #, kde-format
 msgid "Find..."
 msgstr "Finn …"
+
+#: src/controls/Terminal.qml:467
+#, kde-format
+msgid "Toggle Virtual Keyboard"
+msgstr ""

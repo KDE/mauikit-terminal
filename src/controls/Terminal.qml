@@ -24,7 +24,7 @@ Maui.Page
     Maui.Theme.colorSet: Maui.Theme.Header
     Maui.Theme.inherit: false
 
-    title: ksession.title
+    title: ksession.title + " - " + ksession.foregroundProcessName
     showTitle: false
     
     headBar.visible: false
@@ -475,8 +475,7 @@ Maui.Page
                        control.forceActiveFocus();
                         Qt.inputMethod.show();
                     }
-                }
-            
+                }            
         }
         
         Component.onCompleted:

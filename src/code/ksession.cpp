@@ -31,6 +31,7 @@
 // Konsole
 #include "KeyboardTranslator.h"
 #include "HistorySearch.h"
+#include "History.h"
 
 KSession::KSession(QObject *parent) :
     QObject(parent), m_session(createSession(""))
@@ -42,10 +43,12 @@ KSession::KSession(QObject *parent) :
     {
         qDebug() << m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program();
      Q_EMIT hasActiveProcessChanged();
+     Q_EMIT foregroundProcessNameChanged();
     });
     
     m_session->setMonitorSilence(true);
-    m_session->setMonitorSilenceSeconds(3);
+    m_session->setMonitorSilenceSeconds(30);
+    
     connect(m_session, &Session::changeTabTextColorRequest, [this](int state)
     {
         qDebug() << "changeTabTextColorRequest" << state;
@@ -74,6 +77,7 @@ KSession::KSession(QObject *parent) :
     connect(m_session, &Session::silence, [this]()
     {
         qDebug() << "silence";
+        Q_EMIT processHasSilent();
     });
 }
 

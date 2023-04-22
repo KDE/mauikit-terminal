@@ -291,7 +291,7 @@ Maui.Page
             color6: Maui.Theme.linkColor
             color7: Maui.Theme.visitedLinkColor
             color8: Maui.Theme.highlightColor
-            color9: Maui.Theme.textColor
+            color9: Maui.Theme.highlightedTextColor
         }
 
         Keys.enabled: true

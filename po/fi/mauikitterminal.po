@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-12 00:48+0000\n"
-"PO-Revision-Date: 2023-03-30 12:02+0300\n"
+"PO-Revision-Date: 2023-04-20 12:38+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -35,12 +35,12 @@ msgstr "Etsi"
 #: src/controls/Terminal.qml:174
 #, kde-format
 msgid "Case Sensitive"
-msgstr ""
+msgstr "Erota pien- ja suuraakkoset"
 
 #: src/controls/Terminal.qml:181
 #, kde-format
 msgid "Whole Words Only"
-msgstr ""
+msgstr "Vain kokonaiset sanat"
 
 #: src/controls/Terminal.qml:191
 #, kde-format
@@ -50,4 +50,4 @@ msgstr "Etsi…"
 #: src/controls/Terminal.qml:467
 #, kde-format
 msgid "Toggle Virtual Keyboard"
-msgstr ""
+msgstr "Näytä tai piilota näyttönäppäimistö"

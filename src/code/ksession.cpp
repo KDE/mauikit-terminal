@@ -33,6 +33,8 @@
 #include "HistorySearch.h"
 #include "History.h"
 
+#include "Emulation.h"
+
 KSession::KSession(QObject *parent) :
     QObject(parent), m_session(createSession(""))
 {
@@ -41,9 +43,15 @@ KSession::KSession(QObject *parent) :
     connect(m_session, SIGNAL(titleChanged()), this, SIGNAL(titleChanged()));
     connect(m_session, &Session::stateChanged, [this](int state)
     {
-        qDebug() << m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program();
+        qDebug() << m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program() << state;
      Q_EMIT hasActiveProcessChanged();
-     Q_EMIT foregroundProcessNameChanged();
+     
+     
+     if(m_processName != m_session->foregroundProcessName())
+     {
+         m_processName = m_session->foregroundProcessName();
+         Q_EMIT foregroundProcessNameChanged();
+     }
     });
     
     m_session->setMonitorSilence(true);

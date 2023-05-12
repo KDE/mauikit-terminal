@@ -176,10 +176,12 @@ private slots:
     Session* createSession(QString name);
     //Konsole::KTerminalDisplay* createTerminalDisplay(Konsole::Session *session, QQuickItem* parent);
     
+    
 private:
     //Konsole::KTerminalDisplay *m_terminalDisplay;
     QString _initialWorkingDirectory;
     Session *m_session;
+    QString m_processName;
     
 };
 

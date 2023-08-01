@@ -165,7 +165,7 @@ void KSession::removeView(TerminalDisplay *display)
 
 void KSession::sessionFinished()
 {
-    emit finished();
+    Q_EMIT finished();
 }
 
 void KSession::selectionChanged(bool textSelected)
@@ -231,7 +231,7 @@ void KSession::setInitialWorkingDirectory(const QString &dir)
     if ( _initialWorkingDirectory != dir ) {
         _initialWorkingDirectory = dir;
         m_session->setInitialWorkingDirectory(dir);
-        emit initialWorkingDirectoryChanged();
+        Q_EMIT initialWorkingDirectoryChanged();
 }   }
 
 QString KSession::getInitialWorkingDirectory()
@@ -256,7 +256,7 @@ void KSession::setHistorySize(int lines)
             m_session->setHistoryType(HistoryTypeFile());
         else
             m_session->setHistoryType(HistoryTypeBuffer(lines));
-        emit historySizeChanged();
+        Q_EMIT historySizeChanged();
     }
 }
 
@@ -330,7 +330,7 @@ bool KSession::flowControlEnabled()
 void KSession::setKeyBindings(const QString &kb)
 {
     m_session->setKeyBindings(kb);
-    emit changedKeyBindings(kb);
+    Q_EMIT changedKeyBindings(kb);
 }
 
 QString KSession::getKeyBindings()

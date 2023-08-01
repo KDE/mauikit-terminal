@@ -384,7 +384,7 @@ public:
      */
     int getPtySlaveFd() const;
 
-public slots:
+public Q_SLOTS:
 
     /**
      * Starts the terminal session.
@@ -414,7 +414,7 @@ public slots:
      */
     void setUserTitle( int, const QString & caption );
 
-signals:
+Q_SIGNALS:
 
     /** Emitted when the terminal process starts. */
     void started();
@@ -497,7 +497,7 @@ signals:
     void silence();
     void activity();
 
-private slots:
+private Q_SLOTS:
     void done(int);
 
 //  void fireZModemDetected();

@@ -501,7 +501,7 @@ UrlFilter::HotSpot::~HotSpot()
 
 void FilterObject::emitActivated(const QUrl& url, bool fromContextMenu)
 {
-    emit activated(url, fromContextMenu);
+    Q_EMIT activated(url, fromContextMenu);
 }
 
 void FilterObject::activate()

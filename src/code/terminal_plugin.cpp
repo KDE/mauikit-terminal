@@ -1,9 +1,10 @@
 #include "terminal_plugin.h"
 
-#include "lib/TerminalDisplay.h"
+#include "TerminalDisplay.h"
 #include "ksession.h"
-#include "colorschemesmodel.h"
 #include "customcolorscheme.h"
+
+#include "colorschemesmodel.h"
 
 #include <qqml.h>
 #include <QQmlEngine>
@@ -19,7 +20,7 @@ void TerminalPlugin::registerTypes(const char *uri)
     qmlRegisterType<ColorSchemesModel>(uri, 1, 0, "ColorSchemesModel");
     qmlRegisterAnonymousType<CustomColorScheme>(uri, 1);
 
-    qmlRegisterType(resolveFileUrl(QStringLiteral("Terminal.qml")), uri, 1, 0, "Terminal");
+    qmlRegisterType(componentUrl(QStringLiteral("Terminal.qml")), uri, 1, 0, "Terminal");
 }
 
 void TerminalPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
@@ -33,7 +34,7 @@ void TerminalPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
 
         QString cs, kbl;
 
-        foreach (QString pwd, pwds) {
+        for (const QString &pwd : pwds) {
             cs  = pwd + "/org/mauikit/terminal/color-schemes";
             kbl = pwd + "/org/mauikit/terminal/kb-layouts";
             if (QDir(cs).exists()) break;
@@ -44,4 +45,9 @@ void TerminalPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
         setenv("KB_LAYOUT_DIR",kbl.toUtf8().constData(),1);
         setenv("COLORSCHEMES_DIR",cs.toUtf8().constData(),1);
     }
+}
+
+QUrl TerminalPlugin::componentUrl(const QString &fileName) const
+{
+    return QUrl(resolveFileUrl(fileName));
 }

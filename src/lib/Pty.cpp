@@ -291,7 +291,7 @@ void Pty::sendData(const char* data, int length)
 void Pty::dataReceived()
 {
      QByteArray data = pty()->readAll();
-    emit receivedData(data.constData(),data.count());
+    Q_EMIT receivedData(data.constData(),data.count());
 }
 
 void Pty::lockPty(bool lock)
@@ -323,7 +323,7 @@ void Pty::setupChildProcess()
 
     // reset all signal handlers
     // this ensures that terminal applications respond to
-    // signals generated via key sequences such as Ctrl+C
+    // Q_SIGNALS generated via key sequences such as Ctrl+C
     // (which sends SIGINT)
     struct sigaction action;
     sigset_t sigset;

@@ -250,7 +250,7 @@ public:
 
   bool programBracketedPasteMode() const;
 
-public slots:
+public Q_SLOTS:
 
   /** Change the size of the emulation's image */
   virtual void setImageSize(int lines, int columns);
@@ -296,7 +296,7 @@ public slots:
    */
   void receiveData(const char* buffer,int len);
 
-signals:
+Q_SIGNALS:
 
   /**
    * Emitted when a buffer of data is ready to send to the
@@ -498,7 +498,7 @@ protected:
   QTextDecoder* _decoder;
   const KeyboardTranslator* _keyTranslator; // the keyboard layout
 
-protected slots:
+protected Q_SLOTS:
   /**
    * Schedules an update of attached views.
    * Repeated calls to bufferedUpdate() in close succession will result in only a single update,
@@ -506,7 +506,7 @@ protected slots:
    */
   void bufferedUpdate();
 
-private slots:
+private Q_SLOTS:
 
   // triggered by timer, causes the emulation to send an updated screen image to each
   // view

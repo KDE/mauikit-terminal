@@ -113,7 +113,7 @@ public:
     QString currentDir();
     
  
-signals:
+Q_SIGNALS:
     void started();
     void finished();
     void copyAvailable(bool);
@@ -138,7 +138,7 @@ signals:
     
     void processHasSilent();
     
-public slots:
+public Q_SLOTS:
     /*! Set named key binding for given widget
      */
     void setKeyBindings(const QString & kb);
@@ -168,11 +168,11 @@ public slots:
     void search(const QString &regexp, int startLine = 0, int startColumn = 0, bool forwards = true );
     
     
-protected slots:
+protected Q_SLOTS:
     void sessionFinished();
     void selectionChanged(bool textSelected);
     
-private slots:
+private Q_SLOTS:
     Session* createSession(QString name);
     //Konsole::KTerminalDisplay* createTerminalDisplay(Konsole::Session *session, QQuickItem* parent);
     

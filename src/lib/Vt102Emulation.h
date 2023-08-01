@@ -89,7 +89,7 @@ public:
   virtual void reset();
   virtual char eraseChar() const;
 
-public slots:
+public Q_SLOTS:
   // reimplemented from Emulation
   virtual void sendString(const char*,int length = -1);
   virtual void sendText(const QString& text);
@@ -104,7 +104,7 @@ protected:
   virtual void resetMode(int mode);
   virtual void receiveChar(wchar_t cc);
 
-private slots:
+private Q_SLOTS:
   //causes changeTitle() to be emitted for each (int,QString) pair in pendingTitleUpdates
   //used to buffer multiple title updates
   void updateTitle();

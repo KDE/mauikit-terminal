@@ -1,4 +1,0 @@
-module org.mauikit.terminal
-plugin MauiKitTerminal
-classname TerminalPlugin
-typeinfo plugins.qmltypes

@@ -50,10 +50,10 @@ void HistorySearch::search() {
         }
 
         if (found) {
-            emit matchFound(m_foundStartColumn, m_foundStartLine, m_foundEndColumn, m_foundEndLine);
+            Q_EMIT matchFound(m_foundStartColumn, m_foundStartLine, m_foundEndColumn, m_foundEndLine);
         }
         else {
-            emit noMatchFound();
+            Q_EMIT noMatchFound();
         }
     }
 

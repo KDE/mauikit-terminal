@@ -150,7 +150,7 @@ Q_OBJECT
      */
     int foregroundProcessGroup() const;
 
-  public slots:
+  public Q_SLOTS:
 
     /**
      * Put the pty into UTF-8 mode on systems which support it.
@@ -177,7 +177,7 @@ Q_OBJECT
      */
     void sendData(const char* buffer, int length);
 
-  signals:
+  Q_SIGNALS:
 
     /**
      * Emitted when a new block of data is received from
@@ -191,7 +191,7 @@ Q_OBJECT
   protected:
       void setupChildProcess();
 
-  private slots:
+  private Q_SLOTS:
     // called when data is received from the terminal process
     void dataReceived();
 

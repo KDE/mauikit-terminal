@@ -1,5 +1,5 @@
 #include "customcolorscheme.h"
-#include "lib/ColorScheme.h"
+#include "ColorScheme.h"
 #include <QDebug>
 #include <QCoreApplication>
 #include <QTimer>
@@ -152,7 +152,7 @@ void CustomColorScheme::setDescription(QString description)
         return;
 
     m_description = description;
-    emit descriptionChanged(m_description);
+    Q_EMIT descriptionChanged(m_description);
 }
 
 void CustomColorScheme::setBackgroundColor(QColor backgroundColor)
@@ -161,7 +161,7 @@ void CustomColorScheme::setBackgroundColor(QColor backgroundColor)
         return;
 
     m_backgroundColor = backgroundColor;
-    emit backgroundColorChanged(m_backgroundColor);
+    Q_EMIT backgroundColorChanged(m_backgroundColor);
 }
 
 void CustomColorScheme::setForegroundColor(QColor foregroundColor)
@@ -170,7 +170,7 @@ void CustomColorScheme::setForegroundColor(QColor foregroundColor)
         return;
 
     m_foregroundColor = foregroundColor;
-    emit foregroundColorChanged(m_foregroundColor);
+    Q_EMIT foregroundColorChanged(m_foregroundColor);
 }
 
 void CustomColorScheme::setColor2(QColor color2)
@@ -179,7 +179,7 @@ void CustomColorScheme::setColor2(QColor color2)
         return;
 
     m_color2 = color2;
-    emit color2Changed(m_color2);
+    Q_EMIT color2Changed(m_color2);
 }
 
 void CustomColorScheme::setColor3(QColor color3)
@@ -188,7 +188,7 @@ void CustomColorScheme::setColor3(QColor color3)
         return;
 
     m_color3 = color3;
-    emit color3Changed(m_color3);
+    Q_EMIT color3Changed(m_color3);
 }
 
 void CustomColorScheme::setColor4(QColor color4)
@@ -197,7 +197,7 @@ void CustomColorScheme::setColor4(QColor color4)
         return;
 
     m_color4 = color4;
-    emit color4Changed(m_color4);
+    Q_EMIT color4Changed(m_color4);
 }
 
 void CustomColorScheme::setColor5(QColor color5)
@@ -206,7 +206,7 @@ void CustomColorScheme::setColor5(QColor color5)
         return;
 
     m_color5 = color5;
-    emit color5Changed(m_color5);
+    Q_EMIT color5Changed(m_color5);
 }
 
 void CustomColorScheme::setColor6(QColor color6)
@@ -215,7 +215,7 @@ void CustomColorScheme::setColor6(QColor color6)
         return;
 
     m_color6 = color6;
-    emit color6Changed(m_color6);
+    Q_EMIT color6Changed(m_color6);
 }
 
 void CustomColorScheme::setColor7(QColor color7)
@@ -224,7 +224,7 @@ void CustomColorScheme::setColor7(QColor color7)
         return;
 
     m_color7 = color7;
-    emit color7Changed(m_color7);
+    Q_EMIT color7Changed(m_color7);
 }
 
 void CustomColorScheme::setColor8(QColor color8)
@@ -233,7 +233,7 @@ void CustomColorScheme::setColor8(QColor color8)
         return;
 
     m_color8 = color8;
-    emit color8Changed(m_color8);
+    Q_EMIT color8Changed(m_color8);
 }
 
 void CustomColorScheme::setColor9(QColor color9)
@@ -242,7 +242,7 @@ void CustomColorScheme::setColor9(QColor color9)
         return;
 
     m_color9 = color9;
-    emit color9Changed(m_color9);
+    Q_EMIT color9Changed(m_color9);
 }
 
 static bool isLight(const QColor &color)

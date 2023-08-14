@@ -35,10 +35,10 @@ public:
     bool matchCase();
     bool highlightAllMatches();
 
-public slots:
+public Q_SLOTS:
     void noMatchFound();
 
-signals:
+Q_SIGNALS:
     void searchCriteriaChanged();
     void highlightMatchesChanged(bool highlightMatches);
     void findNext();
@@ -47,7 +47,7 @@ signals:
 protected:
     virtual void keyReleaseEvent(QKeyEvent* keyEvent);
 
-private slots:
+private Q_SLOTS:
     void clearBackgroundColor();
 
 private:

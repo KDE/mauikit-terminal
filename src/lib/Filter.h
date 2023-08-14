@@ -291,7 +291,7 @@ private:
 
     // combined OR of FullUrlRegExp and EmailAddressRegExp
     static const QRegExp CompleteUrlRegExp;
-signals:
+Q_SIGNALS:
     void activated(const QUrl& url, bool fromContextMenu);
 };
 
@@ -302,11 +302,11 @@ public:
     FilterObject(Filter::HotSpot* filter) : _filter(filter) {}
 
     void emitActivated(const QUrl& url, bool fromContextMenu);
-public slots:
+public Q_SLOTS:
     void activate();
 private:
     Filter::HotSpot* _filter;
-signals:
+Q_SIGNALS:
     void activated(const QUrl& url, bool fromContextMenu);
 };
 

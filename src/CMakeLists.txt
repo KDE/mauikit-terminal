@@ -1,84 +1,77 @@
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/code
-)
+    ${CMAKE_CURRENT_SOURCE_DIR}/code)
+
+remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY)
+
+ecm_add_qml_module(MauiKitTerminal${MAUI_MAJOR_VERSION} URI "org.mauikit.terminal" VERSION 3.0 CLASSNAME TerminalPlugin)
 
 set(plugin_SRCS
-    code/ksession.cpp
     code/colorschemesmodel.cpp
-    code/customcolorscheme.cpp
-    code/terminal_plugin.cpp
-)
+    code/terminal_plugin.cpp)
 
-if(QUICK_COMPILER)
-    qtquick_compiler_add_resources(lib_QML_QRC resources.qrc)
-else()
-    qt5_add_resources(lib_QML_QRC resources.qrc)
+if (QT_MAJOR_VERSION STREQUAL "5")
+    if(QUICK_COMPILER)
+        qtquick_compiler_add_resources(lib_QML_QRC resources.qrc)
+    else()
+        qt5_add_resources(lib_QML_QRC resources.qrc)
+    endif()
 endif()
 
-ecm_generate_qmltypes(org.mauikit.terminal ${PROJECT_VERSION} DESTINATION ${KDE_INSTALL_QMLDIR}/org/mauikit/terminal)
+ecm_target_qml_sources(MauiKitTerminal${MAUI_MAJOR_VERSION} SOURCES
+    controls.${QT_MAJOR_VERSION}/Terminal.qml
+    controls.${QT_MAJOR_VERSION}/QMLTermScrollbar.qml)
+
+ecm_target_qml_sources(MauiKitTerminal${MAUI_MAJOR_VERSION} PATH private SOURCES
+    controls.${QT_MAJOR_VERSION}/private/TerminalInputArea.qml
+    controls.${QT_MAJOR_VERSION}/private/TerminalScrollBar.qml)
 
 add_subdirectory(lib)
 
-add_library(MauiKitTerminal
-    SHARED
-    ${plugin_SRCS}
-    ${lib_QML_QRC}
-)
-
-add_library(MauiKit::Terminal ALIAS MauiKitTerminal)
-
-generate_export_header(MauiKitTerminal BASE_NAME Terminal)
-set_target_properties(MauiKitTerminal PROPERTIES
-    VERSION ${Terminal_VERSION_STRING}
-    SOVERSION ${Terminal_SOVERSION}
-    EXPORT_NAME Terminal
-    )
-
-target_include_directories(MauiKitTerminal
-    INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/MauiKit/Terminal>")
-
-target_include_directories(MauiKitTerminal PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_CURRENT_BINARY_DIR};>")
-
-target_link_libraries(MauiKitTerminal
+target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION}
     PRIVATE
-    KTerminalLib
-    Qt5::Core
-    Qt5::Quick
-    Qt5::Gui
-    Qt5::Widgets
-    KF5::ConfigCore
-    KF5::ConfigGui
-    MauiKit
-)
+    ${plugin_SRCS})
 
-install(TARGETS MauiKitTerminal EXPORT MauiKitTerminalTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+add_library(MauiKit${MAUI_MAJOR_VERSION}::Terminal ALIAS MauiKitTerminal${MAUI_MAJOR_VERSION})
 
-install(FILES
-#    ${headers}
-    ${CMAKE_CURRENT_BINARY_DIR}/terminal_export.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/MauiKit/Terminal
-    COMPONENT Devel)
+if (QT_MAJOR_VERSION STREQUAL "5")
+    if(QUICK_COMPILER)
+        target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION} PRIVATE ${lib_QML_QRC})
 
-if (BUILD_SHARED_LIBS)
-    add_custom_target(copy_to_bin ALL
-        COMMAND ${CMAKE_COMMAND} -E
-                make_directory ${CMAKE_BINARY_DIR}/bin/org/mauikit/terminal/
-        COMMAND ${CMAKE_COMMAND} -E
-                copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/controls ${CMAKE_BINARY_DIR}/bin/org/mauikit/terminal/
-        COMMAND ${CMAKE_COMMAND} -E
-                copy $<TARGET_FILE:MauiKitTerminal> ${CMAKE_BINARY_DIR}/bin/org/mauikit/terminal/
-    )
-
-    install(DIRECTORY controls/ DESTINATION ${KDE_INSTALL_QMLDIR}/org/mauikit/terminal)
-
-    #include(ECMGeneratePriFile)
-    #ecm_generate_pri_file(BASE_NAME KQuickImageEditor LIB_NAME KQuickImageEditor DEPS "core qml quick svg" FILENAME_VAR PRI_FILENAME )
-    #install(FILES ${PRI_FILENAME}
-            #DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
-
+        add_definitions(-DQUICK_COMPILER)
+        target_compile_definitions(MauiKitTerminal${MAUI_MAJOR_VERSION} PUBLIC QUICK_COMPILER)
+    endif()
 endif()
 
-install(TARGETS MauiKitTerminal DESTINATION ${KDE_INSTALL_QMLDIR}/org/mauikit/terminal )
+generate_export_header(MauiKitTerminal${MAUI_MAJOR_VERSION} BASE_NAME Terminal)
+set_target_properties(MauiKitTerminal${MAUI_MAJOR_VERSION} PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    EXPORT_NAME "Terminal")
 
+target_include_directories(MauiKitTerminal${MAUI_MAJOR_VERSION}
+    INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/MauiKit${MAUI_MAJOR_VERSION}/Terminal>")
 
+target_include_directories(MauiKitTerminal${MAUI_MAJOR_VERSION} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_CURRENT_BINARY_DIR};>")
+
+target_link_libraries(MauiKitTerminal${MAUI_MAJOR_VERSION}
+    PRIVATE
+    KTerminalLib
+    Qt${QT_MAJOR_VERSION}::Core
+    Qt${QT_MAJOR_VERSION}::Quick
+    Qt${QT_MAJOR_VERSION}::Gui
+    Qt${QT_MAJOR_VERSION}::Widgets
+    KF${KF_MAJOR_VERSION}::ConfigCore
+    KF${KF_MAJOR_VERSION}::ConfigGui
+    MauiKit${MAUI_MAJOR_VERSION})
+
+ecm_finalize_qml_module(MauiKitTerminal${MAUI_MAJOR_VERSION} DESTINATION ${KDE_INSTALL_QMLDIR})
+ecm_generate_qmltypes(org.mauikit.terminal 3.0 DESTINATION ${KDE_INSTALL_QMLDIR}/org/mauikit/terminal)
+
+install(TARGETS MauiKitTerminal${MAUI_MAJOR_VERSION} EXPORT MauiKitTerminal${MAUI_MAJOR_VERSION}Targets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+
+install(FILES
+    #    ${headers}
+    ${CMAKE_CURRENT_BINARY_DIR}/terminal_export.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/MauiKit${MAUI_MAJOR_VERSION}/Terminal
+    COMPONENT Devel)

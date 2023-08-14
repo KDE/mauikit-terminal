@@ -430,7 +430,7 @@ void Vt102Emulation::updateTitle()
     QListIterator<int> iter( _pendingTitleUpdates.keys() );
     while (iter.hasNext()) {
         int arg = iter.next();
-        emit titleChanged( arg , _pendingTitleUpdates[arg] );
+        Q_EMIT titleChanged( arg , _pendingTitleUpdates[arg] );
     }
     _pendingTitleUpdates.clear();
 }
@@ -469,7 +469,7 @@ void Vt102Emulation::processToken(int token, wchar_t p, int q)
     case TY_CTL('D'      ) : /* EOT: ignored                      */ break;
     case TY_CTL('E'      ) :      reportAnswerBack     (          ); break; //VT100
     case TY_CTL('F'      ) : /* ACK: ignored                      */ break;
-    case TY_CTL('G'      ) : emit stateSet(NOTIFYBELL);
+    case TY_CTL('G'      ) : Q_EMIT stateSet(NOTIFYBELL);
                                 break; //VT100
     case TY_CTL('H'      ) : _currentScreen->backspace            (          ); break; //VT100
     case TY_CTL('I'      ) : _currentScreen->tab                  (          ); break; //VT100
@@ -553,11 +553,11 @@ void Vt102Emulation::processToken(int token, wchar_t p, int q)
 
 // resize = \e[8;<row>;<col>t
     case TY_CSI_PS('t',   8) : setImageSize( p /*lines */, q /* columns */ );
-                               emit imageResizeRequest(QSize(q, p));
+                               Q_EMIT imageResizeRequest(QSize(q, p));
                                break;
 
 // change tab text color : \e[28;<color>t  color: 0-16,777,215
-    case TY_CSI_PS('t',   28) : emit changeTabTextColorRequest      ( p        );          break;
+    case TY_CSI_PS('t',   28) : Q_EMIT changeTabTextColorRequest      ( p        );          break;
 
     case TY_CSI_PS('K',   0) : _currentScreen->clearToEndOfLine     (          ); break;
     case TY_CSI_PS('K',   1) : _currentScreen->clearToBeginOfLine   (          ); break;
@@ -655,12 +655,12 @@ void Vt102Emulation::processToken(int token, wchar_t p, int q)
     case TY_CSI_PS('x',   1) :      reportTerminalParms  (         3); break; //VT100
 
     case TY_CSI_PS_SP('q',   0) : /* fall through */
-    case TY_CSI_PS_SP('q',   1) : emit cursorChanged(KeyboardCursorShape::BlockCursor,     true ); break;
-    case TY_CSI_PS_SP('q',   2) : emit cursorChanged(KeyboardCursorShape::BlockCursor,     false); break;
-    case TY_CSI_PS_SP('q',   3) : emit cursorChanged(KeyboardCursorShape::UnderlineCursor, true ); break;
-    case TY_CSI_PS_SP('q',   4) : emit cursorChanged(KeyboardCursorShape::UnderlineCursor, false); break;
-    case TY_CSI_PS_SP('q',   5) : emit cursorChanged(KeyboardCursorShape::IBeamCursor,     true ); break;
-    case TY_CSI_PS_SP('q',   6) : emit cursorChanged(KeyboardCursorShape::IBeamCursor,     false); break;
+    case TY_CSI_PS_SP('q',   1) : Q_EMIT cursorChanged(KeyboardCursorShape::BlockCursor,     true ); break;
+    case TY_CSI_PS_SP('q',   2) : Q_EMIT cursorChanged(KeyboardCursorShape::BlockCursor,     false); break;
+    case TY_CSI_PS_SP('q',   3) : Q_EMIT cursorChanged(KeyboardCursorShape::UnderlineCursor, true ); break;
+    case TY_CSI_PS_SP('q',   4) : Q_EMIT cursorChanged(KeyboardCursorShape::UnderlineCursor, false); break;
+    case TY_CSI_PS_SP('q',   5) : Q_EMIT cursorChanged(KeyboardCursorShape::IBeamCursor,     true ); break;
+    case TY_CSI_PS_SP('q',   6) : Q_EMIT cursorChanged(KeyboardCursorShape::IBeamCursor,     false); break;
 
     case TY_CSI_PN('@'      ) : _currentScreen->insertChars          (p         ); break;
     case TY_CSI_PN('A'      ) : _currentScreen->cursorUp             (p         ); break; //VT100
@@ -866,9 +866,9 @@ void Vt102Emulation::clearScreenAndSetColumns(int columnCount)
 void Vt102Emulation::sendString(const char* s , int length)
 {
   if ( length >= 0 )
-    emit sendData(s,length);
+    Q_EMIT sendData(s,length);
   else
-    emit sendData(s,strlen(s));
+    Q_EMIT sendData(s,strlen(s));
 }
 
 void Vt102Emulation::reportCursorPosition()
@@ -1181,11 +1181,11 @@ void Vt102Emulation::sendKeyEvent( QKeyEvent* origEvent )
     {
         switch (event->key()) {
         case Qt::Key_S:
-            emit flowControlKeyPressed(true);
+            Q_EMIT flowControlKeyPressed(true);
             break;
         case Qt::Key_Q:
         case Qt::Key_C: // cancel flow control
-            emit flowControlKeyPressed(false);
+            Q_EMIT flowControlKeyPressed(false);
             break;
         }
     }
@@ -1421,11 +1421,11 @@ void Vt102Emulation::setMode(int m)
     case MODE_Mouse1001:
     case MODE_Mouse1002:
     case MODE_Mouse1003:
-        emit programUsesMouseChanged(false);
+        Q_EMIT programUsesMouseChanged(false);
     break;
 
     case MODE_BracketedPaste:
-        emit programBracketedPasteModeChanged(true);
+        Q_EMIT programBracketedPasteModeChanged(true);
 
     break;
 
@@ -1453,11 +1453,11 @@ void Vt102Emulation::resetMode(int m)
     case MODE_Mouse1001 :
     case MODE_Mouse1002 :
     case MODE_Mouse1003 :
-        emit programUsesMouseChanged(true);
+        Q_EMIT programUsesMouseChanged(true);
     break;
 
     case MODE_BracketedPaste:
-        emit programBracketedPasteModeChanged(false);
+        Q_EMIT programBracketedPasteModeChanged(false);
     break;
 
     case MODE_AppScreen :

@@ -542,7 +542,7 @@ private:
 
             const QStringList& argList = data.split(QChar('\0'));
 
-            foreach(const QString & entry , argList) {
+            for(const QString & entry : argList) {
                 if (!entry.isEmpty())
                     addArgument(entry);
             }
@@ -582,7 +582,7 @@ private:
 
             const QStringList& bindingList = data.split(QChar('\0'));
 
-            foreach(const QString & entry , bindingList) {
+            for(const QString & entry : bindingList) {
                 QString name;
                 QString value;
 

@@ -456,7 +456,7 @@ public:
     void setReadOnly(bool value);
     bool readOnly() const;
 
-public slots:
+public Q_SLOTS:
 
     /**
      * Causes the terminal display to fetch the latest character image from the associated
@@ -513,7 +513,7 @@ public slots:
      * Sets whether the program whoose output is being displayed in the view
      * is interested in mouse events.
      *
-     * If this is set to true, mouse signals will be emitted by the view when the user clicks, drags
+     * If this is set to true, mouse Q_SIGNALS will be emitted by the view when the user clicks, drags
      * or otherwise moves the mouse inside the view.
      * The user interaction needed to create selections will also change, and the user will be required
      * to hold down the shift key to create a selection or perform other mouse activities inside the
@@ -569,7 +569,7 @@ public slots:
     void matchFound(int startColumn, int startLine, int endColumn, int endLine);
     void noMatchFound();
     
-signals:
+Q_SIGNALS:
     void backgroundOpacityChanged();
 
     /**
@@ -610,7 +610,7 @@ signals:
     void isBusySelecting(bool busy);
     void sendStringToEmu(const char*);
 
-    // qtermwidget signals
+    // qtermwidget Q_SIGNALS
     void copyAvailable(bool available);
     void termGetFocus();
     void termLostFocus();
@@ -689,7 +689,7 @@ protected:
     void inputMethodQuery(QInputMethodQueryEvent *event);
     void itemChange(ItemChange change, const ItemChangeData & value);
 
-protected slots:
+protected Q_SLOTS:
     void scrollBarPositionChanged(int value);
     void blinkEvent();
     void blinkCursorEvent();
@@ -698,7 +698,7 @@ protected slots:
     //after emitting the first in a sequence of bell events.
     void enableBell();
 
-private slots:
+private Q_SLOTS:
     void swapColorTable();
     void tripleClickTimeout();  // resets possibleTripleClick
     void applyColorScheme();

@@ -73,7 +73,7 @@ Emulation::Emulation() :
            SLOT(bracketedPasteModeChanged(bool)));
 
   connect(this, &Emulation::cursorChanged, [this] (KeyboardCursorShape cursorShape, bool blinkingCursorEnabled) {
-    emit titleChanged( 50, QString(QLatin1String("CursorShape=%1;BlinkingCursorEnabled=%2"))
+    Q_EMIT titleChanged( 50, QString(QLatin1String("CursorShape=%1;BlinkingCursorEnabled=%2"))
                                .arg(static_cast<int>(cursorShape)).arg(blinkingCursorEnabled) );
   });
 }
@@ -164,7 +164,7 @@ void Emulation::setCodec(const QTextCodec * qtc)
   delete _decoder;
   _decoder = _codec->makeDecoder();
 
-  emit useUtf8Request(utf8());
+  Q_EMIT useUtf8Request(utf8());
 }
 
 void Emulation::setCodec(EmulationCodec codec)
@@ -200,7 +200,7 @@ void Emulation::receiveChar(wchar_t c)
     case '\t'      : _currentScreen->tab();                       break;
     case '\n'      : _currentScreen->newLine();                   break;
     case '\r'      : _currentScreen->toStartOfLine();             break;
-    case 0x07      : emit stateSet(NOTIFYBELL);
+    case 0x07      : Q_EMIT stateSet(NOTIFYBELL);
                      break;
     default        : _currentScreen->displayCharacter(c);         break;
   };
@@ -208,13 +208,13 @@ void Emulation::receiveChar(wchar_t c)
 
 void Emulation::sendKeyEvent( QKeyEvent* ev )
 {
-  emit stateSet(NOTIFYNORMAL);
+  Q_EMIT stateSet(NOTIFYNORMAL);
 
   if (!ev->text().isEmpty())
   { // A block of text
     // Note that the text is proper unicode.
     // We should do a conversion here
-    emit sendData(ev->text().toUtf8().constData(),ev->text().length());
+    Q_EMIT sendData(ev->text().toUtf8().constData(),ev->text().length());
   }
 }
 
@@ -235,7 +235,7 @@ TODO: Character composition from the old code.  See #96536
 
 void Emulation::receiveData(const char* text, int length)
 {
-    emit stateSet(NOTIFYACTIVITY);
+    Q_EMIT stateSet(NOTIFYACTIVITY);
 
     bufferedUpdate();
 
@@ -259,7 +259,7 @@ void Emulation::receiveData(const char* text, int length)
         if (text[i] == '\030')
         {
             if ((length-i-1 > 3) && (strncmp(text+i+1, "B00", 3) == 0))
-                emit zmodemDetected();
+                Q_EMIT zmodemDetected();
         }
     }
 }
@@ -277,7 +277,7 @@ void Emulation::receiveData(const char* text, int length)
 
 /*void Emulation::onRcvBlock(const char *s, int len)
 {
-  emit notifySessionState(NOTIFYACTIVITY);
+  Q_EMIT notifySessionState(NOTIFYACTIVITY);
 
   bufferedUpdate();
   for (int i = 0; i < len; i++)
@@ -308,7 +308,7 @@ void Emulation::receiveData(const char* text, int length)
     if (s[i] == '\030')
     {
       if ((len-i-1 > 3) && (strncmp(s+i+1, "B00", 3) == 0))
-          emit zmodemDetected();
+          Q_EMIT zmodemDetected();
     }
   }
 }*/
@@ -339,7 +339,7 @@ void Emulation::showBulk()
     _bulkTimer1.stop();
     _bulkTimer2.stop();
 
-    emit outputChanged();
+    Q_EMIT outputChanged();
 
     _currentScreen->resetScrolledLines();
     _currentScreen->resetDroppedLines();
@@ -378,7 +378,7 @@ void Emulation::setImageSize(int lines, int columns)
   _screen[0]->resizeImage(lines,columns);
   _screen[1]->resizeImage(lines,columns);
 
-  emit imageSizeChanged(lines,columns);
+  Q_EMIT imageSizeChanged(lines,columns);
 
   bufferedUpdate();
 }

@@ -195,7 +195,7 @@ void Session::addView(TerminalDisplay * widget)
     _views.append(widget);
 
     if ( _emulation != 0 ) {
-        // connect emulation - view signals and slots
+        // connect emulation - view Q_SIGNALS and Q_SLOTS
         connect( widget , SIGNAL(keyPressedSignal(QKeyEvent *)) , _emulation ,
                  SLOT(sendKeyEvent(QKeyEvent *)) );
         connect( widget , SIGNAL(mouseSignal(int,int,int,int)) , _emulation ,
@@ -204,7 +204,7 @@ void Session::addView(TerminalDisplay * widget)
                  SLOT(sendString(const char *)) );
 
         // allow emulation to notify view when the foreground process
-        // indicates whether or not it is interested in mouse signals
+        // indicates whether or not it is interested in mouse Q_SIGNALS
         connect( _emulation , SIGNAL(programUsesMouseChanged(bool)) , widget ,
                  SLOT(setUsesMouse(bool)) );
 
@@ -218,7 +218,7 @@ void Session::addView(TerminalDisplay * widget)
         widget->setScreenWindow(_emulation->createWindow());
     }
 
-    //connect view signals and slots
+    //connect view Q_SIGNALS and Q_SLOTS
     QObject::connect( widget ,SIGNAL(changedContentSizeSignal(int,int)),this,
                       SLOT(onViewSizeChange(int,int)));
 
@@ -246,14 +246,14 @@ void Session::removeView(TerminalDisplay * widget)
 
     if ( _emulation != 0 ) {
         // disconnect
-        //  - key presses signals from widget
-        //  - mouse activity signals from widget
-        //  - string sending signals from widget
+        //  - key presses Q_SIGNALS from widget
+        //  - mouse activity Q_SIGNALS from widget
+        //  - string sending Q_SIGNALS from widget
         //
-        //  ... and any other signals connected in addView()
+        //  ... and any other Q_SIGNALS connected in addView()
         disconnect( widget, 0, _emulation, 0);
 
-        // disconnect state change signals emitted by emulation
+        // disconnect state change Q_SIGNALS emitted by emulation
         disconnect( _emulation , 0 , widget , 0);
     }
 
@@ -336,7 +336,7 @@ void Session::run()
     }
 
     _shellProcess->setWriteable(false);  // We are reachable via kwrited.
-    emit started();
+    Q_EMIT started();
 }
 
 void Session::runEmptyPTY()
@@ -350,7 +350,7 @@ void Session::runEmptyPTY()
                 _shellProcess, SLOT(sendData(const char *,int)) );
 
     _shellProcess->setEmptyPTYProperties();
-    emit started();
+    Q_EMIT started();
 }
 
 void Session::setUserTitle( int what, const QString & caption )
@@ -388,7 +388,7 @@ void Session::setUserTitle( int what, const QString & caption )
                 // and tested - just so we don't forget to do this.
                 Q_ASSERT( 0 );
 
-                emit changeBackgroundColorRequest(backColor);
+                Q_EMIT changeBackgroundColorRequest(backColor);
             }
         }
     }
@@ -404,7 +404,7 @@ void Session::setUserTitle( int what, const QString & caption )
     if (what == 31) {
         QString cwd=caption;
         cwd=cwd.replace( QRegExp(QLatin1String("^~")), QDir::homePath() );
-        emit openUrlRequest(cwd);
+        Q_EMIT openUrlRequest(cwd);
     }
 
     // change icon via \033]32;Icon\007
@@ -418,12 +418,12 @@ void Session::setUserTitle( int what, const QString & caption )
     }
 
     if (what == 50) {
-        emit profileChangeCommandReceived(caption);
+        Q_EMIT profileChangeCommandReceived(caption);
         return;
     }
 
     if ( modified ) {
-        emit titleChanged();
+        Q_EMIT titleChanged();
     }
 }
 
@@ -461,10 +461,10 @@ void Session::monitorTimerDone()
 
     //FIXME: Make message text for this notification and the activity notification more descriptive.
     if (_monitorSilence) {
-        emit silence();
-        emit stateChanged(NOTIFYSILENCE);
+        Q_EMIT silence();
+        Q_EMIT stateChanged(NOTIFYSILENCE);
     } else {
-        emit stateChanged(NOTIFYNORMAL);
+        Q_EMIT stateChanged(NOTIFYNORMAL);
     }
 
     _notifiedActivity=false;
@@ -476,7 +476,7 @@ void Session::activityStateSet(int state)
         QString s;
         s.sprintf("Bell in session '%s'",_nameTitle.toUtf8().data());
 
-        emit bellRequest( s );
+        Q_EMIT bellRequest( s );
     } else if (state==NOTIFYACTIVITY) {
         if (_monitorSilence) {
             _monitorTimer->start(_silenceSeconds*1000);
@@ -486,7 +486,7 @@ void Session::activityStateSet(int state)
             //FIXME:  See comments in Session::monitorTimerDone()
             if (!_notifiedActivity) {
                 _notifiedActivity=true;
-                emit activity();
+                Q_EMIT activity();
             }
         }
     }
@@ -498,7 +498,7 @@ void Session::activityStateSet(int state)
         state = NOTIFYNORMAL;
     }
 
-    emit stateChanged(state);
+    Q_EMIT stateChanged(state);
 }
 
 void Session::onViewSizeChange(int /*height*/, int /*width*/)
@@ -600,7 +600,7 @@ Session::~Session()
 void Session::setProfileKey(const QString & key)
 {
     _profileKey = key;
-    emit profileChanged(key);
+    Q_EMIT profileChanged(key);
 }
 QString Session::profileKey() const
 {
@@ -611,7 +611,7 @@ void Session::done(int exitStatus)
 {
     if (!_autoClose) {
         _userTitle = QString::fromLatin1("This session is done. Finished");
-        emit titleChanged();
+        Q_EMIT titleChanged();
         return;
     }
 
@@ -632,7 +632,7 @@ void Session::done(int exitStatus)
                         _nameTitle.toUtf8().data());
     }
 
-    emit finished();
+    Q_EMIT finished();
 }
 
 Emulation * Session::emulation() const
@@ -674,7 +674,7 @@ void Session::setTitle(TitleRole role , const QString & newTitle)
             _displayTitle = newTitle;
         }
 
-        emit titleChanged();
+        Q_EMIT titleChanged();
     }
 }
 
@@ -693,7 +693,7 @@ void Session::setIconName(const QString & iconName)
 {
     if ( iconName != _iconName ) {
         _iconName = iconName;
-        emit titleChanged();
+        Q_EMIT titleChanged();
     }
 }
 
@@ -803,7 +803,7 @@ void Session::setFlowControlEnabled(bool enabled)
         _shellProcess->setFlowControlEnabled(_flowControl);
     }
 
-    emit flowControlEnabledChanged(enabled);
+    Q_EMIT flowControlEnabledChanged(enabled);
 }
 bool Session::flowControlEnabled() const
 {
@@ -925,7 +925,7 @@ void Session::zmodemFinished()
 void Session::onReceiveBlock( const char * buf, int len )
 {
     _emulation->receiveData( buf, len );
-    emit receivedData( QString::fromLatin1( buf, len ) );
+    Q_EMIT receivedData( QString::fromLatin1( buf, len ) );
 }
 
 QSize Session::size()
@@ -939,7 +939,7 @@ void Session::setSize(const QSize & size)
         return;
     }
 
-    emit resizeRequest(size);
+    Q_EMIT resizeRequest(size);
 }
 int Session::foregroundProcessId() const
 {

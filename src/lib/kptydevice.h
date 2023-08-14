@@ -97,7 +97,7 @@ public:
      *
      * When the KPtyDevice is suspended, it will no longer attempt to buffer
      * data that becomes available from the pty and it will not emit any
-     * signals.
+     * Q_SIGNALS.
      *
      * Do not use on closed ptys.
      * After a call to open(), the pty is not suspended. If you need to

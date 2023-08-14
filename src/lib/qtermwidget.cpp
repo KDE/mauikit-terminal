@@ -124,7 +124,7 @@ QTermWidget::QTermWidget(QWidget *parent)
 
 void QTermWidget::selectionChanged(bool textSelected)
 {
-    emit copyAvailable(textSelected);
+    Q_EMIT copyAvailable(textSelected);
 }
 
 void QTermWidget::find()
@@ -346,7 +346,7 @@ void QTermWidget::init(int startnow)
 QTermWidget::~QTermWidget()
 {
     delete m_impl;
-    emit destroyed();
+    Q_EMIT destroyed();
 }
 
 
@@ -528,7 +528,7 @@ void QTermWidget::resizeEvent(QResizeEvent*)
 
 void QTermWidget::sessionFinished()
 {
-    emit finished();
+    Q_EMIT finished();
 }
 
 void QTermWidget::bracketText(QString& text)

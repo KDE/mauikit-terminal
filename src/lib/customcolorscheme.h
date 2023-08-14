@@ -61,7 +61,7 @@ public:
 
     Konsole::ColorScheme * getScheme();
 
-public slots:
+public Q_SLOTS:
     void setDescription(QString description);
 
     void setBackgroundColor(QColor backgroundColor);
@@ -113,7 +113,7 @@ private:
 
     QColor m_color9;
 
-signals:
+Q_SIGNALS:
     void descriptionChanged(QString description);
     void backgroundColorChanged(QColor backgroundColor);
     void foregroundColorChanged(QColor foregroundColor);

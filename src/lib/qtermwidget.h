@@ -226,7 +226,7 @@ public:
 
     /** Get the empty space outside the terminal */
     int getMargin() const;
-signals:
+Q_SIGNALS:
     void finished();
     void copyAvailable(bool);
 
@@ -259,7 +259,7 @@ signals:
      */
     void receivedData(const QString &text);
 
-public slots:
+public Q_SLOTS:
     // Copy selection to clipboard
     void copyClipboard();
 
@@ -289,11 +289,11 @@ public slots:
 protected:
     virtual void resizeEvent(QResizeEvent *);
 
-protected slots:
+protected Q_SLOTS:
     void sessionFinished();
     void selectionChanged(bool textSelected);
 
-private slots:
+private Q_SLOTS:
     void find();
     void findNext();
     void findPrevious();

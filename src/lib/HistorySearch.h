@@ -45,7 +45,7 @@ public:
 
     void search();
 
-signals:
+Q_SIGNALS:
     void matchFound(int startColumn, int startLine, int endColumn, int endLine);
     void noMatchFound();
 

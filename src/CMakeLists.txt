@@ -4,7 +4,7 @@ include_directories(
 
 remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY)
 
-ecm_add_qml_module(MauiKitTerminal${MAUI_MAJOR_VERSION} URI "org.mauikit.terminal" VERSION 3.0 CLASSNAME TerminalPlugin)
+ecm_add_qml_module(MauiKitTerminal${MAUI_MAJOR_VERSION} URI "org.mauikit.terminal" CLASSNAME TerminalPlugin)
 
 set(plugin_SRCS
     code/colorschemesmodel.cpp

@@ -412,7 +412,7 @@ public Q_SLOTS:
      * emulation display. For a list of what may be changed see the
      * Emulation::titleChanged() signal.
      */
-    void setUserTitle( int, const QString & caption );
+    void setUserTitle( int, const QString & caption );    
 
 Q_SIGNALS:
 

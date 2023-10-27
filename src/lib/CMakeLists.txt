@@ -44,6 +44,7 @@ target_link_libraries(${PROJECT_NAME}
     Qt${QT_MAJOR_VERSION}::Quick
     Qt${QT_MAJOR_VERSION}::Gui
     Qt${QT_MAJOR_VERSION}::Widgets
+    KF${KF_MAJOR_VERSION}::CoreAddons
     KF${KF_MAJOR_VERSION}::ConfigCore)
 
 install(DIRECTORY color-schemes DESTINATION ${KDE_INSTALL_QMLDIR}/org/mauikit/terminal)

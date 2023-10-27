@@ -61,6 +61,7 @@ target_link_libraries(MauiKitTerminal${MAUI_MAJOR_VERSION}
     Qt${QT_MAJOR_VERSION}::Quick
     Qt${QT_MAJOR_VERSION}::Gui
     Qt${QT_MAJOR_VERSION}::Widgets
+    KF${KF_MAJOR_VERSION}::CoreAddons
     KF${KF_MAJOR_VERSION}::ConfigCore
     KF${KF_MAJOR_VERSION}::ConfigGui
     MauiKit${MAUI_MAJOR_VERSION})

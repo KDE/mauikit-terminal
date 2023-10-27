@@ -22,6 +22,7 @@
 
 // Own
 #include "ksession.h"
+#include <KShell>
 
 // Qt
 #include <QTextCodec>
@@ -44,8 +45,7 @@ KSession::KSession(QObject *parent) :
     connect(m_session, &Session::stateChanged, [this](int state)
     {
         qDebug() << m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program() << state;
-     Q_EMIT hasActiveProcessChanged();
-     
+     Q_EMIT hasActiveProcessChanged();     
      
      if(m_processName != m_session->foregroundProcessName())
      {
@@ -54,8 +54,13 @@ KSession::KSession(QObject *parent) :
      }
     });
     
-    m_session->setMonitorSilence(true);
+    // m_session->setMonitorSilence(true);
     m_session->setMonitorSilenceSeconds(30);
+    
+    connect(m_session, &Session::bellRequest, [this](QString message)
+    {
+        Q_EMIT bellRequest(message);
+    });
     
     connect(m_session, &Session::changeTabTextColorRequest, [this](int state)
     {
@@ -80,12 +85,13 @@ KSession::KSession(QObject *parent) :
     connect(m_session, &Session::activity, [this]()
     {
         qDebug() << "activity";
+        Q_EMIT processHasSilent(false);
     });
     
     connect(m_session, &Session::silence, [this]()
     {
         qDebug() << "silence";
-        Q_EMIT processHasSilent();
+        Q_EMIT processHasSilent(true);
     });
 }
 
@@ -98,11 +104,24 @@ KSession::~KSession()
     }
 }
 
+void KSession::setMonitorSilence(bool value)
+{
+    if(m_session->isMonitorSilence() == value)
+        return;
+        
+    m_session->setMonitorSilence(value);
+    Q_EMIT monitorSilenceChanged();
+}
+
+bool KSession::monitorSilence() const
+{
+    return m_session->isMonitorSilence();
+}
+
 void KSession::setTitle(QString name)
 {
     m_session->setTitle(Session::NameRole, name);
 }
-
 
 Session *KSession::createSession(QString name)
 {
@@ -209,9 +228,14 @@ void KSession::changeDir(const QString &dir)
     strCmd.append(" | tail -1 | awk '{ print $5 }' | grep -q \\+");
     int retval = system(strCmd.toStdString().c_str());
 
-    if (!retval) {
-        QString cmd = "cd " + dir + "\n";
-        sendText(cmd);
+    if (!retval) {        
+        // Send prior Ctrl-E, Ctrl-U to ensure the line is empty. This is
+        // mandatory, otherwise sending a 'cd x\n' to a prompt with 'rm -rf *'
+        // would result in data loss.
+        sendText(QStringLiteral("\x05\x15"));    
+        
+        sendText(" cd " + KShell::quoteArg(dir) + '\r');
+        Q_EMIT currentDirChanged();
     }
 }
 
@@ -232,6 +256,7 @@ void KSession::setInitialWorkingDirectory(const QString &dir)
         _initialWorkingDirectory = dir;
         m_session->setInitialWorkingDirectory(dir);
         Q_EMIT initialWorkingDirectoryChanged();
+        Q_EMIT currentDirChanged();
 }   }
 
 QString KSession::getInitialWorkingDirectory()

@@ -477,12 +477,6 @@ Maui.Page
                     }
                 }            
         }
-        
-        Component.onCompleted:
-        {
-            ksession.startShellProgram();
-            forceActiveFocus()
-        }
     }
     
     opacity: _dropArea.containsDrag ? 0.5 : 1
@@ -496,9 +490,13 @@ Maui.Page
             if(drop.urls)
                 control.urlsDropped(drop.urls)
         }
-    }
-    
-    //Component.onCompleted: control.forceActiveFocus();
+    }    
+   
+   Component.onCompleted:
+   {
+       ksession.startShellProgram();
+       forceActiveFocus()
+   }
     
     function forceActiveFocus()
     {

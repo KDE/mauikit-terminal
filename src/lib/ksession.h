@@ -42,8 +42,9 @@ class KSession : public QObject
     Q_PROPERTY(QString  history READ getHistory)
     Q_PROPERTY(bool hasActiveProcess READ hasActiveProcess NOTIFY hasActiveProcessChanged)
     Q_PROPERTY(QString foregroundProcessName READ foregroundProcessName NOTIFY foregroundProcessNameChanged)
-    Q_PROPERTY(QString currentDir READ currentDir)
+    Q_PROPERTY(QString currentDir READ currentDir NOTIFY currentDirChanged)
     Q_PROPERTY(int historySize READ historySize WRITE setHistorySize NOTIFY historySizeChanged)
+    Q_PROPERTY(bool monitorSilence READ monitorSilence WRITE setMonitorSilence NOTIFY monitorSilenceChanged)
     
 public:
     KSession(QObject *parent = 0);
@@ -112,6 +113,8 @@ public:
      */
     QString currentDir();
     
+void setMonitorSilence(bool value);
+bool monitorSilence() const;
  
 Q_SIGNALS:
     void started();
@@ -136,7 +139,10 @@ Q_SIGNALS:
     void hasActiveProcessChanged();
     void foregroundProcessNameChanged();
     
-    void processHasSilent();
+    void processHasSilent(bool value);
+    void bellRequest(QString message);
+    void monitorSilenceChanged();
+    void currentDirChanged();
     
 public Q_SLOTS:
     /*! Set named key binding for given widget
@@ -165,8 +171,7 @@ public Q_SLOTS:
     void clearScreen();
     
     // Search history
-    void search(const QString &regexp, int startLine = 0, int startColumn = 0, bool forwards = true );
-    
+    void search(const QString &regexp, int startLine = 0, int startColumn = 0, bool forwards = true );    
     
 protected Q_SLOTS:
     void sessionFinished();

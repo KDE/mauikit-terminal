@@ -8,7 +8,11 @@ ecm_add_qml_module(MauiKitTerminal${MAUI_MAJOR_VERSION} URI "org.mauikit.termina
 
 set(plugin_SRCS
     code/colorschemesmodel.cpp
+    code/moduleinfo.cpp
     code/terminal_plugin.cpp)
+
+set(plugin_HDRS
+    code/moduleinfo.h)
 
 if (QT_MAJOR_VERSION STREQUAL "5")
     if(QUICK_COMPILER)
@@ -72,7 +76,7 @@ ecm_generate_qmltypes(org.mauikit.terminal 3.0 DESTINATION ${KDE_INSTALL_QMLDIR}
 install(TARGETS MauiKitTerminal${MAUI_MAJOR_VERSION} EXPORT MauiKitTerminal${MAUI_MAJOR_VERSION}Targets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
-    #    ${headers}
+    ${plugin_HDRS}
     ${CMAKE_CURRENT_BINARY_DIR}/terminal_export.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/MauiKit${MAUI_MAJOR_VERSION}/Terminal
     COMPONENT Devel)

@@ -9,6 +9,4 @@ namespace MauiKitTerminal
    TERMINAL_EXPORT QString versionString();
    TERMINAL_EXPORT QString buildVersion();
    TERMINAL_EXPORT KAboutComponent aboutData();
-
-   TERMINAL_EXPORT KAboutComponent aboutLuv();
 };

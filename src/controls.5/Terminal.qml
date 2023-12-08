@@ -24,7 +24,7 @@ Maui.Page
     Maui.Theme.colorSet: Maui.Theme.Header
     Maui.Theme.inherit: false
 
-    title: ksession.title + " - " + ksession.foregroundProcessName
+    title: ksession.title
     showTitle: false
     
     headBar.visible: false
@@ -56,23 +56,22 @@ Maui.Page
     /**
      * kterminal : QMLTermWidget
      */
-    property alias kterminal: kterminal
+    readonly property alias kterminal: kterminal
     
     /**
      * session : QMLTermSession
      */
-    property alias session: ksession
+    readonly property alias session: ksession
     
     /**
      * findBar : TextField
      */
-    property alias findBar : findBar
+    readonly property alias findBar : findBar
     
     /**
      *  menu : Menu
      */
-    property alias menu : terminalMenu.contentData
-    
+    property alias menu : terminalMenu.data
     /**
      * terminalSize : size
      */

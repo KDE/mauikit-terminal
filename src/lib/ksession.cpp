@@ -375,16 +375,16 @@ QString KSession::keyBindings()
 
 QString KSession::getTitle()
 {
-    if (m_session->currentDir() == QDir::homePath()) {
-        return m_session->currentDir();
-    }
+    // if (m_session->currentDir() == QDir::homePath()) {
+    //     return m_session->currentDir();
+    // }
+    // 
+    // if (m_session->currentDir() == "/")
+    //     return m_session->currentDir();
+    // 
+    // return QDir(m_session->currentDir()).dirName();
 
-    if (m_session->currentDir() == "/")
-        return m_session->currentDir();
-
-    return QDir(m_session->currentDir()).dirName();
-
-    // return m_session->userTitle();
+    return m_session->userTitle();
 }
 
 bool KSession::hasActiveProcess() const

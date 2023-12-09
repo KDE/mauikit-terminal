@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:29+0000\n"
+"POT-Creation-Date: 2023-12-09 00:41+0000\n"
 "PO-Revision-Date: 2023-04-12 16:50+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -19,37 +19,37 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 22.12.3\n"
 
-#: src/controls.5/Terminal.qml:106
+#: src/controls.5/Terminal.qml:105
 #, kde-format
 msgid "Copy"
 msgstr "Copia"
 
-#: src/controls.5/Terminal.qml:119
+#: src/controls.5/Terminal.qml:118
 #, kde-format
 msgid "Paste"
 msgstr "Enganxa"
 
-#: src/controls.5/Terminal.qml:132
+#: src/controls.5/Terminal.qml:131
 #, kde-format
 msgid "Find"
 msgstr "Cerca"
 
-#: src/controls.5/Terminal.qml:174
+#: src/controls.5/Terminal.qml:173
 #, kde-format
 msgid "Case Sensitive"
 msgstr "Distingeix entre majúscules i minúscules"
 
-#: src/controls.5/Terminal.qml:181
+#: src/controls.5/Terminal.qml:180
 #, kde-format
 msgid "Whole Words Only"
 msgstr "Només paraules senceres"
 
-#: src/controls.5/Terminal.qml:191
+#: src/controls.5/Terminal.qml:190
 #, kde-format
 msgid "Find..."
 msgstr "Cerca..."
 
-#: src/controls.5/Terminal.qml:467
+#: src/controls.5/Terminal.qml:466
 #, kde-format
 msgid "Toggle Virtual Keyboard"
 msgstr "Commuta el teclat virtual"

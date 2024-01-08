@@ -943,8 +943,9 @@ private:
     void setFullCursorHeight(bool val);
 
     CustomColorScheme* m_customColorScheme;
-   const Konsole::ColorScheme *m_scheme;
-   
+    const Konsole::ColorScheme *m_scheme = nullptr;
+    const QObject *tete = nullptr;
+    
    bool m_readOnly = false;
 
 public:

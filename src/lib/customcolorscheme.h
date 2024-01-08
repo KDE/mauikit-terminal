@@ -59,7 +59,7 @@ public:
 
     QColor color9() const;
 
-    Konsole::ColorScheme * getScheme();
+    const Konsole::ColorScheme * getScheme();
 
 public Q_SLOTS:
     void setDescription(QString description);

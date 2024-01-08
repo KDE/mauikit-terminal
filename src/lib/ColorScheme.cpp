@@ -748,11 +748,12 @@ QList<QString> ColorSchemeManager::listColorSchemes()
 //                                             "konsole/*.colorscheme",
 //                                             KStandardDirs::NoDuplicates);
 }
-const ColorScheme ColorSchemeManager::_defaultColorScheme;
+
 const ColorScheme* ColorSchemeManager::defaultColorScheme() const
 {
-    return &_defaultColorScheme;
+    return new ColorScheme();
 }
+
 bool ColorSchemeManager::deleteColorScheme(const QString& name)
 {
     Q_ASSERT( _colorSchemes.contains(name) );
@@ -787,18 +788,20 @@ QString ColorSchemeManager::findColorSchemePath(const QString& name) const
 
     return path;
 }
+
 const ColorScheme* ColorSchemeManager::findColorScheme(const QString& name)
 {
-    if ( name.isEmpty() )
+    if (name.isEmpty())
         return defaultColorScheme();
 
-    if ( _colorSchemes.contains(name) )
+    if (_colorSchemes.contains(name))
+    {
         return _colorSchemes[name];
-    else
+    }else
     {
         // look for this color scheme
         QString path = findColorSchemePath(name);
-        if ( !path.isEmpty() && loadColorScheme(path) )
+        if (!path.isEmpty() && loadColorScheme(path) )
         {
             return findColorScheme(name);
         }
@@ -810,7 +813,7 @@ const ColorScheme* ColorSchemeManager::findColorScheme(const QString& name)
 
         qDebug() << "Could not find color scheme - " << name;
 
-        return 0;
+        return defaultColorScheme();
     }
 }
 Q_GLOBAL_STATIC(ColorSchemeManager, theColorSchemeManager)

@@ -5,7 +5,7 @@
 #include <QTimer>
 
 CustomColorScheme::CustomColorScheme(QObject *parent) : QObject(parent)
-  ,m_scheme( new Konsole::ColorScheme)
+  ,m_scheme(new Konsole::ColorScheme(this))
   ,m_timer(new QTimer(this))
 {
     m_timer->setInterval(100);
@@ -141,7 +141,7 @@ QColor CustomColorScheme::color9() const
     return m_color9;
 }
 
-Konsole::ColorScheme *CustomColorScheme::getScheme()
+const Konsole::ColorScheme *CustomColorScheme::getScheme()
 {
     return m_scheme;
 }

@@ -338,8 +338,8 @@ TerminalDisplay::TerminalDisplay(QQuickItem *parent)
     , m_colorRole(QPalette::Background)
     , m_full_cursor_height(false)
     , m_backgroundOpacity(1.0)
-    ,m_customColorScheme(new CustomColorScheme(this))
-    ,m_scheme(Konsole::ColorSchemeManager::instance()->defaultColorScheme())
+    , m_customColorScheme(new CustomColorScheme(this))
+    , m_scheme(nullptr)
 {
     // terminal applications are not designed with Right-To-Left in mind,
     // so the layout is forced to Left-To-Right
@@ -402,10 +402,7 @@ TerminalDisplay::~TerminalDisplay()
     delete[] _image;
 
     delete _outputSuspendedLabel;
-    delete _filterChain;
-
-    if(m_scheme)
-        delete m_scheme;
+    delete _filterChain;   
 }
 
 /* ------------------------------------------------------------------------- */
@@ -3259,7 +3256,6 @@ void TerminalDisplay::setSession(KSession * session)
     }
 }
 
-
 KSession* TerminalDisplay::getSession()
 {
     return m_session;
@@ -3275,27 +3271,22 @@ QStringList TerminalDisplay::availableColorSchemes()
 
 void TerminalDisplay::setColorScheme(const QString &name)
 {
-
     if ( name != _colorScheme )
     {
-        qDebug() << "Setting color shcme as "<< name;
+        qDebug() << "Setting color scheme as "<< name;
 
         if (m_scheme)
         {
-            disconnect(m_scheme, 0, this, 0);
+            disconnect(m_scheme, nullptr, this, nullptr);
         }
-
+        
         if(name == "Adaptive")
         {
             m_scheme = m_customColorScheme->getScheme();
         }else
         {
-            if (!availableColorSchemes().contains(name))
-                m_scheme = ColorSchemeManager::instance()->defaultColorScheme();
-            else
-                m_scheme = ColorSchemeManager::instance()->findColorScheme(name);
+            m_scheme = ColorSchemeManager::instance()->findColorScheme(name);
         }
-
 
         qDebug() << "Trying to find colorshcme" << name << m_scheme;
 
@@ -3315,7 +3306,12 @@ void TerminalDisplay::setColorScheme(const QString &name)
 void TerminalDisplay::applyColorScheme()
 {
     qDebug() << "Colors CHANGED";
-
+    if (!m_scheme)
+    {
+        qDebug() << "Cannot apply color scheme";
+        return;
+    }
+    
     ColorEntry table[TABLE_COLORS];
     m_scheme->getColorTable(table);
     setColorTable(table);

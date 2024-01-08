@@ -361,8 +361,6 @@ private:
     QSet<ColorScheme*> _modifiedSchemes;
 
     bool _haveLoadedAll;
-
-    static const ColorScheme _defaultColorScheme;
 };
 
 }

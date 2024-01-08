@@ -96,8 +96,7 @@ Maui.Page
      * clicked :
      */
     signal clicked()
-    
-    
+        
     //Actions
     Action
     {
@@ -133,7 +132,6 @@ Maui.Page
         //         shortcut: "Ctrl+Shift+F"
         onTriggered:  toggleSearchBar()
     }
-
     
     Maui.ContextualMenu
     {
@@ -274,8 +272,7 @@ Maui.Page
             
             kterminal.noMatchFound();
         console.log("not found");
-        }
-        
+        }       
         
         }
         
@@ -302,6 +299,7 @@ Maui.Page
                     && (event.modifiers & Qt.ShiftModifier)) {
                 kterminal.selectAll()
                 event.accepted = true
+                return
             }
 
             if ((event.key === Qt.Key_C)
@@ -309,6 +307,7 @@ Maui.Page
                     && (event.modifiers & Qt.ShiftModifier)) {
                 _copyAction.trigger()
                 event.accepted = true
+                return
             }
 
             if ((event.key === Qt.Key_V)
@@ -316,13 +315,17 @@ Maui.Page
                     && (event.modifiers & Qt.ShiftModifier)) {
                 _pasteAction.trigger()
                 event.accepted = true
+                return
             }
 
 
             if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
             {
                 control.toggleSearchBar()
+                return
             }
+            
+            control.keyPressed(event)
         }
 
         Loader

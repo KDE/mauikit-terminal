@@ -71,7 +71,7 @@ Maui.Page
     /**
      *  menu : Menu
      */
-    property alias menu : terminalMenu.data
+    property alias menu : terminalMenu.contentData
     /**
      * terminalSize : size
      */

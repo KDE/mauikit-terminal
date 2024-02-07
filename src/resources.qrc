@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/mauikit/terminal">
         <file alias="Terminal.qml">controls.5/Terminal.qml</file>
+        <file alias="ColorSchemesPage.qml">controls.5/ColorSchemesPage.qml</file>
         <file alias="QMLTermScrollBar.qml">controls.5/QMLTermScrollbar.qml</file>
         <file alias="private/TerminalInputArea.qml">controls.5/private/TerminalInputArea.qml</file>
         <file alias="private/TerminalScrollBar.qml">controls.5/private/TerminalScrollBar.qml</file>

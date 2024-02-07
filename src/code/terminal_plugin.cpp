@@ -21,6 +21,7 @@ void TerminalPlugin::registerTypes(const char *uri)
     qmlRegisterAnonymousType<CustomColorScheme>(uri, 1);
 
     qmlRegisterType(componentUrl(QStringLiteral("Terminal.qml")), uri, 1, 0, "Terminal");
+    qmlRegisterType(componentUrl(QStringLiteral("ColorSchemesPage.qml")), uri, 1, 0, "ColorSchemesPage");
 }
 
 void TerminalPlugin::initializeEngine(QQmlEngine *engine, const char *uri)

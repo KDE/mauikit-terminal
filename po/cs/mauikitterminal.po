@@ -21,12 +21,12 @@ msgstr ""
 #: src/controls.5/ColorSchemesPage.qml:18
 #, kde-format
 msgid "Color Scheme"
-msgstr ""
+msgstr "Barevné schéma"
 
 #: src/controls.5/ColorSchemesPage.qml:19
 #, kde-format
 msgid "Change the color scheme of the terminal."
-msgstr ""
+msgstr "Změnit barevné schéma terminálu."
 
 #: src/controls.5/Terminal.qml:104
 #, kde-format

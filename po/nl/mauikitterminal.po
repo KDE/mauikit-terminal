@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the mauikit-terminal package.
 #
-# Freek de Kruijf <freekdekruijf@kde.nl>, 2023.
+# SPDX-FileCopyrightText: 2023, 2024 Freek de Kruijf <freekdekruijf@kde.nl>
 msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-08 01:39+0000\n"
-"PO-Revision-Date: 2023-04-12 11:02+0200\n"
+"PO-Revision-Date: 2024-02-08 14:11+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,18 +15,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #: src/controls.5/ColorSchemesPage.qml:12
 #: src/controls.5/ColorSchemesPage.qml:18
 #, kde-format
 msgid "Color Scheme"
-msgstr ""
+msgstr "Color Scheme"
 
 #: src/controls.5/ColorSchemesPage.qml:19
 #, kde-format
 msgid "Change the color scheme of the terminal."
-msgstr ""
+msgstr "Het kleurenschema van de terminal wijzigen."
 
 #: src/controls.5/Terminal.qml:104
 #, kde-format

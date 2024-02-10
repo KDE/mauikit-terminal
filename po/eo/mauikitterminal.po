@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-08 01:39+0000\n"
-"PO-Revision-Date: 2023-07-12 16:46+0100\n"
+"PO-Revision-Date: 2024-02-09 21:14+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -21,12 +21,12 @@ msgstr ""
 #: src/controls.5/ColorSchemesPage.qml:18
 #, kde-format
 msgid "Color Scheme"
-msgstr ""
+msgstr "Kolorskemo"
 
 #: src/controls.5/ColorSchemesPage.qml:19
 #, kde-format
 msgid "Change the color scheme of the terminal."
-msgstr ""
+msgstr "Ŝanĝi kolorskemon de la terminalo."
 
 #: src/controls.5/Terminal.qml:104
 #, kde-format

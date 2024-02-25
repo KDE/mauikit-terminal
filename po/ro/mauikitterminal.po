@@ -1,64 +1,65 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the mauikit-terminal package.
-# Tommi Nieminen <translator@legisign.org>, 2023, 2024.
+# Sergiu Bivol <sergiu@cip.md>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-08 01:39+0000\n"
-"PO-Revision-Date: 2024-02-14 19:00+0200\n"
-"Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
-"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
-"Language: fi\n"
+"PO-Revision-Date: 2024-02-24 15:54+0000\n"
+"Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
+"Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #: src/controls.5/ColorSchemesPage.qml:12
 #: src/controls.5/ColorSchemesPage.qml:18
 #, kde-format
 msgid "Color Scheme"
-msgstr "Väriteema"
+msgstr "Schemă de culori"
 
 #: src/controls.5/ColorSchemesPage.qml:19
 #, kde-format
 msgid "Change the color scheme of the terminal."
-msgstr "Vaihda päätteen väriteemaa."
+msgstr "Modifică schema de culori a terminalului."
 
 #: src/controls.5/Terminal.qml:104
 #, kde-format
 msgid "Copy"
-msgstr "Kopioi"
+msgstr "Copiază"
 
 #: src/controls.5/Terminal.qml:117
 #, kde-format
 msgid "Paste"
-msgstr "Liitä"
+msgstr "Lipește"
 
 #: src/controls.5/Terminal.qml:130
 #, kde-format
 msgid "Find"
-msgstr "Etsi"
+msgstr "Găsește"
 
 #: src/controls.5/Terminal.qml:171
 #, kde-format
 msgid "Case Sensitive"
-msgstr "Erota pien- ja suuraakkoset"
+msgstr "Sensibil la majuscule"
 
 #: src/controls.5/Terminal.qml:178
 #, kde-format
 msgid "Whole Words Only"
-msgstr "Vain kokonaiset sanat"
+msgstr "Numai cuvinte întergi"
 
 #: src/controls.5/Terminal.qml:188
 #, kde-format
 msgid "Find..."
-msgstr "Etsi…"
+msgstr "Găsește…"
 
 #: src/controls.5/Terminal.qml:469
 #, kde-format
 msgid "Toggle Virtual Keyboard"
-msgstr "Näytä tai piilota näyttönäppäimistö"
+msgstr "Comută tastatura virtuală"

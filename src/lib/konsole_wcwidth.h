@@ -1,20 +1,21 @@
-/* $XFree86: xc/programs/xterm/wcwidth.h,v 1.2 2001/06/18 19:09:27 dickey Exp $ */
+// SPDX-FileCopyrightText: Markus Kuhn
+// SPDX-License-Identifier: CC0-1.0
 
-/* Markus Kuhn -- 2001-01-12 -- public domain */
-/* Adaptions for KDE by Waldo Bastian <bastian@kde.org> */
-/*
-    Rewritten for QT4 by e_k <e_k at users.sourceforge.net>
-*/
+#pragma once
 
+#include <QStringView>
 
-#ifndef _KONSOLE_WCWIDTH_H_
-#define _KONSOLE_WCWIDTH_H_
+inline int konsole_wcwidth(QChar ucs)
+{
+    return wcwidth(ucs.unicode());
+}
 
-// Standard
-#include <string>
-
-int konsole_wcwidth(wchar_t ucs);
-
-int string_width( const std::wstring & wstr );
-
-#endif
+// single byte char: +1, multi byte char: +2
+inline int string_width(QStringView str)
+{
+    int w = 0;
+    for (auto c : str) {
+        w += konsole_wcwidth(c);
+    }
+    return w;
+}

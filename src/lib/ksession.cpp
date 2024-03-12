@@ -2,22 +2,22 @@
     This file is part of Konsole QML plugin,
     which is a terminal emulator from KDE.
 
-    Copyright 2013      by Dmitry Zagnoyko <hiroshidi@gmail.com>
+Copyright 2013      by Dmitry Zagnoyko <hiroshidi@gmail.com>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301  USA.
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301  USA.
 */
 
 // Own
@@ -25,82 +25,87 @@
 #include <KShell>
 
 // Qt
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QTextCodec>
+#else
+#include <QtCore5Compat/QTextCodec>
+#endif
+
 #include <QDir>
 #include <QDebug>
 
 // Konsole
 #include "KeyboardTranslator.h"
 #include "HistorySearch.h"
-#include "History.h"
 
-#include "Emulation.h"
 
-KSession::KSession(QObject *parent) :
-    QObject(parent), m_session(createSession(""))
+KSession::KSession(QObject *parent) : QObject(parent)
+    ,m_session(createSession(QString()))
 {
-    connect(m_session, SIGNAL(started()), this, SIGNAL(started()));
-    connect(m_session, SIGNAL(finished()), this, SLOT(sessionFinished()));
-    connect(m_session, SIGNAL(titleChanged()), this, SIGNAL(titleChanged()));
-    connect(m_session, &Session::stateChanged, [this](int state)
-    {
-        qDebug() << m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program() << state;
-     Q_EMIT hasActiveProcessChanged();     
-     
-     if(m_processName != m_session->foregroundProcessName())
-     {
-         m_processName = m_session->foregroundProcessName();
-         Q_EMIT foregroundProcessNameChanged();
-     }
-    });
+    connect(m_session.get(), &Konsole::Session::started, this, &KSession::started);
+    connect(m_session.get(), &Konsole::Session::finished, this, &KSession::sessionFinished);
+    connect(m_session.get(), &Konsole::Session::titleChanged, this, &KSession::titleChanged);
+    connect(m_session.get(), &Konsole::Session::stateChanged, [this](int state)
+            {
+                qDebug() << m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program() << state;
+
+                if( m_session->processId() != m_session->foregroundProcessId())
+                    Q_EMIT hasActiveProcessChanged();
+
+                if(m_processName != m_session->foregroundProcessName())
+                {
+                    m_processName = m_session->foregroundProcessName();
+                    Q_EMIT foregroundProcessNameChanged();
+                }
+            });
     
     // m_session->setMonitorSilence(true);
     m_session->setMonitorSilenceSeconds(30);
     
-    connect(m_session, &Session::bellRequest, [this](QString message)
-    {
-        Q_EMIT bellRequest(message);
-    });
+    connect(m_session.get(), &Konsole::Session::bellRequest, [this](QString message)
+            {
+                Q_EMIT bellRequest(message);
+            });
     
-    connect(m_session, &Session::changeTabTextColorRequest, [this](int state)
-    {
-        qDebug() << "changeTabTextColorRequest" << state;
-    });
+    connect(m_session.get(), &Konsole::Session::changeTabTextColorRequest, [this](int state)
+            {
+                qDebug() << "changeTabTextColorRequest" << state;
+            });
     
-    connect(m_session, &Session::changeTabTextColorRequest, [this](int state)
-    {
-        qDebug() << "changeTabTextColorRequest" << state;
-    });
+    connect(m_session.get(), &Konsole::Session::changeTabTextColorRequest, [this](int state)
+            {
+                qDebug() << "changeTabTextColorRequest" << state;
+            });
     
-    connect(m_session, &Session::changeBackgroundColorRequest, [this](QColor state)
-    {
-        qDebug() << "changeBackgroundColorRequest" << state;
-    });
+    connect(m_session.get(), &Konsole::Session::changeBackgroundColorRequest, [this](QColor state)
+            {
+                qDebug() << "changeBackgroundColorRequest" << state;
+            });
     
-    connect(m_session, &Session::openUrlRequest, [this](QString state)
-    {
-        qDebug() << "openUrlRequest" << state;
-    });
+    connect(m_session.get(), &Konsole::Session::openUrlRequest, [this](QString state)
+            {
+                qDebug() << "openUrlRequest" << state;
+            });
     
-    connect(m_session, &Session::activity, [this]()
-    {
-        qDebug() << "activity";
-        Q_EMIT processHasSilent(false);
-    });
+    connect(m_session.get(), &Konsole::Session::activity, [this]()
+            {
+                qDebug() << "activity";
+                Q_EMIT processHasSilent(false);
+            });
     
-    connect(m_session, &Session::silence, [this]()
-    {
-        qDebug() << "silence";
-        Q_EMIT processHasSilent(true);
-    });
+    connect(m_session.get(), &Konsole::Session::silence, [this]()
+            {
+                qDebug() << "silence";
+                Q_EMIT processHasSilent(true);
+            });
 }
 
 KSession::~KSession()
 {
-    if (m_session) {
+    if (m_session)
+    {
         m_session->close();
         m_session->disconnect();
-        delete m_session;
     }
 }
 
@@ -108,7 +113,7 @@ void KSession::setMonitorSilence(bool value)
 {
     if(m_session->isMonitorSilence() == value)
         return;
-        
+
     m_session->setMonitorSilence(value);
     Q_EMIT monitorSilenceChanged();
 }
@@ -123,9 +128,9 @@ void KSession::setTitle(QString name)
     m_session->setTitle(Session::NameRole, name);
 }
 
-Session *KSession::createSession(QString name)
+std::unique_ptr<Session> KSession::createSession(QString name)
 {
-    Session *session = new Session();
+    auto session = std::make_unique<Session>();
 
     session->setTitle(Session::NameRole, name);
 
@@ -137,17 +142,17 @@ Session *KSession::createSession(QString name)
      * But as iam not sure if you want to do anything else ill just let both checks in and set this to $SHELL anyway.
      */
 
-    //cool-old-term: There is another check in the code. Not sure if useful.
+           //cool-old-term: There is another check in the code. Not sure if useful.
 
     QString envshell = getenv("SHELL");
-    QString shellProg = envshell != NULL ? envshell : "/bin/bash";
+    QString shellProg = !envshell.isNull() ? envshell : QStringLiteral("/bin/bash");
     session->setProgram(shellProg);
 
     setenv("TERM", "xterm-256color", 1);
 
-    //session->setProgram();
+           //session->setProgram();
 
-    QStringList args("");
+    QStringList args;
     session->setArguments(args);
     session->setAutoClose(true);
 
@@ -158,7 +163,7 @@ Session *KSession::createSession(QString name)
 
     session->setDarkBackground(true);
 
-    session->setKeyBindings("");
+    session->setKeyBindings(QString());
 
     return session;
 }
@@ -174,7 +179,7 @@ int  KSession::getRandomSeed()
 
 void  KSession::addView(TerminalDisplay *display)
 {
-    m_session->addView(display);
+    m_session->setView(display);
 }
 
 void KSession::removeView(TerminalDisplay *display)
@@ -194,7 +199,8 @@ void KSession::selectionChanged(bool textSelected)
 
 void KSession::startShellProgram()
 {
-    if ( m_session->isRunning() ) {
+    if (m_session->isRunning())
+    {
         return;
     }
 
@@ -203,7 +209,8 @@ void KSession::startShellProgram()
 
 bool KSession::sendSignal(int signal)
 {
-    if ( !m_session->isRunning() ) {
+    if (!m_session->isRunning())
+    {
         return false;
     }
 
@@ -224,17 +231,18 @@ void KSession::changeDir(const QString &dir)
     */
     QString strCmd;
     strCmd.setNum(getShellPID());
-    strCmd.prepend("ps -j ");
-    strCmd.append(" | tail -1 | awk '{ print $5 }' | grep -q \\+");
+    strCmd.prepend(u"ps -j ");
+    strCmd.append(u" | tail -1 | awk '{ print $5 }' | grep -q \\+");
     int retval = system(strCmd.toStdString().c_str());
 
-    if (!retval) {        
+    if (!retval)
+    {
         // Send prior Ctrl-E, Ctrl-U to ensure the line is empty. This is
         // mandatory, otherwise sending a 'cd x\n' to a prompt with 'rm -rf *'
         // would result in data loss.
         sendText(QStringLiteral("\x05\x15"));    
         
-        sendText(" cd " + KShell::quoteArg(dir) + '\r');
+        sendText(u"cd " + KShell::quoteArg(dir) + '\r');
         Q_EMIT currentDirChanged();
     }
 }
@@ -244,20 +252,30 @@ void KSession::setEnvironment(const QStringList &environment)
     m_session->setEnvironment(environment);
 }
 
-
 void KSession::setShellProgram(const QString &progname)
 {
+    if(m_session->program() == progname)
+        return;
+
     m_session->setProgram(progname);
+    Q_EMIT shellProgramChanged();
+}
+
+QString KSession::shellProgram() const
+{
+    return m_session->program();
 }
 
 void KSession::setInitialWorkingDirectory(const QString &dir)
 {
-    if ( _initialWorkingDirectory != dir ) {
+    if(_initialWorkingDirectory != dir)
+    {
         _initialWorkingDirectory = dir;
         m_session->setInitialWorkingDirectory(dir);
         Q_EMIT initialWorkingDirectoryChanged();
         Q_EMIT currentDirChanged();
-}   }
+    }
+}
 
 QString KSession::getInitialWorkingDirectory()
 {
@@ -266,7 +284,11 @@ QString KSession::getInitialWorkingDirectory()
 
 void KSession::setArgs(const QStringList &args)
 {
+    if(m_session->arguments() == args)
+        return;
+
     m_session->setArguments(args);
+    Q_EMIT argsChanged();
 }
 
 void KSession::setTextCodec(QTextCodec *codec)
@@ -276,18 +298,21 @@ void KSession::setTextCodec(QTextCodec *codec)
 
 void KSession::setHistorySize(int lines)
 {
-    if ( historySize() != lines ) {
+    if(historySize() != lines )
+    {
         if (lines < 0)
             m_session->setHistoryType(HistoryTypeFile());
         else
             m_session->setHistoryType(HistoryTypeBuffer(lines));
+
         Q_EMIT historySizeChanged();
     }
 }
 
 int KSession::historySize() const
 {
-    if ( m_session->historyType().isUnlimited() ) {
+    if(m_session->historyType().isUnlimited())
+    {
         return -1;
     } else {
         return m_session->historyType().maximumLineCount();
@@ -318,15 +343,15 @@ void KSession::sendKey(int rep, int key, int mod) const
     Q_UNUSED(key);
     Q_UNUSED(mod);
 
-    //TODO implement or remove this function.
-//    Qt::KeyboardModifier kbm = Qt::KeyboardModifier(mod);
+           //TODO implement or remove this function.
+    //    Qt::KeyboardModifier kbm = Qt::KeyboardModifier(mod);
 
-//    QKeyEvent qkey(QEvent::KeyPress, key, kbm);
+           //    QKeyEvent qkey(QEvent::KeyPress, key, kbm);
 
-//    while (rep > 0){
-//        m_session->sendKey(&qkey);
-//        --rep;
-    //    }
+           //    while (rep > 0){
+           //        m_session->sendKey(&qkey);
+           //        --rep;
+           //    }
 }
 
 void KSession::clearScreen()
@@ -336,9 +361,9 @@ void KSession::clearScreen()
 
 void KSession::search(const QString &regexp, int startLine, int startColumn, bool forwards)
 {
-    HistorySearch *history = new HistorySearch( QPointer<Emulation>(m_session->emulation()), QRegExp(regexp), forwards, startColumn, startLine, this);
-    connect( history, SIGNAL(matchFound(int,int,int,int)), this, SIGNAL(matchFound(int,int,int,int)));
-    connect( history, SIGNAL(noMatchFound()), this, SIGNAL(noMatchFound()));
+    HistorySearch *history = new HistorySearch(QPointer<Emulation>(m_session->emulation()), QRegExp(regexp), forwards, startColumn, startLine, this);
+    connect(history, &HistorySearch::matchFound, this, &KSession::matchFound);
+    connect(history, &HistorySearch::noMatchFound, this, &KSession::noMatchFound);
     history->search();
 }
 
@@ -360,7 +385,7 @@ void KSession::setKeyBindings(const QString &kb)
 
 QString KSession::getKeyBindings()
 {
-   return m_session->keyBindings();
+    return m_session->keyBindings();
 }
 
 QStringList KSession::availableKeyBindings()
@@ -400,4 +425,8 @@ QString KSession::foregroundProcessName()
 QString KSession::currentDir() 
 {
     return m_session->currentDir();
+}
+QStringList KSession::args() const
+{
+    return m_session->arguments();
 }

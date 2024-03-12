@@ -32,7 +32,7 @@ else()
     set(MAUIKIT_VERSION 3.1.1)
 endif()
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -76,7 +76,7 @@ find_package(KF${KF_MAJOR_VERSION} ${REQUIRED_KF_VERSION} REQUIRED COMPONENTS
     CoreAddons
     Config)
 
-find_package(MauiKit${MAUI_MAJOR_VERSION} ${MAUIKIT_VERSION})
+find_package(MauiKit${MAUI_MAJOR_VERSION} ${MAUIKIT_VERSION} REQUIRED)
 
 if (QT_MAJOR_VERSION STREQUAL "5")
     if(QUICK_COMPILER)
@@ -139,9 +139,11 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/terminal_version.h"
     COMPONENT Devel)
 
 add_definitions(-DTRANSLATION_DOMAIN="mauikitterminal")
+if(${QT_MAJOR_VERSION} STREQUAL 5) ##for now skip installing translations for mauikit4 to avoid packaging conflicts with translation files
 ki18n_install(po)
+endif()
 
-#add_subdirectory(src/lib)
+add_subdirectory(src/lib)
 add_subdirectory(src)
 
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)

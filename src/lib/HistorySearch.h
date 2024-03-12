@@ -1,10 +1,7 @@
 /*
-    Copyright 2013 Christian Surlykke
+    SPDX-FileCopyrightText: 2013 Christian Surlykke
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    SPDX-License-Identifier: GPL-2.0-or-later
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,17 +14,20 @@
     02110-1301  USA.
 */
 #ifndef TASK_H
-#define	TASK_H
+#define TASK_H
 
+#include <QMap>
 #include <QObject>
 #include <QPointer>
-#include <QMap>
+#include <QRegExp>
 
-#include <Session.h>
 #include <ScreenWindow.h>
+#include <Session.h>
 
 #include "Emulation.h"
 #include "TerminalCharacterDecoder.h"
+
+class QRegExp;
 
 using namespace Konsole;
 
@@ -38,10 +38,9 @@ class HistorySearch : public QObject
     Q_OBJECT
 
 public:
-    explicit HistorySearch(EmulationPtr emulation, QRegExp regExp, bool forwards,
-                           int startColumn, int startLine, QObject* parent);
+    explicit HistorySearch(EmulationPtr emulation, const QRegExp &regExp, bool forwards, int startColumn, int startLine, QObject *parent);
 
-    ~HistorySearch();
+    ~HistorySearch() override;
 
     void search();
 
@@ -52,7 +51,6 @@ Q_SIGNALS:
 private:
     bool search(int startColumn, int startLine, int endColumn, int endLine);
     int findLineNumberInString(QList<int> linePositions, int position);
-
 
     EmulationPtr m_emulation;
     QRegExp m_regExp;
@@ -66,5 +64,4 @@ private:
     int m_foundEndLine;
 };
 
-#endif	/* TASK_H */
-
+#endif /* TASK_H */

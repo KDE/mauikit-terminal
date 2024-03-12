@@ -1,26 +1,25 @@
 /*
     This source file is part of Konsole, a terminal emulator.
 
-    Copyright 2007-2008 by Robert Knight <robertknight@gmail.com>
+ Copyright 2007-2008 by Robert Knight <robertknight@gmail.com>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301  USA.
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ 02110-1301  USA.
 */
 
-#ifndef COLORSCHEME_H
-#define COLORSCHEME_H
+#pragma once
 
 // Qt
 #include <QHash>
@@ -33,14 +32,22 @@
 // Konsole
 #include "CharacterColor.h"
 
+// std
+#include <memory>
+#include <optional>
+#include <span>
+#include <unordered_map>
+#include <vector>
+
 class QIODevice;
-class KConfig;
 
 namespace Konsole
 {
 
+std::array<ColorEntry, TABLE_COLORS> defaultColorTable();
+
 /**
- * Represents a color scheme for a terminal display.
+ * @brief Represents a color scheme for a terminal display.
  *
  * The color scheme includes the palette of colors used to draw the text and character backgrounds
  * in the display and the opacity level of the display background.
@@ -51,33 +58,45 @@ class ColorScheme : public QObject
 
 public:
     /**
-     * Constructs a new color scheme which is initialised to the default color set
+     * @brief Constructs a new color scheme which is initialised to the default color set
      * for Konsole.
      */
     ColorScheme(QObject * parent = nullptr);
     ~ColorScheme();
 
-    /** Sets the descriptive name of the color scheme. */
+    /**
+     * @brief Sets the descriptive name of the color scheme.
+     */
     void setDescription(const QString& description);
-    /** Returns the descriptive name of the color scheme. */
+
+    /**
+     * @brief Returns the descriptive name of the color scheme.
+     */
     QString description() const;
 
-    /** Sets the name of the color scheme */
+    /**
+     * @brief Sets the name of the color scheme
+     */
     void setName(const QString& name);
-    /** Returns the name of the color scheme */
+
+    /**
+     * @brief Returns the name of the color scheme
+     */
     QString name() const;
 
 #if 0
 // Implemented upstream - in user apps
     /** Reads the color scheme from the specified configuration source */
     void read(KConfig& config);
-
-#endif
     /** Writes the color scheme to the specified configuration source */
     void write(KConfig& config) const;
+#endif
+
     void read(const QString & filename);
 
-    /** Sets a single entry within the color palette. */
+    /**
+     *  @brief Sets a single entry within the color palette.
+     */
     void setColorTableEntry(int index , const ColorEntry& entry);
     void setColor(int index, QColor color);
 
@@ -90,7 +109,7 @@ public:
      * @param randomSeed Color schemes may allow certain colors in their
      * palette to be randomized.  The seed is used to pick the random color.
      */
-    void getColorTable(ColorEntry* table, uint randomSeed = 0) const;
+    std::array<ColorEntry, TABLE_COLORS> getColorTable(uint randomSeed = 0) const;
 
     /**
      * Retrieves a single color entry from the table.
@@ -167,9 +186,9 @@ private:
         quint8  value;
     };
 
-    // returns the active color table.  if none has been set specifically,
-    // this is the default color table.
-    const ColorEntry* colorTable() const;
+           // returns the active color table.  if none has been set specifically,
+           // this is the default color table.
+    const std::span<const ColorEntry> colorTable() const;
 
 #if 0
 // implemented upstream - user apps
@@ -177,28 +196,27 @@ private:
     // and sets the palette entry at 'index' to the entry read.
     void readColorEntry(KConfig& config , int index);
     // writes a single colour entry to a KConfig source
-#endif
     void writeColorEntry(KConfig& config , const QString& colorName, const ColorEntry& entry,const RandomizationRange& range) const;
+#endif
 
     void readColorEntry(QSettings *s, int index);
 
-    // sets the amount of randomization allowed for a particular color
-    // in the palette.  creates the randomization table if
-    // it does not already exist
+           // sets the amount of randomization allowed for a particular color
+           // in the palette.  creates the randomization table if
+           // it does not already exist
     void setRandomizationRange( int index , quint16 hue , quint8 saturation , quint8 value );
 
     QString _description;
     QString _name;
     qreal _opacity;
-    ColorEntry* _table; // pointer to custom color table or 0 if the default
-                        // color scheme is being used
+    std::optional<std::vector<ColorEntry>> _table; // pointer to custom color table or 0 if the default                        // color scheme is being used
 
 
     static const quint16 MAX_HUE = 340;
 
-    RandomizationRange* _randomTable;   // pointer to randomization table or 0
-                                        // if no colors in the color scheme support
-                                        // randomization
+    std::optional<std::vector<RandomizationRange>> _randomTable;   // pointer to randomization table or 0
+                                                                 // if no colors in the color scheme support
+                                                                 // randomization
 
     static const char* const colorNames[TABLE_COLORS];
     static const char* const translatedColorNames[TABLE_COLORS];
@@ -222,41 +240,6 @@ class AccessibleColorScheme : public ColorScheme
 {
 public:
     AccessibleColorScheme();
-};
-
-/**
- * Reads a color scheme stored in the .schema format used in the KDE 3 incarnation
- * of Konsole
- *
- * Only the basic essentials ( title and color palette entries ) are currently
- * supported.  Additional options such as background image and background
- * blend colors are ignored.
- */
-class KDE3ColorSchemeReader
-{
-public:
-    /**
-     * Constructs a new reader which reads from the specified device.
-     * The device should be open in read-only mode.
-     */
-    KDE3ColorSchemeReader( QIODevice* device );
-
-    /**
-     * Reads and parses the contents of the .schema file from the input
-     * device and returns the ColorScheme defined within it.
-     *
-     * Returns a null pointer if an error occurs whilst parsing
-     * the contents of the file.
-     */
-    ColorScheme* read();
-
-private:
-    // reads a line from the file specifying a colour palette entry
-    // format is: color [index] [red] [green] [blue] [transparent] [bold]
-    bool readColorLine(const QString& line , ColorScheme* scheme);
-    bool readTitleLine(const QString& line , ColorScheme* scheme);
-
-    QIODevice* _device;
 };
 
 /**
@@ -316,7 +299,7 @@ public:
      *
      * Subsequent calls will be inexpensive.
      */
-    QList<const ColorScheme*> allColorSchemes();
+    QList<ColorScheme *> allColorSchemes();
 
     /** Returns the global color scheme manager instance. */
     static ColorSchemeManager* instance();
@@ -345,9 +328,8 @@ public:
 private:
     // loads a color scheme from a KDE 4+ .colorscheme file
     bool loadColorScheme(const QString& path);
-    // loads a color scheme from a KDE 3 .schema file
-    bool loadKDE3ColorScheme(const QString& path);
-    // returns a list of paths of color schemes in the KDE 4+ .colorscheme file format
+
+           // returns a list of paths of color schemes in the KDE 4+ .colorscheme file format
     QList<QString> listColorSchemes();
     // returns a list of paths of color schemes in the .schema file format
     // used in KDE 3
@@ -357,14 +339,13 @@ private:
     // finds the path of a color scheme
     QString findColorSchemePath(const QString& name) const;
 
-    QHash<QString,const ColorScheme*> _colorSchemes;
+    std::unordered_map<QString, std::unique_ptr<ColorScheme>> _colorSchemes;
     QSet<ColorScheme*> _modifiedSchemes;
 
     bool _haveLoadedAll;
+    static const ColorScheme _defaultColorScheme;
 };
 
 }
 
 Q_DECLARE_METATYPE(const Konsole::ColorScheme*)
-
-#endif //COLORSCHEME_H

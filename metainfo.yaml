@@ -1,0 +1,28 @@
+maintainer: milohr
+fancyname: MauiKit Terminal
+description: QtQuick plugin for embedded terminal emulator
+platforms:
+    - name: Linux
+    - name: FreeBSD
+public_lib: true
+deprecated: false
+type: functional
+release: true
+logo: logo.png
+irc: '#kde-maui'
+mailinglist: '' # do we have one?
+group: mauikit
+qdoc: false
+public_doc_dir:
+    - docs
+public_source_dirs:  # optional, default to src, must be a list
+  - src/code
+  - src/lib
+  - src/controls.6
+public_example_dirs: examples
+libraries:
+    - cmake: MauiKit4::Terminal
+cmakename: MauiKitTerminal4
+
+group_info:
+    name: mauikit

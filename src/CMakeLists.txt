@@ -1,10 +1,16 @@
+# SPDX-FileCopyrightText: 2020 Camilo Higuita <milo.h@aol.com>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/code)
 
 remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY)
 
-ecm_add_qml_module(MauiKitTerminal${MAUI_MAJOR_VERSION} URI "org.mauikit.terminal" CLASSNAME TerminalPlugin)
+ecm_add_qml_module(MauiKitTerminal${MAUI_MAJOR_VERSION}
+    URI "org.mauikit.terminal"
+    CLASS_NAME TerminalPlugin)
 
 set(plugin_SRCS
     code/colorschemesmodel.cpp
@@ -31,7 +37,7 @@ ecm_target_qml_sources(MauiKitTerminal${MAUI_MAJOR_VERSION} PATH private SOURCES
     controls.${QT_MAJOR_VERSION}/private/TerminalInputArea.qml
     controls.${QT_MAJOR_VERSION}/private/TerminalScrollBar.qml)
 
-add_subdirectory(lib)
+# add_subdirectory(lib)
 
 target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION}
     PRIVATE
@@ -71,8 +77,9 @@ target_link_libraries(MauiKitTerminal${MAUI_MAJOR_VERSION}
     KF${KF_MAJOR_VERSION}::ConfigGui
     MauiKit${MAUI_MAJOR_VERSION})
 
+
 ecm_finalize_qml_module(MauiKitTerminal${MAUI_MAJOR_VERSION} DESTINATION ${KDE_INSTALL_QMLDIR})
-ecm_generate_qmltypes(org.mauikit.terminal 3.0 DESTINATION ${KDE_INSTALL_QMLDIR}/org/mauikit/terminal)
+# ecm_generate_qmltypes(org.mauikit.terminal 3.0 DESTINATION ${KDE_INSTALL_QMLDIR}/org/mauikit/terminal)
 
 install(TARGETS MauiKitTerminal${MAUI_MAJOR_VERSION} EXPORT MauiKitTerminal${MAUI_MAJOR_VERSION}Targets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 

@@ -1,10 +1,7 @@
 /*
-    Copyright 2013 Christian Surlykke
+    SPDX-FileCopyrightText: 2013 Christian Surlykke
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    SPDX-License-Identifier: GPL-2.0-or-later
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,32 +14,33 @@
     02110-1301  USA.
 */
 #include <QApplication>
-#include <QTextStream>
 #include <QDebug>
+#include <QRegExp>
+#include <QTextStream>
 
-#include "TerminalCharacterDecoder.h"
 #include "Emulation.h"
 #include "HistorySearch.h"
+#include "TerminalCharacterDecoder.h"
 
-HistorySearch::HistorySearch(EmulationPtr emulation, QRegExp regExp,
-        bool forwards, int startColumn, int startLine,
-        QObject* parent) :
-QObject(parent),
-m_emulation(emulation),
-m_regExp(regExp),
-m_forwards(forwards),
-m_startColumn(startColumn),
-m_startLine(startLine) {
+HistorySearch::HistorySearch(EmulationPtr emulation, const QRegExp &regExp, bool forwards, int startColumn, int startLine, QObject *parent)
+    : QObject(parent)
+    , m_emulation(emulation)
+    , m_regExp(regExp)
+    , m_forwards(forwards)
+    , m_startColumn(startColumn)
+    , m_startLine(startLine)
+{
 }
 
-HistorySearch::~HistorySearch() {
+HistorySearch::~HistorySearch()
+{
 }
 
-void HistorySearch::search() {
+void HistorySearch::search()
+{
     bool found = false;
 
-    if (! m_regExp.isEmpty())
-    {
+    if (!m_regExp.isEmpty()) {
         if (m_forwards) {
             found = search(m_startColumn, m_startLine, -1, m_emulation->lineCount()) || search(0, 0, m_startColumn, m_startLine);
         } else {
@@ -51,8 +49,7 @@ void HistorySearch::search() {
 
         if (found) {
             Q_EMIT matchFound(m_foundStartColumn, m_foundStartLine, m_foundEndColumn, m_foundEndLine);
-        }
-        else {
+        } else {
             Q_EMIT noMatchFound();
         }
     }
@@ -60,9 +57,9 @@ void HistorySearch::search() {
     deleteLater();
 }
 
-bool HistorySearch::search(int startColumn, int startLine, int endColumn, int endLine) {
-    qDebug() << "search from" << startColumn << "," << startLine
-            <<  "to" << endColumn << "," << endLine;
+bool HistorySearch::search(int startColumn, int startLine, int endColumn, int endLine)
+{
+    qDebug() << "search from" << startColumn << "," << startLine << "to" << endColumn << "," << endLine;
 
     int linesRead = 0;
     int linesToRead = endLine - startLine + 1;
@@ -73,7 +70,6 @@ bool HistorySearch::search(int startColumn, int startLine, int endColumn, int en
     // blocks of at most 10K lines so that we do not use unhealthy amounts of memory
     int blockSize;
     while ((blockSize = qMin(10000, linesToRead - linesRead)) > 0) {
-
         QString string;
         QTextStream searchStream(&string);
         PlainTextDecoder decoder;
@@ -93,32 +89,25 @@ bool HistorySearch::search(int startColumn, int startLine, int endColumn, int en
         // The String that Emulator.writeToStream produces has a newline at the end, and so ends with an
         // empty line - we ignore that.
         int numberOfLinesInString = decoder.linePositions().size() - 1;
-        if (numberOfLinesInString > 0 && endColumn > -1 )
-        {
+        if (numberOfLinesInString > 0 && endColumn > -1) {
             endPosition = decoder.linePositions().at(numberOfLinesInString - 1) + endColumn;
-        }
-        else
-        {
+        } else {
             endPosition = string.size();
         }
 
         // So now we can log for m_regExp in the string between startColumn and endPosition
         int matchStart;
-        if (m_forwards)
-        {
-            matchStart = string.indexOf(m_regExp, startColumn);
+        if (m_forwards) {
+            matchStart = m_regExp.indexIn(string, startColumn);
             if (matchStart >= endPosition)
                 matchStart = -1;
-        }
-        else
-        {
-            matchStart = string.lastIndexOf(m_regExp, endPosition - 1);
+        } else {
+            matchStart = m_regExp.lastIndexIn(string, endPosition - 1);
             if (matchStart < startColumn)
                 matchStart = -1;
         }
 
-        if (matchStart > -1)
-        {
+        if (matchStart > -1) {
             int matchEnd = matchStart + m_regExp.matchedLength() - 1;
             qDebug() << "Found in string from" << matchStart << "to" << matchEnd;
 
@@ -131,14 +120,11 @@ bool HistorySearch::search(int startColumn, int startLine, int endColumn, int en
             m_foundEndColumn = matchEnd - decoder.linePositions().at(endLineNumberInString);
             m_foundEndLine = endLineNumberInString + startLine + linesRead;
 
-            qDebug() << "m_foundStartColumn" << m_foundStartColumn
-                    << "m_foundStartLine" << m_foundEndLine
-                    << "m_foundEndColumn" << m_foundEndColumn
-                    << "m_foundEndLine" << m_foundEndLine;
+            qDebug() << "m_foundStartColumn" << m_foundStartColumn << "m_foundStartLine" << m_foundEndLine << "m_foundEndColumn" << m_foundEndColumn
+                     << "m_foundEndLine" << m_foundEndLine;
 
             return true;
         }
-
 
         linesRead += blockSize;
     }
@@ -147,8 +133,8 @@ bool HistorySearch::search(int startColumn, int startLine, int endColumn, int en
     return false;
 }
 
-
-int HistorySearch::findLineNumberInString(QList<int> linePositions, int position) {
+int HistorySearch::findLineNumberInString(QList<int> linePositions, int position)
+{
     int lineNum = 0;
     while (lineNum + 1 < linePositions.size() && linePositions[lineNum + 1] <= position)
         lineNum++;

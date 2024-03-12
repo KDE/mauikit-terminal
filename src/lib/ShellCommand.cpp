@@ -1,50 +1,25 @@
 /*
     SPDX-FileCopyrightText: 2007-2008 Robert Knight <robertknight@gmail.com>
+
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 // Own
 #include "ShellCommand.h"
 
-// some versions of gcc(4.3) require explicit include
-#include <cstdlib>
-
-// Qt
-#include <QDir>
+// KDE
+#include <KShell>
 
 using Konsole::ShellCommand;
 
-ShellCommand::ShellCommand(const QString &fullCommand)
+ShellCommand::ShellCommand(const QString &aCommand)
+    : _arguments(KShell::splitArgs(aCommand))
 {
-    bool inQuotes = false;
-
-    QString builder;
-
-    for ( int i = 0 ; i < fullCommand.count() ; i++ ) {
-        QChar ch = fullCommand[i];
-
-        const bool isLastChar = ( i == fullCommand.count() - 1 );
-        const bool isQuote = ( ch == QLatin1Char('\'') || ch == QLatin1Char('\"') );
-
-        if ( !isLastChar && isQuote ) {
-            inQuotes = !inQuotes;
-        } else {
-            if ( (!ch.isSpace() || inQuotes) && !isQuote ) {
-                builder.append(ch);
-            }
-
-            if ( (ch.isSpace() && !inQuotes) || ( i == fullCommand.count()-1 ) ) {
-                _arguments << builder;
-                builder.clear();
-            }
-        }
-    }
 }
 
 ShellCommand::ShellCommand(const QString &aCommand, const QStringList &aArguments)
+    : _arguments(aArguments)
 {
-    _arguments = aArguments;
-
     if (!_arguments.isEmpty()) {
         _arguments[0] = aCommand;
     }
@@ -53,10 +28,10 @@ ShellCommand::ShellCommand(const QString &aCommand, const QStringList &aArgument
 QString ShellCommand::fullCommand() const
 {
     QStringList quotedArgs(_arguments);
-    for (int i = 0; i < quotedArgs.count(); i++) {
+    for (int i = 0; i < quotedArgs.size(); i++) {
         QString arg = quotedArgs.at(i);
         bool hasSpace = false;
-        for (int j = 0; j < arg.count(); j++) {
+        for (int j = 0; j < arg.size(); j++) {
             if (arg[j].isSpace()) {
                 hasSpace = true;
             }
@@ -120,12 +95,6 @@ bool ShellCommand::isValidLeadingEnvCharacter(const QChar &ch)
  */
 bool ShellCommand::expandEnv(QString &text)
 {
-    // Current path
-    if (text == "$PWD") {
-        text = QDir::currentPath();
-        return true;
-    }
-
     const QLatin1Char dollarChar('$');
     const QLatin1Char backslashChar('\\');
 

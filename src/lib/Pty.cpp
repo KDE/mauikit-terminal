@@ -1,338 +1,341 @@
 /*
- * This file is a part of QTerminal - http://gitorious.org/qterminal
- *
- * This file was un-linked from KDE and modified
- * by Maxim Bourmistrov <maxim@unixconn.com>
- *
- */
+    SPDX-FileCopyrightText: 1997, 1998 Lars Doelle <lars.doelle@on-line.de>
 
-/*
-    This file is part of Konsole, an X terminal.
-    Copyright 1997,1998 by Lars Doelle <lars.doelle@on-line.de>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301  USA.
+    SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 // Own
 #include "Pty.h"
 
 // System
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <errno.h>
+#include <csignal>
+#include <sys/ioctl.h> //ioctl() and TIOCSWINSZ
 #include <termios.h>
-#include <signal.h>
 
 // Qt
+#include <QDebug>
 #include <QStringList>
-#include <QtDebug>
+#include <qplatformdefs.h>
 
-#include "kpty.h"
-#include "kptydevice.h"
+// KDE
+#include <KPtyDevice>
+#include <kpty_version.h>
 
-using namespace Konsole;
+using Konsole::Pty;
 
-void Pty::setWindowSize(int lines, int cols)
+Pty::Pty(QObject *aParent)
+    : Pty(-1, aParent)
 {
-  _windowColumns = cols;
-  _windowLines = lines;
-
-  if (pty()->masterFd() >= 0)
-    pty()->setWinSize(lines, cols);
-}
-QSize Pty::windowSize() const
-{
-    return QSize(_windowColumns,_windowLines);
 }
 
-void Pty::setFlowControlEnabled(bool enable)
+Pty::Pty(int masterFd, QObject *aParent)
+    : KPtyProcess(masterFd, aParent)
 {
-  _xonXoff = enable;
-
-  if (pty()->masterFd() >= 0)
-  {
-    struct ::termios ttmode;
-    pty()->tcGetAttr(&ttmode);
-    if (!enable)
-      ttmode.c_iflag &= ~(IXOFF | IXON);
-    else
-      ttmode.c_iflag |= (IXOFF | IXON);
-    if (!pty()->tcSetAttr(&ttmode))
-      qWarning() << "Unable to set terminal attributes.";
-  }
-}
-bool Pty::flowControlEnabled() const
-{
-    if (pty()->masterFd() >= 0)
-    {
-        struct ::termios ttmode;
-        pty()->tcGetAttr(&ttmode);
-        return ttmode.c_iflag & IXOFF &&
-               ttmode.c_iflag & IXON;
-    }
-    qWarning() << "Unable to get flow control status, terminal not connected.";
-    return false;
-}
-
-void Pty::setUtf8Mode(bool enable)
-{
-#ifdef IUTF8 // XXX not a reasonable place to check it.
-  _utf8 = enable;
-
-  if (pty()->masterFd() >= 0)
-  {
-    struct ::termios ttmode;
-    pty()->tcGetAttr(&ttmode);
-    if (!enable)
-      ttmode.c_iflag &= ~IUTF8;
-    else
-      ttmode.c_iflag |= IUTF8;
-    if (!pty()->tcSetAttr(&ttmode))
-      qWarning() << "Unable to set terminal attributes.";
-  }
-#endif
-}
-
-void Pty::setErase(char erase)
-{
-  _eraseChar = erase;
-
-  if (pty()->masterFd() >= 0)
-  {
-    struct ::termios ttmode;
-    pty()->tcGetAttr(&ttmode);
-    ttmode.c_cc[VERASE] = erase;
-    if (!pty()->tcSetAttr(&ttmode))
-      qWarning() << "Unable to set terminal attributes.";
-  }
-}
-
-char Pty::erase() const
-{
-    if (pty()->masterFd() >= 0)
-    {
-        struct ::termios ttyAttributes;
-        pty()->tcGetAttr(&ttyAttributes);
-        return ttyAttributes.c_cc[VERASE];
-    }
-
-    return _eraseChar;
-}
-
-void Pty::addEnvironmentVariables(const QStringList& environment)
-{
-    QListIterator<QString> iter(environment);
-    while (iter.hasNext())
-    {
-        QString pair = iter.next();
-
-        // split on the first '=' character
-        int pos = pair.indexOf(QLatin1Char('='));
-
-        if ( pos >= 0 )
-        {
-            QString variable = pair.left(pos);
-            QString value = pair.mid(pos+1);
-
-            setEnv(variable,value);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // Must call parent class child process modifier, as it sets file descriptors ...etc
+    auto parentChildProcModifier = KPtyProcess::childProcessModifier();
+    setChildProcessModifier([parentChildProcModifier = std::move(parentChildProcModifier)]() {
+        if (parentChildProcModifier) {
+            parentChildProcModifier();
         }
-    }
-}
 
-int Pty::start(const QString& program,
-               const QStringList& programArguments,
-               const QStringList& environment,
-               ulong winid,
-               bool addToUtmp
-               //const QString& dbusService,
-               //const QString& dbusSession
-               )
-{
-  clearProgram();
-
-  // For historical reasons, the first argument in programArguments is the
-  // name of the program to execute, so create a list consisting of all
-  // but the first argument to pass to setProgram()
-  Q_ASSERT(programArguments.count() >= 1);
-  setProgram(program, programArguments.mid(1));
-
-  addEnvironmentVariables(environment);
-
-  setEnv(QLatin1String("WINDOWID"), QString::number(winid));
-
-  // unless the LANGUAGE environment variable has been set explicitly
-  // set it to a null string
-  // this fixes the problem where KCatalog sets the LANGUAGE environment
-  // variable during the application's startup to something which
-  // differs from LANG,LC_* etc. and causes programs run from
-  // the terminal to display messages in the wrong language
-  //
-  // this can happen if LANG contains a language which KDE
-  // does not have a translation for
-  //
-  // BR:149300
-  setEnv(QLatin1String("LANGUAGE"),QString(),false /* do not overwrite existing value if any */);
-
-  setUseUtmp(addToUtmp);
-
-  struct ::termios ttmode;
-  pty()->tcGetAttr(&ttmode);
-  if (!_xonXoff)
-    ttmode.c_iflag &= ~(IXOFF | IXON);
-  else
-    ttmode.c_iflag |= (IXOFF | IXON);
-#ifdef IUTF8 // XXX not a reasonable place to check it.
-  if (!_utf8)
-    ttmode.c_iflag &= ~IUTF8;
-  else
-    ttmode.c_iflag |= IUTF8;
+        // reset all signal handlers
+        // this ensures that terminal applications respond to
+        // signals generated via key sequences such as Ctrl+C
+        // (which sends SIGINT)
+        struct sigaction action;
+        sigemptyset(&action.sa_mask);
+        action.sa_handler = SIG_DFL;
+        action.sa_flags = 0;
+        for (int signal = 1; signal < NSIG; signal++) {
+            sigaction(signal, &action, nullptr);
+        }
+    });
 #endif
 
-  if (_eraseChar != 0)
-      ttmode.c_cc[VERASE] = _eraseChar;
+    _windowColumns = 0;
+    _windowLines = 0;
+    _windowWidth = 0;
+    _windowHeight = 0;
+    _eraseChar = 0;
+    _xonXoff = true;
+    _utf8 = true;
 
-  if (!pty()->tcSetAttr(&ttmode))
-    qWarning() << "Unable to set terminal attributes.";
+    setEraseChar(_eraseChar);
+    setFlowControlEnabled(_xonXoff);
+    setUtf8Mode(_utf8);
 
-  pty()->setWinSize(_windowLines, _windowColumns);
+    setWindowSize(_windowColumns, _windowLines, _windowWidth, _windowHeight);
 
-  KProcess::start();
+    setUseUtmp(true);
+    setPtyChannels(KPtyProcess::AllChannels);
 
-  if (!waitForStarted())
-      return -1;
-
-  return 0;
+    connect(pty(), &KPtyDevice::readyRead, this, &Konsole::Pty::dataReceived);
 }
 
-void Pty::setEmptyPTYProperties()
+Pty::~Pty() = default;
+
+void Pty::sendData(const QByteArray &data)
 {
-    struct ::termios ttmode;
-    pty()->tcGetAttr(&ttmode);
-    if (!_xonXoff)
-      ttmode.c_iflag &= ~(IXOFF | IXON);
-    else
-      ttmode.c_iflag |= (IXOFF | IXON);
-  #ifdef IUTF8 // XXX not a reasonable place to check it.
-    if (!_utf8)
-      ttmode.c_iflag &= ~IUTF8;
-    else
-      ttmode.c_iflag |= IUTF8;
-  #endif
+    if (data.isEmpty()) {
+        return;
+    }
 
-    if (_eraseChar != 0)
-        ttmode.c_cc[VERASE] = _eraseChar;
-
-    if (!pty()->tcSetAttr(&ttmode))
-      qWarning() << "Unable to set terminal attributes.";
-}
-
-void Pty::setWriteable(bool writeable)
-{
-  struct stat sbuf;
-  stat(pty()->ttyName(), &sbuf);
-  if (writeable)
-    chmod(pty()->ttyName(), sbuf.st_mode | S_IWGRP);
-  else
-    chmod(pty()->ttyName(), sbuf.st_mode & ~(S_IWGRP|S_IWOTH));
-}
-
-Pty::Pty(int masterFd, QObject* parent)
-    : KPtyProcess(masterFd,parent)
-{
-    init();
-}
-Pty::Pty(QObject* parent)
-    : KPtyProcess(parent)
-{
-    init();
-}
-void Pty::init()
-{
-  _windowColumns = 0;
-  _windowLines = 0;
-  _eraseChar = 0;
-  _xonXoff = true;
-  _utf8 =true;
-
-  connect(pty(), SIGNAL(readyRead()) , this , SLOT(dataReceived()));
-  setPtyChannels(KPtyProcess::AllChannels);
-}
-
-Pty::~Pty()
-{
-}
-
-void Pty::sendData(const char* data, int length)
-{
-  if (!length)
-      return;
-
-  if (!pty()->write(data,length))
-  {
-    qWarning() << "Pty::doSendJobs - Could not send input data to terminal process.";
-    return;
-  }
+    if (pty()->write(data) == -1) {
+        qDebug() << "Could not send input data to terminal process.";
+        return;
+    }
 }
 
 void Pty::dataReceived()
 {
-     QByteArray data = pty()->readAll();
-    Q_EMIT receivedData(data.constData(),data.count());
+    QByteArray data = pty()->readAll();
+    if (data.isEmpty()) {
+        return;
+    }
+
+    Q_EMIT receivedData(data.constData(), data.size());
 }
 
-void Pty::lockPty(bool lock)
+void Pty::setWindowSize(int columns, int lines, int width, int height)
 {
-    Q_UNUSED(lock);
+    _windowColumns = columns;
+    _windowLines = lines;
+    _windowWidth = width;
+    _windowHeight = height;
 
-// TODO: Support for locking the Pty
-  //if (lock)
-    //suspend();
-  //else
-    //resume();
+    if (pty()->masterFd() >= 0) {
+#if KPTY_VERSION >= QT_VERSION_CHECK(5, 93, 0)
+        pty()->setWinSize(_windowLines, _windowColumns, _windowHeight, _windowWidth);
+#else
+        struct winsize w;
+        w.ws_xpixel = _windowWidth;
+        w.ws_ypixel = _windowHeight;
+        w.ws_col = _windowColumns;
+        w.ws_row = _windowLines;
+        ioctl(pty()->masterFd(), TIOCSWINSZ, &w);
+#endif
+    }
+}
+
+QSize Pty::windowSize() const
+{
+    return {_windowColumns, _windowLines};
+}
+
+QSize Pty::pixelSize() const
+{
+    return {_windowWidth, _windowHeight};
+}
+
+void Pty::setFlowControlEnabled(bool enable)
+{
+    _xonXoff = enable;
+
+    if (pty()->masterFd() >= 0) {
+        struct ::termios ttmode;
+        pty()->tcGetAttr(&ttmode);
+        if (enable) {
+            ttmode.c_iflag |= (IXOFF | IXON);
+        } else {
+            ttmode.c_iflag &= ~(IXOFF | IXON);
+        }
+
+        if (!pty()->tcSetAttr(&ttmode)) {
+            qDebug() << "Unable to set terminal attributes.";
+        }
+    }
+}
+
+bool Pty::flowControlEnabled() const
+{
+    if (pty()->masterFd() >= 0) {
+        struct ::termios ttmode;
+        pty()->tcGetAttr(&ttmode);
+        return ((ttmode.c_iflag & IXOFF) != 0U) && ((ttmode.c_iflag & IXON) != 0U);
+    } else {
+        qDebug() << "Unable to get flow control status, terminal not connected.";
+        return _xonXoff;
+    }
+}
+
+void Pty::setUtf8Mode(bool enable)
+{
+#if defined(IUTF8) // XXX not a reasonable place to check it.
+    _utf8 = enable;
+
+    if (pty()->masterFd() >= 0) {
+        struct ::termios ttmode;
+        pty()->tcGetAttr(&ttmode);
+        if (enable) {
+            ttmode.c_iflag |= IUTF8;
+        } else {
+            ttmode.c_iflag &= ~IUTF8;
+        }
+
+        if (!pty()->tcSetAttr(&ttmode)) {
+            qDebug() << "Unable to set terminal attributes.";
+        }
+    }
+#else
+    Q_UNUSED(enable)
+#endif
+}
+
+void Pty::setEraseChar(char eChar)
+{
+    _eraseChar = eChar;
+
+    if (pty()->masterFd() >= 0) {
+        struct ::termios ttmode;
+        pty()->tcGetAttr(&ttmode);
+        ttmode.c_cc[VERASE] = eChar;
+
+        if (!pty()->tcSetAttr(&ttmode)) {
+            qDebug() << "Unable to set terminal attributes.";
+        }
+    }
+}
+
+char Pty::eraseChar() const
+{
+    if (pty()->masterFd() >= 0) {
+        struct ::termios ttyAttributes;
+        pty()->tcGetAttr(&ttyAttributes);
+        return ttyAttributes.c_cc[VERASE];
+    } else {
+        qDebug() << "Unable to get erase char attribute, terminal not connected.";
+        return _eraseChar;
+    }
+}
+
+void Pty::setInitialWorkingDirectory(const QString &dir)
+{
+    QString pwd = dir;
+
+    // remove trailing slash in the path when appropriate
+    // example: /usr/share/icons/ ==> /usr/share/icons
+    if (pwd.length() > 1 && pwd.endsWith(QLatin1Char('/'))) {
+        pwd.chop(1);
+    }
+
+    setWorkingDirectory(pwd);
+
+    // setting PWD to "." will cause problem for bash & zsh
+    if (pwd != QLatin1String(".")) {
+        setEnv(QStringLiteral("PWD"), pwd);
+    }
+}
+
+void Pty::addEnvironmentVariables(const QStringList &environmentVariables)
+{
+    bool isTermEnvAdded = false;
+
+    for (const QString &pair : environmentVariables) {
+        // split on the first '=' character
+        const int separator = pair.indexOf(QLatin1Char('='));
+
+        if (separator >= 0) {
+            QString variable = pair.left(separator);
+            QString value = pair.mid(separator + 1);
+
+            setEnv(variable, value);
+
+            if (variable == QLatin1String("TERM")) {
+                isTermEnvAdded = true;
+            }
+        }
+    }
+
+    // extra safeguard to make sure $TERM is always set
+    if (!isTermEnvAdded) {
+        setEnv(QStringLiteral("TERM"), QStringLiteral("xterm-256color"));
+    }
+}
+
+int Pty::start(const QString &programName, const QStringList &programArguments, const QStringList &environmentList)
+{
+    clearProgram();
+
+    setProgram(programName, programArguments);
+
+    addEnvironmentVariables(environmentList);
+
+    // unless the LANGUAGE environment variable has been set explicitly
+    // set it to a null string
+    // this fixes the problem where KCatalog sets the LANGUAGE environment
+    // variable during the application's startup to something which
+    // differs from LANG,LC_* etc. and causes programs run from
+    // the terminal to display messages in the wrong language
+    //
+    // this can happen if LANG contains a language which KDE
+    // does not have a translation for
+    //
+    // BR:149300
+    setEnv(QStringLiteral("LANGUAGE"), QString(), false /* do not overwrite existing value if any */);
+
+    KProcess::start();
+
+    if (waitForStarted()) {
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
+void Pty::setWriteable(bool writeable)
+{
+    QT_STATBUF sbuf;
+    if (QT_STAT(pty()->ttyName(), &sbuf) == 0) {
+        if (writeable) {
+            if (::chmod(pty()->ttyName(), sbuf.st_mode | S_IWGRP) < 0) {
+                qDebug() << "Could not set writeable on " << pty()->ttyName();
+            }
+        } else {
+            if (::chmod(pty()->ttyName(), sbuf.st_mode & ~(S_IWGRP | S_IWOTH)) < 0) {
+                qDebug() << "Could not unset writeable on " << pty()->ttyName();
+            }
+        }
+    } else {
+        qDebug() << "Could not stat " << pty()->ttyName();
+    }
+}
+
+void Pty::closePty()
+{
+    pty()->close();
 }
 
 int Pty::foregroundProcessGroup() const
 {
-    int pid = tcgetpgrp(pty()->masterFd());
+    const int master_fd = pty()->masterFd();
 
-    if ( pid != -1 )
-    {
-        return pid;
+    if (master_fd >= 0) {
+        int foregroundPid = tcgetpgrp(master_fd);
+
+        if (foregroundPid != -1) {
+            return foregroundPid;
+        }
     }
 
     return 0;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void Pty::setupChildProcess()
 {
     KPtyProcess::setupChildProcess();
 
     // reset all signal handlers
     // this ensures that terminal applications respond to
-    // Q_SIGNALS generated via key sequences such as Ctrl+C
+    // signals generated via key sequences such as Ctrl+C
     // (which sends SIGINT)
     struct sigaction action;
-    sigset_t sigset;
     sigemptyset(&action.sa_mask);
     action.sa_handler = SIG_DFL;
     action.sa_flags = 0;
-    for (int signal=1;signal < NSIG; signal++) {
-        sigaction(signal,&action,0L);
-        sigaddset(&sigset, signal);
+    for (int signal = 1; signal < NSIG; signal++) {
+        sigaction(signal, &action, nullptr);
     }
-    sigprocmask(SIG_UNBLOCK, &sigset, NULL);
 }
+#endif

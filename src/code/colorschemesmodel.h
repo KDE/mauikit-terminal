@@ -33,7 +33,7 @@ public:
     void componentComplete() override final;
 
 private:
-    QList<const Konsole::ColorScheme*> m_list;
+    QList<Konsole::ColorScheme*> m_list;
     void setList();
 
     // QAbstractItemModel interface

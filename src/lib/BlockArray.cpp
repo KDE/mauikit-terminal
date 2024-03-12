@@ -1,13 +1,10 @@
 /*
     This file is part of Konsole, an X terminal.
-    Copyright (C) 2000 by Stephan Kulow <coolo@kde.org>
+    SPDX-FileCopyrightText: 2000 Stephan Kulow <coolo@kde.org>
 
     Rewritten for QT4 by e_k <e_k at users.sourceforge.net>, Copyright (C)2008
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    SPDX-License-Identifier: GPL-2.0-or-later
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,36 +18,33 @@
 
 */
 
-#include <QtDebug>
+#include <QDebug>
 
 // Own
 #include "BlockArray.h"
 
 // System
+#include <cstdio>
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <unistd.h>
-#include <stdio.h>
-
 
 using namespace Konsole;
 
-static int blocksize = 0;
-
 BlockArray::BlockArray()
-        : size(0),
-        current(size_t(-1)),
-        index(size_t(-1)),
-        lastmap(0),
-        lastmap_index(size_t(-1)),
-        lastblock(0), ion(-1),
-        length(0)
+    : size(0)
+    , current(size_t(-1))
+    , index(size_t(-1))
+    , lastmap(nullptr)
+    , lastmap_index(size_t(-1))
+    , lastblock(nullptr)
+    , ion(-1)
+    , length(0)
 {
     // lastmap_index = index = current = size_t(-1);
     if (blocksize == 0) {
         blocksize = ((sizeof(Block) / getpagesize()) + 1) * getpagesize();
     }
-
 }
 
 BlockArray::~BlockArray()
@@ -59,7 +53,7 @@ BlockArray::~BlockArray()
     Q_ASSERT(!lastblock);
 }
 
-size_t BlockArray::append(Block * block)
+size_t BlockArray::append(Block *block)
 {
     if (!size) {
         return size_t(-1);
@@ -106,7 +100,7 @@ size_t BlockArray::newBlock()
     return index + 1;
 }
 
-Block * BlockArray::lastBlock() const
+Block *BlockArray::lastBlock() const
 {
     return lastblock;
 }
@@ -126,7 +120,7 @@ bool BlockArray::has(size_t i) const
     return true;
 }
 
-const Block * BlockArray::at(size_t i)
+const Block *BlockArray::at(size_t i)
 {
     if (i == index + 1) {
         return lastblock;
@@ -138,24 +132,19 @@ const Block * BlockArray::at(size_t i)
 
     if (i > index) {
         qDebug() << "BlockArray::at() i > index\n";
-        return 0;
+        return nullptr;
     }
-
-//     if (index - i >= length) {
-//         kDebug(1211) << "BlockArray::at() index - i >= length\n";
-//         return 0;
-//     }
 
     size_t j = i; // (current - (index - i) + (index/size+1)*size) % size ;
 
     Q_ASSERT(j < size);
     unmap();
 
-    Block * block = (Block *)mmap(0, blocksize, PROT_READ, MAP_PRIVATE, ion, j * blocksize);
+    Block *block = (Block *)mmap(nullptr, blocksize, PROT_READ, MAP_PRIVATE, ion, j * blocksize);
 
     if (block == (Block *)-1) {
         perror("mmap");
-        return 0;
+        return nullptr;
     }
 
     lastmap = block;
@@ -172,7 +161,7 @@ void BlockArray::unmap()
             perror("munmap");
         }
     }
-    lastmap = 0;
+    lastmap = nullptr;
     lastmap_index = size_t(-1);
 }
 
@@ -183,8 +172,6 @@ bool BlockArray::setSize(size_t newsize)
 
 bool BlockArray::setHistorySize(size_t newsize)
 {
-//    kDebug(1211) << "setHistorySize " << size << " " << newsize;
-
     if (size == newsize) {
         return false;
     }
@@ -193,7 +180,7 @@ bool BlockArray::setHistorySize(size_t newsize)
 
     if (!newsize) {
         delete lastblock;
-        lastblock = 0;
+        lastblock = nullptr;
         if (ion >= 0) {
             close(ion);
         }
@@ -203,12 +190,12 @@ bool BlockArray::setHistorySize(size_t newsize)
     }
 
     if (!size) {
-        FILE * tmp = tmpfile();
+        FILE *tmp = tmpfile();
         if (!tmp) {
             perror("konsole: cannot open temp file.\n");
         } else {
             ion = dup(fileno(tmp));
-            if (ion<0) {
+            if (ion < 0) {
                 perror("konsole: cannot dup temp file.\n");
                 fclose(tmp);
             }
@@ -230,14 +217,14 @@ bool BlockArray::setHistorySize(size_t newsize)
         return false;
     } else {
         decreaseBuffer(newsize);
-        ftruncate(ion, length*blocksize);
+        ftruncate(ion, length * blocksize);
         size = newsize;
 
         return true;
     }
 }
 
-void moveBlock(FILE * fion, int cursor, int newpos, char * buffer2)
+void BlockArray::moveBlock(FILE *fion, int cursor, int newpos, char *buffer2)
 {
     int res = fseek(fion, cursor * blocksize, SEEK_SET);
     if (res) {
@@ -272,11 +259,11 @@ void BlockArray::decreaseBuffer(size_t newsize)
     }
 
     // The Block constructor could do somthing in future...
-    char * buffer1 = new char[blocksize];
+    char *buffer1 = new char[blocksize];
 
-    FILE * fion = fdopen(dup(ion), "w+b");
+    FILE *fion = fdopen(dup(ion), "w+b");
     if (!fion) {
-        delete [] buffer1;
+        delete[] buffer1;
         perror("fdopen/dup");
         return;
     }
@@ -289,7 +276,7 @@ void BlockArray::decreaseBuffer(size_t newsize)
     }
 
     size_t oldpos;
-    for (size_t i = 0, cursor=firstblock; i < newsize; i++) {
+    for (size_t i = 0, cursor = firstblock; i < newsize; i++) {
         oldpos = (size + cursor + offset) % size;
         moveBlock(fion, oldpos, cursor, buffer1);
         if (oldpos < newsize) {
@@ -302,10 +289,9 @@ void BlockArray::decreaseBuffer(size_t newsize)
     current = newsize - 1;
     length = newsize;
 
-    delete [] buffer1;
+    delete[] buffer1;
 
     fclose(fion);
-
 }
 
 void BlockArray::increaseBuffer()
@@ -320,8 +306,8 @@ void BlockArray::increaseBuffer()
     }
 
     // The Block constructor could do somthing in future...
-    char * buffer1 = new char[blocksize];
-    char * buffer2 = new char[blocksize];
+    char *buffer1 = new char[blocksize];
+    char *buffer2 = new char[blocksize];
 
     int runs = 1;
     int bpr = size; // blocks per run
@@ -331,11 +317,11 @@ void BlockArray::increaseBuffer()
         runs = offset;
     }
 
-    FILE * fion = fdopen(dup(ion), "w+b");
+    FILE *fion = fdopen(dup(ion), "w+b");
     if (!fion) {
         perror("fdopen/dup");
-        delete [] buffer1;
-        delete [] buffer2;
+        delete[] buffer1;
+        delete[] buffer2;
         return;
     }
 
@@ -352,7 +338,7 @@ void BlockArray::increaseBuffer()
             perror("fread");
         }
         int newpos = 0;
-        for (int j = 1, cursor=firstblock; j < bpr; j++) {
+        for (int j = 1, cursor = firstblock; j < bpr; j++) {
             cursor = (cursor + offset) % size;
             newpos = (cursor - offset + size) % size;
             moveBlock(fion, cursor, newpos, buffer2);
@@ -369,10 +355,8 @@ void BlockArray::increaseBuffer()
     current = size - 1;
     length = size;
 
-    delete [] buffer1;
-    delete [] buffer2;
+    delete[] buffer1;
+    delete[] buffer2;
 
     fclose(fion);
-
 }
-

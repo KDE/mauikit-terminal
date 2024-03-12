@@ -1,47 +1,21 @@
 /*
- * This file is a part of QTerminal - http://gitorious.org/qterminal
- *
- * This file was un-linked from KDE and modified
- * by Maxim Bourmistrov <maxim@unixconn.com>
- *
- */
+    SPDX-FileCopyrightText: 2007-2008 Robert Knight <robertknight@gmail.com>
+    SPDX-FileCopyrightText: 1997, 1998 Lars Doelle <lars.doelle@on-line.de>
 
-/*
-    This file is part of Konsole, KDE's terminal emulator.
-
-    Copyright 2007-2008 by Robert Knight <robertknight@gmail.com>
-    Copyright 1997,1998 by Lars Doelle <lars.doelle@on-line.de>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301  USA.
+    SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #ifndef PTY_H
 #define PTY_H
 
 // Qt
-#include <QStringList>
-#include <QVector>
-#include <QList>
 #include <QSize>
 
 // KDE
-#include "kptyprocess.h"
+#include <KPtyProcess>
 
-namespace Konsole {
-
+namespace Konsole
+{
 /**
  * The Pty class is used to start the terminal process,
  * send data to it, receive data from it and manipulate
@@ -55,12 +29,11 @@ namespace Konsole {
  * To start the terminal process, call the start() method
  * with the program name and appropriate arguments.
  */
-class Pty: public KPtyProcess
+class Pty : public KPtyProcess
 {
-Q_OBJECT
+    Q_OBJECT
 
-  public:
-
+public:
     /**
      * Constructs a new Pty.
      *
@@ -70,15 +43,15 @@ Q_OBJECT
      * To start the terminal process, call the run() method with the
      * name of the program to start and appropriate arguments.
      */
-    explicit Pty(QObject* parent = 0);
+    explicit Pty(QObject *parent = nullptr);
 
     /**
      * Construct a process using an open pty master.
      * See KPtyProcess::KPtyProcess()
      */
-    explicit Pty(int ptyMasterFd, QObject* parent = 0);
+    explicit Pty(int ptyMasterFd, QObject *parent = nullptr);
 
-    ~Pty();
+    ~Pty() override;
 
     /**
      * Starts the terminal process.
@@ -91,28 +64,10 @@ Q_OBJECT
      * @param environment A list of key=value pairs which will be added
      * to the environment for the new process.  At the very least this
      * should include an assignment for the TERM environment variable.
-     * @param winid Specifies the value of the WINDOWID environment variable
-     * in the process's environment.
-     * @param addToUtmp Specifies whether a utmp entry should be created for
-     * the pty used.  See K3Process::setUsePty()
-     * @param dbusService Specifies the value of the KONSOLE_DBUS_SERVICE
-     * environment variable in the process's environment.
-     * @param dbusSession Specifies the value of the KONSOLE_DBUS_SESSION
-     * environment variable in the process's environment.
      */
-    int start( const QString& program,
-               const QStringList& arguments,
-               const QStringList& environment,
-               ulong winid,
-               bool addToUtmp
-             );
+    int start(const QString &program, const QStringList &arguments, const QStringList &environment);
 
-    /**
-     * set properties for "EmptyPTY"
-     */
-    void setEmptyPTYProperties();
-
-    /** TODO: Document me */
+    /** Control whether the pty device is writeable by group members. */
     void setWriteable(bool writeable);
 
     /**
@@ -126,19 +81,30 @@ Q_OBJECT
     bool flowControlEnabled() const;
 
     /**
-     * Sets the size of the window (in lines and columns of characters)
-     * used by this teletype.
+     * Sets the size of the window (in columns and lines of characters,
+     * and width and height in pixels) used by this teletype.
      */
-    void setWindowSize(int lines, int cols);
+    void setWindowSize(int columns, int lines, int width, int height);
 
-    /** Returns the size of the window used by this teletype.  See setWindowSize() */
+    /** Returns the size of the window used by this teletype in characters.  See setWindowSize() */
     QSize windowSize() const;
 
-    /** TODO Document me */
-    void setErase(char erase);
+    /** Returns the size of the window used by this teletype in pixels.  See setWindowSize() */
+    QSize pixelSize() const;
+
+    /**
+     * Sets the special character for erasing previous not-yet-erased character.
+     * See termios(3) for detailed description.
+     */
+    void setEraseChar(char eraseChar);
 
     /** */
-    char erase() const;
+    char eraseChar() const;
+
+    /**
+     * Sets the initial working directory.
+     */
+    void setInitialWorkingDirectory(const QString &dir);
 
     /**
      * Returns the process id of the teletype's current foreground
@@ -150,35 +116,26 @@ Q_OBJECT
      */
     int foregroundProcessGroup() const;
 
-  public Q_SLOTS:
+    /**
+     * Close the underlying pty master/slave pair.
+     */
+    void closePty();
 
+public Q_SLOTS:
     /**
      * Put the pty into UTF-8 mode on systems which support it.
      */
     void setUtf8Mode(bool on);
 
     /**
-     * Suspend or resume processing of data from the standard
-     * output of the terminal process.
-     *
-     * See K3Process::suspend() and K3Process::resume()
-     *
-     * @param lock If true, processing of output is suspended,
-     * otherwise processing is resumed.
-     */
-    void lockPty(bool lock);
-
-    /**
      * Sends data to the process currently controlling the
      * teletype ( whose id is returned by foregroundProcessGroup() )
      *
-     * @param buffer Pointer to the data to send.
-     * @param length Length of @p buffer.
+     * @param data the data to send.
      */
-    void sendData(const char* buffer, int length);
+    void sendData(const QByteArray &data);
 
-  Q_SIGNALS:
-
+Q_SIGNALS:
     /**
      * Emitted when a new block of data is received from
      * the teletype.
@@ -186,29 +143,34 @@ Q_OBJECT
      * @param buffer Pointer to the data received.
      * @param length Length of @p buffer
      */
-    void receivedData(const char* buffer, int length);
+    void receivedData(const char *buffer, int length);
 
-  protected:
-      void setupChildProcess();
+protected:
+    // TODO: remove this; the method is removed from QProcess in Qt6
+    // instead use setChildProcessModifier() in the constructor
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    void setupChildProcess() override;
+#endif
 
-  private Q_SLOTS:
+private Q_SLOTS:
     // called when data is received from the terminal process
     void dataReceived();
 
-  private:
-      void init();
+private:
+    void init();
 
     // takes a list of key=value pairs and adds them
     // to the environment for the process
-    void addEnvironmentVariables(const QStringList& environment);
+    void addEnvironmentVariables(const QStringList &environment);
 
-    int  _windowColumns;
-    int  _windowLines;
+    int _windowColumns;
+    int _windowLines;
+    int _windowWidth;
+    int _windowHeight;
     char _eraseChar;
     bool _xonXoff;
     bool _utf8;
 };
-
 }
 
 #endif // PTY_H

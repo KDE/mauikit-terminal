@@ -1,13 +1,10 @@
 /*
     This file is part of Konsole, KDE's terminal.
 
-    Copyright 2007-2008 by Robert Knight <robertknight@gmail.com>
-    Copyright 1997,1998 by Lars Doelle <lars.doelle@on-line.de>
+    SPDX-FileCopyrightText: 2007-2008 Robert Knight <robertknight@gmail.com>
+    SPDX-FileCopyrightText: 1997, 1998 Lars Doelle <lars.doelle@on-line.de>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    SPDX-License-Identifier: GPL-2.0-or-later
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,8 +22,9 @@
 
 // Qt
 #include <QColor>
+#include <span>
 
-//#include <kdemacros.h>
+// #include <kdemacros.h>
 #define KDE_NO_EXPORT
 
 namespace Konsole
@@ -48,77 +46,71 @@ namespace Konsole
 class ColorEntry
 {
 public:
-  /** Specifies the weight to use when drawing text with this color. */
-  enum FontWeight
-  {
-    /** Always draw text in this color with a bold weight. */
-    Bold,
-    /** Always draw text in this color with a normal weight. */
-    Normal,
+    /** Specifies the weight to use when drawing text with this color. */
+    enum FontWeight {
+        /** Always draw text in this color with a bold weight. */
+        Bold,
+        /** Always draw text in this color with a normal weight. */
+        Normal,
+        /**
+         * Use the current font weight set by the terminal application.
+         * This is the default behavior.
+         */
+        UseCurrentFormat
+    };
+
     /**
-     * Use the current font weight set by the terminal application.
-     * This is the default behavior.
+     * Constructs a new color palette entry.
+     *
+     * @param c The color value for this entry.
+     * @param tr Specifies that the color should be transparent when used as a background color.
+     * @param weight Specifies the font weight to use when drawing text with this color.
      */
-    UseCurrentFormat
-  };
+    constexpr ColorEntry(QColor c, bool tr, FontWeight weight = UseCurrentFormat)
+        : color(c)
+        , transparent(tr)
+        , fontWeight(weight)
+    {
+    }
 
-  /**
-   * Constructs a new color palette entry.
-   *
-   * @param c The color value for this entry.
-   * @param tr Specifies that the color should be transparent when used as a background color.
-   * @param weight Specifies the font weight to use when drawing text with this color.
-   */
-  ColorEntry(QColor c, bool tr, FontWeight weight = UseCurrentFormat)
-          : color(c), transparent(tr), fontWeight(weight) {}
+    /**
+     * Constructs a new color palette entry with an undefined color, and
+     * with the transparent and bold flags set to false.
+     */
+    ColorEntry()
+        : transparent(false)
+        , fontWeight(UseCurrentFormat)
+    {
+    }
 
-  /**
-   * Constructs a new color palette entry with an undefined color, and
-   * with the transparent and bold flags set to false.
-   */
-  ColorEntry() : transparent(false), fontWeight(UseCurrentFormat) {}
+    /** The color value of this entry for display. */
+    QColor color;
 
-  /**
-   * Sets the color, transparency and boldness of this color to those of @p rhs.
-   */
-  void operator=(const ColorEntry& rhs)
-  {
-       color = rhs.color;
-       transparent = rhs.transparent;
-       fontWeight = rhs.fontWeight;
-  }
-
-  /** The color value of this entry for display. */
-  QColor color;
-
-  /**
-   * If true character backgrounds using this color should be transparent.
-   * This is not applicable when the color is used to render text.
-   */
-  bool   transparent;
-  /**
-   * Specifies the font weight to use when drawing text with this color.
-   * This is not applicable when the color is used to draw a character's background.
-   */
-  FontWeight fontWeight;
+    /**
+     * If true character backgrounds using this color should be transparent.
+     * This is not applicable when the color is used to render text.
+     */
+    bool transparent;
+    /**
+     * Specifies the font weight to use when drawing text with this color.
+     * This is not applicable when the color is used to draw a character's background.
+     */
+    FontWeight fontWeight;
 };
-
 
 // Attributed Character Representations ///////////////////////////////
 
 // Colors
 
-#define BASE_COLORS   (2+8)
-#define INTENSITIES   2
-#define TABLE_COLORS  (INTENSITIES*BASE_COLORS)
+constexpr auto BASE_COLORS = (2 + 8);
+constexpr auto INTENSITIES = 2;
+constexpr auto TABLE_COLORS = (INTENSITIES * BASE_COLORS);
 
-#define DEFAULT_FORE_COLOR 0
-#define DEFAULT_BACK_COLOR 1
+constexpr auto DEFAULT_FORE_COLOR = 0;
+constexpr auto DEFAULT_BACK_COLOR = 1;
 
-//a standard set of colors using black text on a white background.
-//defined in TerminalDisplay.cpp
-
-extern const ColorEntry base_color_table[TABLE_COLORS] KDE_NO_EXPORT;
+// a standard set of colors using black text on a white background.
+// defined in TerminalDisplay.cpp
 
 /* CharacterColor is a union of the various color spaces.
 
@@ -136,11 +128,11 @@ extern const ColorEntry base_color_table[TABLE_COLORS] KDE_NO_EXPORT;
    default foreground and default background colour.
 */
 
-#define COLOR_SPACE_UNDEFINED   0
-#define COLOR_SPACE_DEFAULT     1
-#define COLOR_SPACE_SYSTEM      2
-#define COLOR_SPACE_256         3
-#define COLOR_SPACE_RGB         4
+#define COLOR_SPACE_UNDEFINED 0
+#define COLOR_SPACE_DEFAULT 1
+#define COLOR_SPACE_SYSTEM 2
+#define COLOR_SPACE_256 3
+#define COLOR_SPACE_RGB 4
 
 /**
  * Describes the color of a single character in the terminal.
@@ -150,32 +142,32 @@ class CharacterColor
     friend class Character;
 
 public:
-  /** Constructs a new CharacterColor whoose color and color space are undefined. */
-  CharacterColor()
-      : _colorSpace(COLOR_SPACE_UNDEFINED),
-        _u(0),
-        _v(0),
-        _w(0)
-  {}
-
-  /**
-   * Constructs a new CharacterColor using the specified @p colorSpace and with
-   * color value @p co
-   *
-   * The meaning of @p co depends on the @p colorSpace used.
-   *
-   * TODO : Document how @p co relates to @p colorSpace
-   *
-   * TODO : Add documentation about available color spaces.
-   */
-  CharacterColor(quint8 colorSpace, int co)
-      : _colorSpace(colorSpace),
-        _u(0),
-        _v(0),
-        _w(0)
-  {
-    switch (colorSpace)
+    /** Constructs a new CharacterColor whoose color and color space are undefined. */
+    constexpr CharacterColor()
+        : _colorSpace(COLOR_SPACE_UNDEFINED)
+        , _u(0)
+        , _v(0)
+        , _w(0)
     {
+    }
+
+    /**
+     * Constructs a new CharacterColor using the specified @p colorSpace and with
+     * color value @p co
+     *
+     * The meaning of @p co depends on the @p colorSpace used.
+     *
+     * TODO : Document how @p co relates to @p colorSpace
+     *
+     * TODO : Add documentation about available color spaces.
+     */
+    constexpr CharacterColor(quint8 colorSpace, int co)
+        : _colorSpace(colorSpace)
+        , _u(0)
+        , _v(0)
+        , _w(0)
+    {
+        switch (colorSpace) {
         case COLOR_SPACE_DEFAULT:
             _u = co & 1;
             break;
@@ -193,110 +185,112 @@ public:
             break;
         default:
             _colorSpace = COLOR_SPACE_UNDEFINED;
+        }
     }
-  }
 
-  /**
-   * Returns true if this character color entry is valid.
-   */
-  bool isValid() const
-  {
+    /**
+     * Returns true if this character color entry is valid.
+     */
+    constexpr bool isValid() const
+    {
         return _colorSpace != COLOR_SPACE_UNDEFINED;
-  }
+    }
 
-  /**
-   * Set the value of this color from a normal system color to the corresponding intensive
-   * system color if it's not already an intensive system color.
-   *
-   * This is only applicable if the color is using the COLOR_SPACE_DEFAULT or COLOR_SPACE_SYSTEM
-   * color spaces.
-   */
-  void setIntensive();
+    /**
+     * Set the value of this color from a normal system color to the corresponding intensive
+     * system color if it's not already an intensive system color.
+     *
+     * This is only applicable if the color is using the COLOR_SPACE_DEFAULT or COLOR_SPACE_SYSTEM
+     * color spaces.
+     */
+    void setIntensive();
 
-  /**
-   * Returns the color within the specified color @p palette
-   *
-   * The @p palette is only used if this color is one of the 16 system colors, otherwise
-   * it is ignored.
-   */
-  QColor color(const ColorEntry* palette) const;
+    /**
+     * Returns the color within the specified color @p palette
+     *
+     * The @p palette is only used if this color is one of the 16 system colors, otherwise
+     * it is ignored.
+     */
+    constexpr QColor color(std::span<const ColorEntry> palette) const;
 
-  /**
-   * Compares two colors and returns true if they represent the same color value and
-   * use the same color space.
-   */
-  friend bool operator == (const CharacterColor& a, const CharacterColor& b);
-  /**
-   * Compares two colors and returns true if they represent different color values
-   * or use different color spaces.
-   */
-  friend bool operator != (const CharacterColor& a, const CharacterColor& b);
+    /**
+     * Compares two colors and returns true if they represent the same color value and
+     * use the same color space.
+     */
+    constexpr friend bool operator==(const CharacterColor &a, const CharacterColor &b);
+    /**
+     * Compares two colors and returns true if they represent different color values
+     * or use different color spaces.
+     */
+    constexpr friend bool operator!=(const CharacterColor &a, const CharacterColor &b);
 
 private:
-  quint8 _colorSpace;
+    quint8 _colorSpace;
 
-  // bytes storing the character color
-  quint8 _u;
-  quint8 _v;
-  quint8 _w;
+    // bytes storing the character color
+    quint8 _u;
+    quint8 _v;
+    quint8 _w;
 };
 
-inline bool operator == (const CharacterColor& a, const CharacterColor& b)
+constexpr inline bool operator==(const CharacterColor &a, const CharacterColor &b)
 {
-    return     a._colorSpace == b._colorSpace &&
-            a._u == b._u &&
-            a._v == b._v &&
-            a._w == b._w;
-}
-inline bool operator != (const CharacterColor& a, const CharacterColor& b)
-{
-    return !operator==(a,b);
+    return a._colorSpace == b._colorSpace && a._u == b._u && a._v == b._v && a._w == b._w;
 }
 
-inline const QColor color256(quint8 u, const ColorEntry* base)
+constexpr inline bool operator!=(const CharacterColor &a, const CharacterColor &b)
 {
-  //   0.. 16: system colors
-  if (u <   8) return base[u+2            ].color;
-  u -= 8;
-  if (u <   8) return base[u+2+BASE_COLORS].color;
-  u -= 8;
-
-  //  16..231: 6x6x6 rgb color cube
-  if (u < 216) return QColor(((u/36)%6) ? (40*((u/36)%6)+55) : 0,
-                             ((u/ 6)%6) ? (40*((u/ 6)%6)+55) : 0,
-                             ((u/ 1)%6) ? (40*((u/ 1)%6)+55) : 0);
-  u -= 216;
-
-  // 232..255: gray, leaving out black and white
-  int gray = u*10+8; return QColor(gray,gray,gray);
+    return !operator==(a, b);
 }
 
-inline QColor CharacterColor::color(const ColorEntry* base) const
+constexpr inline const QColor color256(quint8 u, std::span<const ColorEntry> base)
 {
-  switch (_colorSpace)
-  {
-    case COLOR_SPACE_DEFAULT: return base[_u+0+(_v?BASE_COLORS:0)].color;
-    case COLOR_SPACE_SYSTEM: return base[_u+2+(_v?BASE_COLORS:0)].color;
-    case COLOR_SPACE_256: return color256(_u,base);
-    case COLOR_SPACE_RGB: return QColor(_u,_v,_w);
-    case COLOR_SPACE_UNDEFINED: return QColor();
-  }
+    //   0.. 16: system colors
+    if (u < 8)
+        return base[u + 2].color;
+    u -= 8;
+    if (u < 8)
+        return base[u + 2 + BASE_COLORS].color;
+    u -= 8;
 
-  Q_ASSERT(false); // invalid color space
+    //  16..231: 6x6x6 rgb color cube
+    if (u < 216)
+        return QColor(((u / 36) % 6) ? (40 * ((u / 36) % 6) + 55) : 0,
+                      ((u / 6) % 6) ? (40 * ((u / 6) % 6) + 55) : 0,
+                      ((u / 1) % 6) ? (40 * ((u / 1) % 6) + 55) : 0);
+    u -= 216;
 
-  return QColor();
+    // 232..255: gray, leaving out black and white
+    int gray = u * 10 + 8;
+    return QColor(gray, gray, gray);
+}
+
+constexpr inline QColor CharacterColor::color(std::span<const ColorEntry> base) const
+{
+    switch (_colorSpace) {
+    case COLOR_SPACE_DEFAULT:
+        return base[_u + 0 + (_v ? BASE_COLORS : 0)].color;
+    case COLOR_SPACE_SYSTEM:
+        return base[_u + 2 + (_v ? BASE_COLORS : 0)].color;
+    case COLOR_SPACE_256:
+        return color256(_u, base);
+    case COLOR_SPACE_RGB:
+        return {_u, _v, _w};
+    case COLOR_SPACE_UNDEFINED:
+        return QColor();
+    }
+
+    Q_ASSERT(false); // invalid color space
+
+    return QColor();
 }
 
 inline void CharacterColor::setIntensive()
 {
-  if (_colorSpace == COLOR_SPACE_SYSTEM || _colorSpace == COLOR_SPACE_DEFAULT)
-  {
-    _v = 1;
-  }
+    if (_colorSpace == COLOR_SPACE_SYSTEM || _colorSpace == COLOR_SPACE_DEFAULT) {
+        _v = 1;
+    }
 }
-
-
 }
 
 #endif // CHARACTERCOLOR_H
-

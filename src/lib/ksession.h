@@ -20,66 +20,137 @@
  *    02110-1301  USA.
  */
 
-#ifndef KSESSION_H
-#define KSESSION_H
+#pragma once
 
 #include <QObject>
 
-// Konsole
 #include "Session.h"
-//#include "TerminalDisplay.h"
 
 using namespace Konsole;
 
+/**
+ * @brief The KSession class
+ * Creates and controls the terminal session. This class is exposed to the QML engine as `Session`.
+ *
+ * @note This class is not part of any public API and it is only part of the Terminal QML control implementation
+ */
 class KSession : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString  kbScheme  READ  getKeyBindings WRITE setKeyBindings NOTIFY changedKeyBindings)
-    Q_PROPERTY(QString  initialWorkingDirectory READ getInitialWorkingDirectory WRITE setInitialWorkingDirectory NOTIFY initialWorkingDirectoryChanged)
-    Q_PROPERTY(QString  title READ getTitle WRITE setTitle NOTIFY titleChanged)
-    Q_PROPERTY(QString  shellProgram WRITE setShellProgram)
-    Q_PROPERTY(QStringList  shellProgramArgs WRITE setArgs)
-    Q_PROPERTY(QString  history READ getHistory)
+
+    /**
+     *  Allows to select the preferred key binding, by default there is one pre-defined.
+     */
+    Q_PROPERTY(QString kbScheme READ getKeyBindings WRITE setKeyBindings NOTIFY changedKeyBindings)
+
+    /**
+     * Set the initial working directory from a local path
+     */
+    Q_PROPERTY(QString initialWorkingDirectory READ getInitialWorkingDirectory WRITE setInitialWorkingDirectory NOTIFY initialWorkingDirectoryChanged)
+
+    /**
+     * The session title
+     */
+    Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
+
+    /**
+     * Allows to change the default shell program, by default bash is used
+     */
+    Q_PROPERTY(QString shellProgram READ shellProgram WRITE setShellProgram NOTIFY shellProgramChanged)
+
+    /**
+     * Allows to set the arguments to the default shell program
+     */
+    Q_PROPERTY(QStringList shellProgramArgs READ args WRITE setArgs NOTIFY argsChanged)
+
+    /**
+     * The commands history
+     */
+    Q_PROPERTY(QString history READ getHistory)
+
+    /**
+     * Whether the session has an active process running
+     */
     Q_PROPERTY(bool hasActiveProcess READ hasActiveProcess NOTIFY hasActiveProcessChanged)
+
+    /**
+     * The name of the current process running
+     */
     Q_PROPERTY(QString foregroundProcessName READ foregroundProcessName NOTIFY foregroundProcessNameChanged)
+
+    /**
+     * The current directory of the session
+     */
     Q_PROPERTY(QString currentDir READ currentDir NOTIFY currentDirChanged)
+
+    /**
+     * Allows to set the amount of lines to store in the history
+     */
     Q_PROPERTY(int historySize READ historySize WRITE setHistorySize NOTIFY historySizeChanged)
+
+    /**
+     * Whether to monitor when the session has gone silent
+     */
     Q_PROPERTY(bool monitorSilence READ monitorSilence WRITE setMonitorSilence NOTIFY monitorSilenceChanged)
     
 public:
-    KSession(QObject *parent = 0);
+    KSession(QObject *parent = nullptr);
     ~KSession();
     
 public:
-    //bool setup();
+    /**
+     * @brief addView
+     * @param display
+     */
     void addView(TerminalDisplay *display);
+
+    /**
+     * @brief removeView
+     * @param display
+     */
     void removeView(TerminalDisplay *display);
     
     int getRandomSeed();
     QString getKeyBindings();
-    
-    //look-n-feel, if you don`t like defaults
-    
-    //environment
+
+    /**
+     * @brief Set the custom enviroment variables
+     * @param environment
+     */
     void setEnvironment(const QStringList & environment);
     
-    //Initial working directory
+    /**
+     * @brief Initial working directory
+     * @param dir
+     */
     void setInitialWorkingDirectory(const QString & dir);
     QString getInitialWorkingDirectory();
     
-    //Text codec, default is UTF-8
+    /**
+     * @brief Text codec, default is UTF-8
+     * @param codec
+     */
     void setTextCodec(QTextCodec * codec);
     
-    // History size for scrolling
+    /**
+     * @brief History size for scrolling
+     * @param lines
+     */
     void setHistorySize(int lines); //infinite if lines < 0
     int historySize() const;
     
     QString getHistory() const;
     
-    // Sets whether flow control is enabled
+    /**
+     * @brief Sets whether flow control is enabled
+     * @param enabled
+     */
     void setFlowControlEnabled(bool enabled);
     
-    // Returns whether flow control is enabled
+    /**
+     * @brief Returns whether flow control is enabled
+     * @return
+     */
     bool flowControlEnabled(void);
     
     /**
@@ -88,106 +159,254 @@ public:
      */
     //void setFlowControlWarningEnabled(bool enabled);
     
-    /*! Get all available keyboard bindings
+    /**
+     * @brief Get all available keyboard bindings
+     * @return
      */
     static QStringList availableKeyBindings();
     
-    //! Return current key bindings
+    /**
+     * @brief Return current key bindings
+     * @return
+     */
     QString keyBindings();
     
     QString getTitle();
     
     /**
-     * Returns \c true if the session has an active subprocess running in it
+     * @brief Returns \c true if the session has an active subprocess running in it
      * spawned from the initial shell.
      */
     bool hasActiveProcess() const;
     
     /**
-     * Returns the name of the terminal's foreground process.
+     * @brief Returns the name of the terminal's foreground process.
      */
     QString foregroundProcessName();
     
     /**
-     * Returns the current working directory of the process.
+     * @brief Returns the current working directory of the process.
      */
     QString currentDir();
     
-void setMonitorSilence(bool value);
-bool monitorSilence() const;
- 
+    /**
+     * @brief setMonitorSilence
+     * @param value
+     */
+    void setMonitorSilence(bool value);
+
+    /**
+     * @brief monitorSilence
+     * @return
+     */
+    bool monitorSilence() const;
+
 Q_SIGNALS:
+    /**
+     * @brief started
+     */
     void started();
+
+    /**
+     * @brief finished
+     */
     void finished();
+
+    /**
+     * @brief copyAvailable
+     */
     void copyAvailable(bool);
     
+    /**
+     * @brief termGetFocus
+     */
     void termGetFocus();
+
+    /**
+     * @brief termLostFocus
+     */
     void termLostFocus();
     
-    void termKeyPressed(QKeyEvent *);
+    /**
+     * @brief termKeyPressed
+     */
+    void termKeyPressed(QKeyEvent *, bool);
     
+    /**
+     * @brief changedKeyBindings
+     * @param kb
+     */
     void changedKeyBindings(QString kb);
     
+    /**
+     * @brief titleChanged
+     */
     void titleChanged();
     
+    /**
+     * @brief historySizeChanged
+     */
     void historySizeChanged();
     
+    /**
+     * @brief initialWorkingDirectoryChanged
+     */
     void initialWorkingDirectoryChanged();
     
+    /**
+     * @brief matchFound
+     * @param startColumn
+     * @param startLine
+     * @param endColumn
+     * @param endLine
+     */
     void matchFound(int startColumn, int startLine, int endColumn, int endLine);
+
+    /**
+     * @brief noMatchFound
+     */
     void noMatchFound();
+
+    /**
+     * @brief hasActiveProcessChanged
+     */
     void hasActiveProcessChanged();
+
+    /**
+     * @brief foregroundProcessNameChanged
+     */
     void foregroundProcessNameChanged();
     
+    /**
+     * @brief processHasSilent
+     * @param value
+     */
     void processHasSilent(bool value);
+
+    /**
+     * @brief bellRequest
+     * @param message
+     */
     void bellRequest(QString message);
+
+    /**
+     * @brief monitorSilenceChanged
+     */
     void monitorSilenceChanged();
+
+    /**
+     * @brief currentDirChanged
+     */
     void currentDirChanged();
     
+    /**
+     * @brief shellProgramChanged
+     */
+    void shellProgramChanged();
+
+    /**
+     * @brief argsChanged
+     */
+    void argsChanged();
+
 public Q_SLOTS:
-    /*! Set named key binding for given widget
+    /**
+     * @brief Set named key binding for the session
      */
     void setKeyBindings(const QString & kb);
+
+    /**
+     * @brief setTitle
+     * @param name
+     */
     void setTitle(QString name);
     
+    /**
+     * @brief startShellProgram
+     */
     void startShellProgram();
     
+    /**
+     * @brief sendSignal
+     * @param signal
+     * @return
+     */
     bool sendSignal(int signal);
     
-    //  Shell program, default is /bin/bash
+    /**
+     * @brief Shell program, default is `/bin/bash`
+     * @param progname
+     */
     void setShellProgram(const QString & progname);
-    
-    // Shell program args, default is none
+
+    /**
+     * @brief shellProgram
+     * @return
+     */
+    QString shellProgram() const;
+
+    /**
+     * @brief Shell program args, default is none
+     * @param args
+     */
     void setArgs(const QStringList &args);
-    
+
+    /**
+     * @brief args
+     * @return
+     */
+    QStringList args() const;
+
+    /**
+     * @brief getShellPID
+     * @return
+     */
     int getShellPID();
+
+    /**
+     * @brief changeDir
+     * @param dir
+     */
     void changeDir(const QString & dir);
     
-    // Send some text to terminal
+    /**
+     * @brief Send some text to terminal
+     * @param text
+     */
     void sendText(QString text);
-    // Send some text to terminal
+
+    /**
+     * @brief Emulate a key press
+     * @param rep
+     * @param key
+     * @param mod
+     */
     void sendKey(int rep, int key, int mod) const;
     
+    /**
+     * @brief clearScreen
+     */
     void clearScreen();
     
-    // Search history
-    void search(const QString &regexp, int startLine = 0, int startColumn = 0, bool forwards = true );    
+    /**
+     * @brief Search history
+     * @param regexp
+     * @param startLine
+     * @param startColumn
+     * @param forwards
+     */
+    void search(const QString &regexp, int startLine = 0, int startColumn = 0, bool forwards = true );
     
+    void selectionChanged(bool textSelected);
+
 protected Q_SLOTS:
     void sessionFinished();
-    void selectionChanged(bool textSelected);
     
 private Q_SLOTS:
-    Session* createSession(QString name);
-    //Konsole::KTerminalDisplay* createTerminalDisplay(Konsole::Session *session, QQuickItem* parent);
-    
+     std::unique_ptr<Session> createSession(QString name);   
     
 private:
-    //Konsole::KTerminalDisplay *m_terminalDisplay;
     QString _initialWorkingDirectory;
-    Session *m_session;
+    std::unique_ptr<Session> m_session;
     QString m_processName;
-    
 };
-
-#endif // KSESSION_H

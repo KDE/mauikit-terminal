@@ -1,7 +1,8 @@
 /*
     This file is part of Konsole, an X terminal.
 
-    Copyright 2006-2008 by Robert Knight <robertknight@gmail.com>
+    SPDX-FileCopyrightText: 2006-2008 Robert Knight <robertknight@gmail.com>
+    SPDX-License-Identifier: GPL-2.0-or-later
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
@@ -43,10 +44,12 @@ namespace Konsole
 class TerminalCharacterDecoder
 {
 public:
-    virtual ~TerminalCharacterDecoder() {}
+    virtual ~TerminalCharacterDecoder()
+    {
+    }
 
     /** Begin decoding characters.  The resulting text is appended to @p output. */
-    virtual void begin(QTextStream* output) = 0;
+    virtual void begin(QTextStream *output) = 0;
     /** End decoding. */
     virtual void end() = 0;
 
@@ -58,9 +61,7 @@ public:
      * @param count The number of characters
      * @param properties Additional properties which affect all characters in the line
      */
-    virtual void decodeLine(const Character* const characters,
-                            int count,
-                            LineProperty properties) = 0;
+    virtual void decodeLine(std::span<const Character> characters, LineProperty properties) = 0;
 };
 
 /**
@@ -92,57 +93,17 @@ public:
     /** Enables recording of character positions at which new lines are added.  See linePositions() */
     void setRecordLinePositions(bool record);
 
-    virtual void begin(QTextStream* output);
-    virtual void end();
+    void begin(QTextStream *output) override;
+    void end() override;
 
-    virtual void decodeLine(const Character* const characters,
-                            int count,
-                            LineProperty properties);
-
+    void decodeLine(std::span<const Character> characters, LineProperty properties) override;
 
 private:
-    QTextStream* _output;
+    QTextStream *_output;
     bool _includeTrailingWhitespace;
 
     bool _recordLinePositions;
     QList<int> _linePositions;
-};
-
-/**
- * A terminal character decoder which produces pretty HTML markup
- */
-class HTMLDecoder : public TerminalCharacterDecoder
-{
-public:
-    /**
-     * Constructs an HTML decoder using a default black-on-white color scheme.
-     */
-    HTMLDecoder();
-
-    /**
-     * Sets the colour table which the decoder uses to produce the HTML colour codes in its
-     * output
-     */
-    void setColorTable( const ColorEntry* table );
-
-    virtual void decodeLine(const Character* const characters,
-                            int count,
-                            LineProperty properties);
-
-    virtual void begin(QTextStream* output);
-    virtual void end();
-
-private:
-    void openSpan(std::wstring& text , const QString& style);
-    void closeSpan(std::wstring& text);
-
-    QTextStream* _output;
-    const ColorEntry* _colorTable;
-    bool _innerSpanOpen;
-    quint8 _lastRendition;
-    CharacterColor _lastForeColor;
-    CharacterColor _lastBackColor;
-
 };
 
 }

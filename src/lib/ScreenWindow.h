@@ -1,10 +1,7 @@
 /*
-    Copyright 2007-2008 by Robert Knight <robertknight@gmail.com>
+    SPDX-FileCopyrightText: 2007-2008 Robert Knight <robertknight@gmail.com>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    SPDX-License-Identifier: GPL-2.0-or-later
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +24,7 @@
 
 // Konsole
 #include "Character.h"
+#include "KeyboardTranslator.h"
 
 namespace Konsole
 {
@@ -47,12 +45,12 @@ class Screen;
  * lines are added to it.
  *
  * Whenever the output from the underlying screen is changed, the notifyOutputChanged() slot should
- * be called.  This in turn will update the window's position and emit the outputChanged() signal
+ * be called.  This in turn will update the window's position and Q_EMIT the outputChanged() signal
  * if necessary.
  */
 class ScreenWindow : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     /**
@@ -64,13 +62,13 @@ public:
      * to notify the window when the associated screen has changed and synchronize selection updates
      * between all views on a session.
      */
-    ScreenWindow(QObject* parent = 0);
-    virtual ~ScreenWindow();
+    ScreenWindow(QObject *parent = nullptr);
+    ~ScreenWindow() override;
 
     /** Sets the screen which this window looks onto */
-    void setScreen(Screen* screen);
+    void setScreen(Screen *screen);
     /** Returns the screen which this window looks onto */
-    Screen* screen() const;
+    Screen *screen() const;
 
     /**
      * Returns the image of characters which are currently visible through this window
@@ -79,7 +77,7 @@ public:
      * The returned buffer is managed by the ScreenWindow instance and does not need to be
      * deleted by the caller.
      */
-    Character* getImage();
+    std::span<Character> getImage();
 
     /**
      * Returns the line attributes associated with the lines of characters which
@@ -114,30 +112,28 @@ public:
      */
     QRect scrollRegion() const;
 
-    void selectAll();
-
     /**
      * Sets the start of the selection to the given @p line and @p column within
      * the window.
      */
-    void setSelectionStart( int column , int line , bool columnMode );
+    void setSelectionStart(int column, int line, bool columnMode);
     /**
      * Sets the end of the selection to the given @p line and @p column within
      * the window.
      */
-    void setSelectionEnd( int column , int line );
+    void setSelectionEnd(int column, int line);
     /**
      * Retrieves the start of the selection within the window.
      */
-    void getSelectionStart( int& column , int& line );
+    void getSelectionStart(int &column, int &line);
     /**
      * Retrieves the end of the selection within the window.
      */
-    void getSelectionEnd( int& column , int& line );
+    void getSelectionEnd(int &column, int &line);
     /**
      * Returns true if the character at @p line , @p column is part of the selection.
      */
-    bool isSelected( int column , int line );
+    bool isSelected(int column, int line);
     /**
      * Clears the current selection
      */
@@ -171,11 +167,10 @@ public:
     bool atEndOfOutput() const;
 
     /** Scrolls the window so that @p line is at the top of the window */
-    void scrollTo( int line );
+    void scrollTo(int line);
 
     /** Describes the units which scrollBy() moves the window by. */
-    enum RelativeScrollMode
-    {
+    enum RelativeScrollMode {
         /** Scroll the window down by a given number of lines. */
         ScrollLines,
         /**
@@ -194,7 +189,7 @@ public:
      * this number is positive, the view is scrolled down.  If this number is negative, the view
      * is scrolled up.
      */
-    void scrollBy( RelativeScrollMode mode , int amount );
+    void scrollBy(RelativeScrollMode mode, int amount);
 
     /**
      * Specifies whether the window should automatically move to the bottom
@@ -215,7 +210,7 @@ public:
      *
      * @param preserveLineBreaks See Screen::selectedText()
      */
-    QString selectedText( bool preserveLineBreaks ) const;
+    QString selectedText(bool preserveLineBreaks) const;
 
 public Q_SLOTS:
     /**
@@ -224,6 +219,8 @@ public Q_SLOTS:
      * the outputChanged() signal to be emitted.
      */
     void notifyOutputChanged();
+
+    void handleCommandFromKeyboard(KeyboardTranslator::Command command);
 
 Q_SIGNALS:
     /**
@@ -241,20 +238,23 @@ Q_SIGNALS:
     /** Emitted when the selection is changed. */
     void selectionChanged();
 
+    void scrollToEnd();
+
 private:
     int endWindowLine() const;
     void fillUnusedArea();
 
-    Screen* _screen; // see setScreen() , screen()
-    Character* _windowBuffer;
+    // not owned by us
+    Screen *_screen; // see setScreen() , screen()
+    std::vector<Character> _windowBuffer;
     int _windowBufferSize;
     bool _bufferNeedsUpdate;
 
-    int  _windowLines;
-    int  _currentLine; // see scrollTo() , currentLine()
+    int _windowLines;
+    int _currentLine; // see scrollTo() , currentLine()
     bool _trackOutput; // see setTrackOutput() , trackOutput()
-    int  _scrollCount; // count of lines which the window has been scrolled by since
-                       // the last call to resetScrollCount()
+    int _scrollCount; // count of lines which the window has been scrolled by since
+                      // the last call to resetScrollCount()
 };
 
 }

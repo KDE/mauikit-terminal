@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-08 01:39+0000\n"
+"POT-Creation-Date: 2024-03-13 01:36+0000\n"
 "PO-Revision-Date: 2024-02-08 16:33+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -19,46 +19,49 @@ msgstr ""
 
 #: src/controls.5/ColorSchemesPage.qml:12
 #: src/controls.5/ColorSchemesPage.qml:18
+#: src/controls.6/ColorSchemesPage.qml:12
+#: src/controls.6/ColorSchemesPage.qml:18
 #, kde-format
 msgid "Color Scheme"
 msgstr "Renk Şeması"
 
 #: src/controls.5/ColorSchemesPage.qml:19
+#: src/controls.6/ColorSchemesPage.qml:19
 #, kde-format
 msgid "Change the color scheme of the terminal."
 msgstr "Uçbirimin renk şemasını değiştirin."
 
-#: src/controls.5/Terminal.qml:104
+#: src/controls.5/Terminal.qml:104 src/controls.6/Terminal.qml:132
 #, kde-format
 msgid "Copy"
 msgstr "Kopyala"
 
-#: src/controls.5/Terminal.qml:117
+#: src/controls.5/Terminal.qml:117 src/controls.6/Terminal.qml:145
 #, kde-format
 msgid "Paste"
 msgstr "Yapıştır"
 
-#: src/controls.5/Terminal.qml:130
+#: src/controls.5/Terminal.qml:130 src/controls.6/Terminal.qml:158
 #, kde-format
 msgid "Find"
 msgstr "Bul"
 
-#: src/controls.5/Terminal.qml:171
+#: src/controls.5/Terminal.qml:171 src/controls.6/Terminal.qml:194
 #, kde-format
 msgid "Case Sensitive"
 msgstr "BÜYÜK/küçük Harf Duyarlı"
 
-#: src/controls.5/Terminal.qml:178
+#: src/controls.5/Terminal.qml:178 src/controls.6/Terminal.qml:201
 #, kde-format
 msgid "Whole Words Only"
 msgstr "Yalnızca Tam Sözcükler"
 
-#: src/controls.5/Terminal.qml:188
+#: src/controls.5/Terminal.qml:188 src/controls.6/Terminal.qml:211
 #, kde-format
 msgid "Find..."
 msgstr "Bul..."
 
-#: src/controls.5/Terminal.qml:469
+#: src/controls.5/Terminal.qml:469 src/controls.6/Terminal.qml:491
 #, kde-format
 msgid "Toggle Virtual Keyboard"
 msgstr "Sanal Klavyeyi Aç/Kapat"

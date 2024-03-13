@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-08 01:39+0000\n"
+"POT-Creation-Date: 2024-03-13 01:36+0000\n"
 "PO-Revision-Date: 2023-08-05 07:53+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -19,46 +19,49 @@ msgstr ""
 
 #: src/controls.5/ColorSchemesPage.qml:12
 #: src/controls.5/ColorSchemesPage.qml:18
+#: src/controls.6/ColorSchemesPage.qml:12
+#: src/controls.6/ColorSchemesPage.qml:18
 #, kde-format
 msgid "Color Scheme"
 msgstr ""
 
 #: src/controls.5/ColorSchemesPage.qml:19
+#: src/controls.6/ColorSchemesPage.qml:19
 #, kde-format
 msgid "Change the color scheme of the terminal."
 msgstr ""
 
-#: src/controls.5/Terminal.qml:104
+#: src/controls.5/Terminal.qml:104 src/controls.6/Terminal.qml:132
 #, kde-format
 msgid "Copy"
 msgstr "Kopiera"
 
-#: src/controls.5/Terminal.qml:117
+#: src/controls.5/Terminal.qml:117 src/controls.6/Terminal.qml:145
 #, kde-format
 msgid "Paste"
 msgstr "Klistra in"
 
-#: src/controls.5/Terminal.qml:130
+#: src/controls.5/Terminal.qml:130 src/controls.6/Terminal.qml:158
 #, kde-format
 msgid "Find"
 msgstr "Sök"
 
-#: src/controls.5/Terminal.qml:171
+#: src/controls.5/Terminal.qml:171 src/controls.6/Terminal.qml:194
 #, kde-format
 msgid "Case Sensitive"
 msgstr "Skiftlägeskänslig"
 
-#: src/controls.5/Terminal.qml:178
+#: src/controls.5/Terminal.qml:178 src/controls.6/Terminal.qml:201
 #, kde-format
 msgid "Whole Words Only"
 msgstr "Bara hela ord"
 
-#: src/controls.5/Terminal.qml:188
+#: src/controls.5/Terminal.qml:188 src/controls.6/Terminal.qml:211
 #, kde-format
 msgid "Find..."
 msgstr "Sök..."
 
-#: src/controls.5/Terminal.qml:469
+#: src/controls.5/Terminal.qml:469 src/controls.6/Terminal.qml:491
 #, kde-format
 msgid "Toggle Virtual Keyboard"
 msgstr "Visa eller dölj virtuellt tangentbord"

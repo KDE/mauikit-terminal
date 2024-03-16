@@ -17,7 +17,8 @@ import "private" as Private
  * This control has a pack of built-in functionality making it ready for embedding it into any other application. 
  * A quick overview includes support for touch gestures for navigation, scrollbar, search and find, contextual menu actions and keyboard shortcuts.
  *
- * @note For creating your own implementation you can llok into using the exposed classes `QMLTermWidget` and `QMLTermSession`
+ * @note For creating your own implementation you can look into using the exposed classes `QMLTermWidget` and `QMLTermSession`.
+ * 
  * @code
  * import QtQuick
 import QtQuick.Controls
@@ -59,7 +60,7 @@ Maui.Page
     clip: true
     
     /**
-     * @see TerminalDisplay::readOnly
+     * @see Konsole::TerminalDisplay::readOnly
      */
     property alias readOnly : kterminal.readOnly
     

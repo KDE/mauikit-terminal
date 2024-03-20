@@ -557,8 +557,7 @@ bool ColorSchemeManager::loadCustomColorScheme(const QString& path)
     if (path.endsWith(QLatin1String(".colorscheme")))
         return loadColorScheme(path);
 
-
-        return false;
+    return false;
 }
 
 void ColorSchemeManager::addCustomColorSchemeDir(const QString& custom_dir)

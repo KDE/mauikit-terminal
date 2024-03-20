@@ -1836,8 +1836,15 @@ void TerminalDisplay::mouseMoveEvent(QMouseEvent *ev)
 
         //   int distance = KGlobalSettings::dndEventDelay();
         int distance = QApplication::startDragDistance();
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         if (ev->position().x() > dragInfo.start.x() + distance || ev->position().x() < dragInfo.start.x() - distance
-            || ev->position().y() > dragInfo.start.y() + distance || ev->position().y() < dragInfo.start.y() - distance) {
+            || ev->position().y() > dragInfo.start.y() + distance || ev->position().y() < dragInfo.start.y() - distance)
+#else
+        if (ev->pos().x() > dragInfo.start.x() + distance || ev->pos().x() < dragInfo.start.x() - distance
+            || ev->pos().y() > dragInfo.start.y() + distance || ev->pos().y() < dragInfo.start.y() - distance)
+#endif
+       {
             // we've left the drag square, we can start a real drag operation now
             Q_EMIT isBusySelecting(false); // Ok.. we can breath again.
 
@@ -3120,8 +3127,13 @@ void TerminalDisplay::simulateKeyPress(int key, int modifiers, bool pressed, qui
 void TerminalDisplay::simulateKeySequence(const QKeySequence &keySequence)
 {
     for (int i = 0; i < keySequence.count(); ++i) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        const Qt::Key key = Qt::Key(keySequence[i] & ~Qt::KeyboardModifierMask);
+        const Qt::KeyboardModifiers modifiers = Qt::KeyboardModifiers(keySequence[i] & Qt::KeyboardModifierMask);
+#else
         const Qt::Key key = Qt::Key(keySequence[i].key());
         const Qt::KeyboardModifiers modifiers = Qt::KeyboardModifiers(keySequence[i].keyboardModifiers());
+#endif
         QKeyEvent eventPress = QKeyEvent(QEvent::KeyPress, key, modifiers, QString());
         keyPressedSignal(&eventPress, false);
     }

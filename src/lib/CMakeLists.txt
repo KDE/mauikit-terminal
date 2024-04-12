@@ -38,8 +38,8 @@ set(lib_SRCS
     tools.cpp
     Vt102Emulation.cpp)
 
-add_library(${PROJECT_NAME}  STATIC)
-target_sources(${PROJECT_NAME}  PRIVATE ${lib_SRCS})
+add_library(${PROJECT_NAME} STATIC)
+target_sources(${PROJECT_NAME} PRIVATE ${lib_SRCS})
 set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(${PROJECT_NAME}

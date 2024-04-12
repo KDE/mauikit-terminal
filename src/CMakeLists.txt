@@ -47,10 +47,12 @@ target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION}
     PRIVATE    
     ${plugin_SRCS})
     
+    if (QT_MAJOR_VERSION STREQUAL "6")
     target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION}plugin
     PRIVATE    
     code/terminal_plugin.cpp
     ${plugin_SRCS})
+    endif()
 
 add_library(MauiKit${MAUI_MAJOR_VERSION}::Terminal ALIAS MauiKitTerminal${MAUI_MAJOR_VERSION})
 
@@ -74,9 +76,11 @@ target_include_directories(MauiKitTerminal${MAUI_MAJOR_VERSION}
 
 target_include_directories(MauiKitTerminal${MAUI_MAJOR_VERSION} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_CURRENT_BINARY_DIR};>")
 
+if (QT_MAJOR_VERSION STREQUAL "6")
 target_link_libraries(MauiKitTerminal${MAUI_MAJOR_VERSION}plugin
     PRIVATE
     KTerminalLib)
+    endif()
     
 target_link_libraries(MauiKitTerminal${MAUI_MAJOR_VERSION}
     PRIVATE

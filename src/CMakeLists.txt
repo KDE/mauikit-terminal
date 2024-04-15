@@ -42,13 +42,14 @@ ecm_target_qml_sources(MauiKitTerminal${MAUI_MAJOR_VERSION} PATH private SOURCES
     controls.${QT_MAJOR_VERSION}/private/TerminalScrollBar.qml)
 
 # add_subdirectory(lib)
-
-target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION}
-    PRIVATE    
-    ${plugin_SRCS})
-    
+   
     if (QT_MAJOR_VERSION STREQUAL "6")
     target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION}plugin
+    PRIVATE    
+    code/terminal_plugin.cpp
+    ${plugin_SRCS})
+    else()
+    target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION}
     PRIVATE    
     code/terminal_plugin.cpp
     ${plugin_SRCS})

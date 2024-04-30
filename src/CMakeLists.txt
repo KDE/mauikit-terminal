@@ -17,10 +17,6 @@ ecm_add_qml_module(MauiKitTerminal${MAUI_MAJOR_VERSION}
     CLASS_NAME TerminalPlugin
     NO_PLUGIN_OPTIONAL)
 
-set(plugin_SRCS
-    code/colorschemesmodel.cpp
-    code/moduleinfo.cpp)
-
 set(plugin_HDRS
     code/moduleinfo.h)
 
@@ -42,18 +38,23 @@ ecm_target_qml_sources(MauiKitTerminal${MAUI_MAJOR_VERSION} PATH private SOURCES
     controls.${QT_MAJOR_VERSION}/private/TerminalScrollBar.qml)
 
 # add_subdirectory(lib)
-   
-    if (QT_MAJOR_VERSION STREQUAL "6")
-    target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION}plugin
-    PRIVATE    
-    code/terminal_plugin.cpp
-    ${plugin_SRCS})
-    else()
+
+if (QT_MAJOR_VERSION STREQUAL "6")
+
     target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION}
-    PRIVATE    
-    code/terminal_plugin.cpp
-    ${plugin_SRCS})
-    endif()
+        PRIVATE
+        code/moduleinfo.cpp)
+
+    target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION}plugin
+        PRIVATE
+        code/terminal_plugin.cpp
+        code/colorschemesmodel.cpp)
+else()
+    target_sources(MauiKitTerminal${MAUI_MAJOR_VERSION}
+        PRIVATE
+        code/terminal_plugin.cpp
+        code/colorschemesmodel.cpp)
+endif()
 
 add_library(MauiKit${MAUI_MAJOR_VERSION}::Terminal ALIAS MauiKitTerminal${MAUI_MAJOR_VERSION})
 
@@ -78,11 +79,11 @@ target_include_directories(MauiKitTerminal${MAUI_MAJOR_VERSION}
 target_include_directories(MauiKitTerminal${MAUI_MAJOR_VERSION} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_CURRENT_BINARY_DIR};>")
 
 if (QT_MAJOR_VERSION STREQUAL "6")
-target_link_libraries(MauiKitTerminal${MAUI_MAJOR_VERSION}plugin
-    PRIVATE
-    KTerminalLib)
-    endif()
-    
+    target_link_libraries(MauiKitTerminal${MAUI_MAJOR_VERSION}plugin
+        PRIVATE
+        KTerminalLib)
+endif()
+
 target_link_libraries(MauiKitTerminal${MAUI_MAJOR_VERSION}
     PRIVATE
     KTerminalLib

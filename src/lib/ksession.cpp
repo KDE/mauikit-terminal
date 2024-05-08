@@ -49,8 +49,7 @@ KSession::KSession(QObject *parent) : QObject(parent)
             {
                 qDebug() << m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program() << state;
 
-                if( m_session->processId() != m_session->foregroundProcessId())
-                    Q_EMIT hasActiveProcessChanged();
+                Q_EMIT hasActiveProcessChanged();
 
                 if(m_processName != m_session->foregroundProcessName())
                 {

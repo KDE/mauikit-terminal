@@ -512,7 +512,7 @@ Maui.Page
         anchors.fill: parent
         onDropped:
         {
-            if(drop.urls)
+            if(drop.hasUrls)
                 control.urlsDropped(drop.urls)
         }
     }    

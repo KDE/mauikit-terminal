@@ -61,7 +61,7 @@ msgstr "Només paraules senceres"
 #: src/controls.5/Terminal.qml:188 src/controls.6/Terminal.qml:212
 #, kde-format
 msgid "Find..."
-msgstr "Busca..."
+msgstr "Busca…"
 
 #: src/controls.5/Terminal.qml:469 src/controls.6/Terminal.qml:492
 #, kde-format

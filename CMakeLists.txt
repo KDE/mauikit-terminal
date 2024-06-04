@@ -4,33 +4,14 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-option(BUILD_WITH_QT5 "Use Qt 5" OFF)
-option(BUILD_WITH_QT6 "Use Qt 6" OFF)
+set(QT_MAJOR_VERSION 6)
+set(REQUIRED_QT_VERSION 6.4)
 
-if(BUILD_WITH_QT5)
-    set(QT_MAJOR_VERSION 5)
-elseif(BUILD_WITH_QT6)
-    set(QT_MAJOR_VERSION 6)
-else()
-    set(QT_MAJOR_VERSION 5)
-endif()
+set(REQUIRED_KF_VERSION 5.240.0)
+set(KF_MAJOR_VERSION 6)
 
-if (QT_MAJOR_VERSION STREQUAL "6")
-    set(REQUIRED_QT_VERSION 6.4)
-    set(REQUIRED_KF_VERSION 5.240.0)
-    set(KF_MAJOR_VERSION 6)
-    set(MAUI_MAJOR_VERSION 4)
-
-    set(MAUIKIT_VERSION 4.0.0)
-
-else()
-    set(REQUIRED_QT_VERSION 5.15.2)
-    set(REQUIRED_KF_VERSION 5.91.0)
-    set(KF_MAJOR_VERSION 5)
-    set(MAUI_MAJOR_VERSION 3)
-
-    set(MAUIKIT_VERSION 3.1.1)
-endif()
+set(MAUI_MAJOR_VERSION 4)
+set(MAUIKIT_VERSION 4.0.0)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -54,17 +35,13 @@ include(CMakePackageConfigHelpers)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings)
-include(KDEPackageAppTemplates)
 include(KDEClangFormat)
 
 include(ECMSetupVersion)
-include(ECMGenerateQmlTypes)
 include(ECMGenerateHeaders)
 include(ECMFindQmlModule)
 include(ECMQmlModule)
 include(ECMSourceVersionControl)
-
-option(QUICK_COMPILER "Use QtQuick compiler to improve performance" TRUE)
 
 find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS
     Core
@@ -77,15 +54,6 @@ find_package(KF${KF_MAJOR_VERSION} ${REQUIRED_KF_VERSION} REQUIRED COMPONENTS
     Config)
 
 find_package(MauiKit${MAUI_MAJOR_VERSION} ${MAUIKIT_VERSION} REQUIRED)
-
-if (QT_MAJOR_VERSION STREQUAL "5")
-    if(QUICK_COMPILER)
-        find_package(Qt5QuickCompiler)
-        set_package_properties(Qt5QuickCompiler PROPERTIES
-            DESCRIPTION "Compile QML at build time"
-            TYPE OPTIONAL)
-    endif()
-endif()
 
 if(${ECM_SOURCE_UNDER_VERSION_CONTROL})
     execute_process(
@@ -139,9 +107,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/terminal_version.h"
     COMPONENT Devel)
 
 add_definitions(-DTRANSLATION_DOMAIN="mauikitterminal")
-if(${QT_MAJOR_VERSION} STREQUAL 5) ##for now skip installing translations for mauikit4 to avoid packaging conflicts with translation files
 ki18n_install(po)
-endif()
 
 add_subdirectory(src/lib)
 add_subdirectory(src)

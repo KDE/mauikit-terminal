@@ -14,14 +14,9 @@ private:
     QUrl componentUrl(const QString &fileName) const;
 
     QString resolveFileUrl(const QString &filePath) const
-       {
-
-           #ifdef QUICK_COMPILER
-           return QStringLiteral("qrc:/mauikit/terminal/") + filePath;
-           #else
-           return baseUrl().toString() + QLatin1Char('/') + filePath;
-           #endif
-       }
+    {
+        return baseUrl().toString() + QLatin1Char('/') + filePath;
+    }
 };
 
 

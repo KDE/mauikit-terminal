@@ -1,13 +1,9 @@
 project(KTerminalLib)
 
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(KF${KF_MAJOR_VERSION} REQUIRED COMPONENTS Pty)
-
-if (${QT_MAJOR_VERSION} EQUAL 6)
-     find_package(Qt6 REQUIRED COMPONENTS Core5Compat)
-endif()
+find_package(Qt6 REQUIRED COMPONENTS Core5Compat)
 
 # this lib uses them
 add_definitions(-DHAVE_POSIX_OPENPT -DHAVE_SYS_TIME_H)
@@ -52,9 +48,7 @@ target_link_libraries(${PROJECT_NAME}
     KF${KF_MAJOR_VERSION}::ConfigCore
     KF${QT_MAJOR_VERSION}::Pty)
 
-if (${QT_MAJOR_VERSION} EQUAL 6)
-    target_link_libraries(${PROJECT_NAME} PUBLIC Qt::Core5Compat)
-endif()
+target_link_libraries(${PROJECT_NAME} PUBLIC Qt::Core5Compat)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 

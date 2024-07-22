@@ -1,12 +1,11 @@
 # Translation of mauikitterminal to Norwegian Nynorsk
 #
-# Karl Ove Hufthammer <karl@huftis.org>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-05 02:05+0000\n"
-"PO-Revision-Date: 2023-07-29 12:31+0200\n"
+"PO-Revision-Date: 2024-07-21 14:17+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -14,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.3\n"
+"X-Generator: Lokalize 24.05.2\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -23,12 +22,12 @@ msgstr ""
 #: src/controls.6/ColorSchemesPage.qml:78
 #, kde-format
 msgid "Color Scheme"
-msgstr ""
+msgstr "Fargeoppsett"
 
 #: src/controls.6/ColorSchemesPage.qml:79
 #, kde-format
 msgid "Change the color scheme of the terminal."
-msgstr ""
+msgstr "Byt fargeoppsett for terminalen."
 
 #: src/controls.6/Terminal.qml:133
 #, kde-format

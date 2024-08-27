@@ -25,11 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 #include <KShell>
 
 // Qt
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QTextCodec>
-#else
 #include <QtCore5Compat/QTextCodec>
-#endif
 
 #include <QDir>
 #include <QDebug>
@@ -57,41 +53,41 @@ KSession::KSession(QObject *parent) : QObject(parent)
                     Q_EMIT foregroundProcessNameChanged();
                 }
             });
-    
+
     // m_session->setMonitorSilence(true);
     m_session->setMonitorSilenceSeconds(30);
-    
+
     connect(m_session.get(), &Konsole::Session::bellRequest, [this](QString message)
             {
                 Q_EMIT bellRequest(message);
             });
-    
+
     connect(m_session.get(), &Konsole::Session::changeTabTextColorRequest, [this](int state)
             {
                 qDebug() << "changeTabTextColorRequest" << state;
             });
-    
+
     connect(m_session.get(), &Konsole::Session::changeTabTextColorRequest, [this](int state)
             {
                 qDebug() << "changeTabTextColorRequest" << state;
             });
-    
+
     connect(m_session.get(), &Konsole::Session::changeBackgroundColorRequest, [this](QColor state)
             {
                 qDebug() << "changeBackgroundColorRequest" << state;
             });
-    
+
     connect(m_session.get(), &Konsole::Session::openUrlRequest, [this](QString state)
             {
                 qDebug() << "openUrlRequest" << state;
             });
-    
+
     connect(m_session.get(), &Konsole::Session::activity, [this]()
             {
                 qDebug() << "activity";
                 Q_EMIT processHasSilent(false);
             });
-    
+
     connect(m_session.get(), &Konsole::Session::silence, [this]()
             {
                 qDebug() << "silence";
@@ -223,6 +219,8 @@ int KSession::getShellPID()
 
 void KSession::changeDir(const QString &dir)
 {
+    if(currentDir() == dir)
+        return;
     /*
        this is a very hackish way of trying to determine if the shell is in
        the foreground before attempting to change the directory.  It may not
@@ -239,8 +237,8 @@ void KSession::changeDir(const QString &dir)
         // Send prior Ctrl-E, Ctrl-U to ensure the line is empty. This is
         // mandatory, otherwise sending a 'cd x\n' to a prompt with 'rm -rf *'
         // would result in data loss.
-        sendText(QStringLiteral("\x05\x15"));    
-        
+        sendText(QStringLiteral("\x05\x15"));
+
         sendText(u"cd " + KShell::quoteArg(dir) + '\r');
         Q_EMIT currentDirChanged();
     }
@@ -402,10 +400,10 @@ QString KSession::getTitle()
     // if (m_session->currentDir() == QDir::homePath()) {
     //     return m_session->currentDir();
     // }
-    // 
+    //
     // if (m_session->currentDir() == "/")
     //     return m_session->currentDir();
-    // 
+    //
     // return QDir(m_session->currentDir()).dirName();
 
     return m_session->userTitle();
@@ -421,10 +419,11 @@ QString KSession::foregroundProcessName()
     return m_session->foregroundProcessName();
 }
 
-QString KSession::currentDir() 
+QString KSession::currentDir()
 {
     return m_session->currentDir();
 }
+
 QStringList KSession::args() const
 {
     return m_session->arguments();

@@ -510,7 +510,7 @@ Maui.Page
     {
         id: _dropArea
         anchors.fill: parent
-        onDropped:
+        onDropped: (drop) =>
         {
             if(drop.hasUrls)
                 control.urlsDropped(drop.urls)

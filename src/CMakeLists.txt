@@ -13,12 +13,12 @@ add_library(MauiKitTerminal${MAUI_MAJOR_VERSION} SHARED)
 ecm_add_qml_module(MauiKitTerminal${MAUI_MAJOR_VERSION}
     URI "org.mauikit.terminal"
     CLASS_NAME TerminalPlugin
-    NO_PLUGIN_OPTIONAL)
+    NO_PLUGIN_OPTIONAL
+    DEPENDENCIES
+    "org.mauikit.controls")
 
 set(plugin_HDRS
     code/moduleinfo.h)
-
-# qt_add_resources(lib_QML_QRC resources.qrc)
 
 ecm_target_qml_sources(MauiKitTerminal${MAUI_MAJOR_VERSION} SOURCES
     controls.${QT_MAJOR_VERSION}/Terminal.qml

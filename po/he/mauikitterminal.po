@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-05 02:05+0000\n"
+"POT-Creation-Date: 2024-09-16 02:09+0000\n"
 "PO-Revision-Date: 2024-05-29 08:24+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -58,7 +58,7 @@ msgstr "מילים שלמות בלבד"
 msgid "Find..."
 msgstr "איתור…"
 
-#: src/controls.6/Terminal.qml:492
+#: src/controls.6/Terminal.qml:491
 #, kde-format
 msgid "Toggle Virtual Keyboard"
 msgstr "הצגת/הסתרת מקלדת וירטואלית"

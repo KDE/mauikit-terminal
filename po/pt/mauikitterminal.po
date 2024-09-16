@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-05 02:05+0000\n"
+"POT-Creation-Date: 2024-09-16 02:09+0000\n"
 "PO-Revision-Date: 2023-04-17 14:31+0100\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -53,7 +53,7 @@ msgstr "Apenas Palavras Inteiras"
 msgid "Find..."
 msgstr "Procurar..."
 
-#: src/controls.6/Terminal.qml:492
+#: src/controls.6/Terminal.qml:491
 #, kde-format
 msgid "Toggle Virtual Keyboard"
 msgstr "Comutar o Teclado Virtual"

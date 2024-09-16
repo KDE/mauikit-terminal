@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-05 02:05+0000\n"
+"POT-Creation-Date: 2024-09-16 02:09+0000\n"
 "PO-Revision-Date: 2024-02-13 01:02+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -61,7 +61,7 @@ msgstr "Hitz osoak bakarrik"
 msgid "Find..."
 msgstr "Aurkitu..."
 
-#: src/controls.6/Terminal.qml:492
+#: src/controls.6/Terminal.qml:491
 #, kde-format
 msgid "Toggle Virtual Keyboard"
 msgstr "Txandakatu alegiazko teklatua"

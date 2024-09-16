@@ -1,7 +1,7 @@
-import QtQuick 2.14
-import org.mauikit.controls 1.3 as Maui
-import org.mauikit.terminal 1.0 as Term
-import QtQuick.Controls 2.14
+import QtQuick
+import org.mauikit.controls as Maui
+import org.mauikit.terminal as Term
+import QtQuick.Controls
 
 Item 
 {
@@ -11,7 +11,7 @@ Item
     
     property int highlightLine : -1
     
-    Flickable 
+    Flickable
     {
         id: terminalProxyFlickable
         anchors.fill: parent
@@ -22,15 +22,16 @@ Item
         {
             width: parent.width
             height: kterminal.fontHeight()
-            color: Maui.Theme.highlightColor    
+            color: Maui.Theme.highlightColor
             opacity: 0.2
-            y: Math.floor(height * control.highlightLine)     
+            y: Math.floor(height * control.highlightLine)
             visible: control.highlightLine > -1
         }
         
         property bool updating: false
         
-        function updateTerminal() {
+        function updateTerminal()
+        {
             if (!terminal) return;
             if (updating) return;
             updating = true;
@@ -38,7 +39,8 @@ Item
             updating = false;
         }
         
-        function updateFromTerminal() {
+        function updateFromTerminal()
+        {
             if (!terminal) return;
             if (updating) return;
             
@@ -54,7 +56,8 @@ Item
         
         onContentYChanged: terminalProxyFlickable.updateTerminal()
         
-        Connections {
+        Connections
+        {
             target: terminal
             function onScrollbarMaximumChanged ()
             {
@@ -77,18 +80,16 @@ Item
             }
         }
         
-         ScrollBar.vertical:  ScrollBar 
-         {
+        ScrollBar.vertical:  ScrollBar
+        {
             Maui.Theme.colorSet: Maui.Theme.Complementary // text color of terminal is also complementary
             Maui.Theme.inherit: false
-           
-           // parent: terminalProxyFlickable
-           width: visible ? implicitWidth : 0
-           x: control.width - width - Maui.Style.space.small
-           y: 0
-           policy: ScrollBar.AsNeeded
+
+            // parent: terminalProxyFlickable
+            width: visible ? implicitWidth : 0
+            x: control.width - width - Maui.Style.space.small
+            y: 0
+            policy: ScrollBar.AsNeeded
         }
     }
-    
-   
 }

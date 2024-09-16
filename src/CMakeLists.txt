@@ -22,8 +22,7 @@ set(plugin_HDRS
 
 ecm_target_qml_sources(MauiKitTerminal${MAUI_MAJOR_VERSION} SOURCES
     controls.${QT_MAJOR_VERSION}/Terminal.qml
-    controls.${QT_MAJOR_VERSION}/ColorSchemesPage.qml
-    controls.${QT_MAJOR_VERSION}/QMLTermScrollbar.qml)
+    controls.${QT_MAJOR_VERSION}/ColorSchemesPage.qml)
 
 ecm_target_qml_sources(MauiKitTerminal${MAUI_MAJOR_VERSION} PATH private SOURCES
     controls.${QT_MAJOR_VERSION}/private/TerminalInputArea.qml

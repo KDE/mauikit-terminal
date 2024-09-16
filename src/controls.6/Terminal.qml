@@ -10,15 +10,15 @@ import "private" as Private
 /**
  * @brief A terminal emulator console with built-in support for touch and keyboard inputs, and many other features.
  *
- * @image html terminal.png "Demo of the Terminal control" 
+ * @image html terminal.png "Demo of the Terminal control"
  *
  * @section features Features
- * 
- * This control has a pack of built-in functionality making it ready for embedding it into any other application. 
+ *
+ * This control has a pack of built-in functionality making it ready for embedding it into any other application.
  * A quick overview includes support for touch gestures for navigation, scrollbar, search and find, contextual menu actions and keyboard shortcuts.
  *
  * @note For creating your own implementation you can look into using the exposed classes `QMLTermWidget` and `QMLTermSession`.
- * 
+ *
  * @code
  * import QtQuick
 import QtQuick.Controls
@@ -68,7 +68,7 @@ Maui.Page
      * @brief The resolution size of the emulated terminal display
      */
     readonly property size virtualResolution: Qt.size(kterminal.width, kterminal.height)
-               
+
     /**
      * @brief Alias to the terminal display object
      * @property Konsole::TerminalDisplay Terminal::kterminal
@@ -92,7 +92,7 @@ Maui.Page
      * @code
      * menu: [
      * Action { text: "Action1" },
-     * MenuItem {text: "Action2"} 
+     * MenuItem {text: "Action2"}
      * ]
      * @endcode
      * @property list<QtObject> Terminal::menu
@@ -125,14 +125,14 @@ Maui.Page
      * @brief Emitted when the terminal control area has been clicked
      */
     signal clicked()
-        
+
     //Actions
     Action
     {
         id: _copyAction
         text: i18nd("mauikitterminal", "Copy")
         icon.name: "edit-copy"
-        onTriggered: 
+        onTriggered:
         {
             kterminal.copyClipboard();
             control.forceActiveFocus()
@@ -179,7 +179,7 @@ Maui.Page
         MenuItem
         {
             action: _findAction
-        }        
+        }
     }
     
     footBar.visible: false
@@ -230,18 +230,18 @@ Maui.Page
                 // text: i18n("Previous")
                 onTriggered: ksession.search(findBar.text, ksession.previousLineSearch, ksession.previousColumnSearch, false)
             }
-        ]    
+        ]
         
         Keys.enabled: true
         
         Keys.onPressed:
         {
             if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
-                        {
-                            control.toggleSearchBar()
-                        }
+            {
+                control.toggleSearchBar()
+            }
         }
-    }    
+    }
     
     Term.QMLTermWidget
     {
@@ -266,38 +266,37 @@ Maui.Page
             id: ksession
             initialWorkingDirectory: "$HOME"
             shellProgram: "$SHELL"
-           
-            onFinished: 
+
+            onFinished:
             {
                 console.log("Terminal finished")
             }
             
-            // Disable search until implemented correctly            
+            // Disable search until implemented correctly
             property int previousColumnSearch : 0
             property int previousLineSearch: 0
             
-                        onMatchFound:
-                        {
-                            previousColumnSearch = startColumn
-                            previousLineSearch = startLine
-                            
-                            
-                            _scrollBarLoader.item.highlightLine = startLine
-                            
-                            kterminal.matchFound(startColumn, startLine, endColumn, endLine)
-                           console.log("found at: %1 %2 %3 %4".arg(startColumn).arg(startLine).arg(endColumn).arg(endLine));
-        }
-        
-        onNoMatchFound:
-        {
-            previousColumnSearch = 0
-            previousLineSearch = 0
-            _scrollBarLoader.item.highlightLine = -1
-            
-            kterminal.noMatchFound();
-        console.log("not found");
-        }       
-        
+            onMatchFound:
+            {
+                previousColumnSearch = startColumn
+                previousLineSearch = startLine
+
+
+                _scrollBarLoader.item.highlightLine = startLine
+
+                kterminal.matchFound(startColumn, startLine, endColumn, endLine)
+                console.log("found at: %1 %2 %3 %4".arg(startColumn).arg(startLine).arg(endColumn).arg(endLine));
+            }
+
+            onNoMatchFound:
+            {
+                previousColumnSearch = 0
+                previousLineSearch = 0
+                _scrollBarLoader.item.highlightLine = -1
+
+                kterminal.noMatchFound();
+                console.log("not found");
+            }
         }
         
         customColorScheme
@@ -317,37 +316,37 @@ Maui.Page
         Keys.enabled: true
 
         Keys.onPressed: (event) =>
-        {
-            if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier)) 
-            {
-                kterminal.selectAll()
-                event.accepted = true
-                return
-            }
+                        {
+                            if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+                            {
+                                kterminal.selectAll()
+                                event.accepted = true
+                                return
+                            }
 
-            if ((event.key === Qt.Key_C) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier)) 
-            {
-                _copyAction.trigger()
-                event.accepted = true
-                return
-            }
+                            if ((event.key === Qt.Key_C) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+                            {
+                                _copyAction.trigger()
+                                event.accepted = true
+                                return
+                            }
 
-            if ((event.key === Qt.Key_V) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
-            {
-                _pasteAction.trigger()
-                event.accepted = true
-                return
-            }
+                            if ((event.key === Qt.Key_V) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+                            {
+                                _pasteAction.trigger()
+                                event.accepted = true
+                                return
+                            }
 
 
-            if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
-            {
-                control.toggleSearchBar()
-                return
-            }
-            
-            control.keyPressed(event)
-        }
+                            if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+                            {
+                                control.toggleSearchBar()
+                                return
+                            }
+
+                            control.keyPressed(event)
+                        }
 
         Loader
         {
@@ -370,57 +369,57 @@ Maui.Page
                 onMouseMoveDetected:(x, y, button, buttons, modifiers) => kterminal.simulateMouseMove(x, y, button, buttons, modifiers);
                 onDoubleClickDetected:(x, y, button, buttons, modifiers) => kterminal.simulateMouseDoubleClick(x, y, button, buttons, modifiers);
                 onMousePressDetected:(x, y, button, buttons, modifiers) =>
-                {
-                    kterminal.forceActiveFocus();
-                    kterminal.simulateMousePress(x, y, button, buttons, modifiers);
-                    control.clicked()
-                }
+                                     {
+                                         kterminal.forceActiveFocus();
+                                         kterminal.simulateMousePress(x, y, button, buttons, modifiers);
+                                         control.clicked()
+                                     }
                 onMouseReleaseDetected: (x, y, button, buttons, modifiers) => kterminal.simulateMouseRelease(x, y, button, buttons, modifiers);
                 onMouseWheelDetected: (x, y, buttons, modifiers, angleDelta) => kterminal.simulateWheel(x, y, buttons, modifiers, angleDelta);
                 
                 // Touch actions
                 onTouchPress: (x, y) =>
-                {
-                    // kterminal.forceActiveFocus()
-                    // control.clicked()
-                }
+                              {
+                                  // kterminal.forceActiveFocus()
+                                  // control.clicked()
+                              }
                 
                 onTouchClick: (x, y) =>
-                {
-                    kterminal.forceActiveFocus()
-                    // kterminal.simulateKeyPress(Qt.Key_Tab, Qt.NoModifier, true, 0, "");
-                    control.clicked()
-                }
+                              {
+                                  kterminal.forceActiveFocus()
+                                  // kterminal.simulateKeyPress(Qt.Key_Tab, Qt.NoModifier, true, 0, "");
+                                  control.clicked()
+                              }
                 
                 onTouchPressAndHold: (x, y) =>
-                {
-                    alternateAction(x, y);
-                }
+                                     {
+                                         alternateAction(x, y);
+                                     }
                 
                 // Swipe actions
                 onSwipeYDetected: (steps) => {
-                    if (steps > 0) {
-                        simulateSwipeDown(steps);
-                    } else {
-                        simulateSwipeUp(-steps);
-                    }
-                }
+                                      if (steps > 0) {
+                                          simulateSwipeDown(steps);
+                                      } else {
+                                          simulateSwipeUp(-steps);
+                                      }
+                                  }
 
                 onSwipeXDetected: (steps) => {
-                    if (steps > 0) {
-                        simulateSwipeRight(steps);
-                    } else {
-                        simulateSwipeLeft(-steps);
-                    }
-                }
+                                      if (steps > 0) {
+                                          simulateSwipeRight(steps);
+                                      } else {
+                                          simulateSwipeLeft(-steps);
+                                      }
+                                  }
 
                 onTwoFingerSwipeYDetected: (steps) => {
-                    if (steps > 0) {
-                        simulateDualSwipeDown(steps);
-                    } else {
-                        simulateDualSwipeUp(-steps);
-                    }
-                }
+                                               if (steps > 0) {
+                                                   simulateDualSwipeDown(steps);
+                                               } else {
+                                                   simulateDualSwipeUp(-steps);
+                                               }
+                                           }
                 
                 function simulateSwipeUp(steps) {
                     while(steps > 0) {
@@ -461,12 +460,12 @@ Maui.Page
                 
                 // Semantic actions
                 onAlternateAction:  (x, y) => {
-                    // Force the hiddenButton in the event position.
-                    //hiddenButton.x = x;
-                    //hiddenButton.y = y;
-                    terminalMenu.show()
-                    
-                }
+                                        // Force the hiddenButton in the event position.
+                                        //hiddenButton.x = x;
+                                        //hiddenButton.y = y;
+                                        terminalMenu.show()
+
+                                    }
             }
         }
         
@@ -479,28 +478,28 @@ Maui.Page
             sourceComponent: Private.TerminalScrollBar
             {
                 terminal: kterminal
-            }            
+            }
         }
         
         Maui.FloatingButton
         {
             visible: Maui.Handy.isMobile
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.margins: Maui.Style.space.big
-                icon.name: "input-keyboard-virtual"
-                text: i18n("Toggle Virtual Keyboard")
-                onClicked:
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.margins: Maui.Style.space.big
+            icon.name: "input-keyboard-virtual"
+            text: i18n("Toggle Virtual Keyboard")
+            onClicked:
+            {
+                if (Qt.inputMethod.visible)
                 {
-                    if (Qt.inputMethod.visible)
-                    {
-                        Qt.inputMethod.hide();
-                    } else
-                    {
-                       control.forceActiveFocus();
-                        Qt.inputMethod.show();
-                    }
-                }            
+                    Qt.inputMethod.hide();
+                } else
+                {
+                    control.forceActiveFocus();
+                    Qt.inputMethod.show();
+                }
+            }
         }
     }
     
@@ -511,17 +510,17 @@ Maui.Page
         id: _dropArea
         anchors.fill: parent
         onDropped: (drop) =>
-        {
-            if(drop.hasUrls)
-                control.urlsDropped(drop.urls)
-        }
-    }    
-   
-   Component.onCompleted:
-   {
-       ksession.startShellProgram();
-       forceActiveFocus()
-   }
+                   {
+                       if(drop.hasUrls)
+                       control.urlsDropped(drop.urls)
+                   }
+    }
+
+    Component.onCompleted:
+    {
+        ksession.startShellProgram();
+        forceActiveFocus()
+    }
     
     /**
      * @brief Force to focus the terminal display for entering input
@@ -536,6 +535,6 @@ Maui.Page
      */
     function toggleSearchBar()
     {
-        footBar.visible = !footBar.visible    
+        footBar.visible = !footBar.visible
     }
 }

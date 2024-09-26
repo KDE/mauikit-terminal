@@ -177,7 +177,7 @@ class KONSOLEPRIVATE_EXPORT TerminalDisplay : public QQuickPaintedItem
     /**
      *
      */
-    Q_PROPERTY(bool selectedText READ selectedText CONSTANT)
+    Q_PROPERTY(bool isTextSelected READ isTextSelected NOTIFY isTextSelectedChanged)
 
     /**
      *
@@ -696,12 +696,14 @@ public Q_SLOTS:
      * @see setColorTable(), setForegroundColor()
      */
     void setBackgroundColor(const QColor &color);
-
+    QColor backgroundColor() const;
+    
     /**
      * Sets the text of the display to the specified color.
      * @see setColorTable(), setBackgroundColor()
      */
     void setForegroundColor(const QColor &color);
+    QColor foregroundColor() const;
 
     void selectionChanged();
 
@@ -726,7 +728,9 @@ public Q_SLOTS:
     void findPrevious(const QString &regexp);
     void matchFound(int startColumn, int startLine, int endColumn, int endLine);
     void noMatchFound();
-
+    
+    QString selectedText() const;
+    
 Q_SIGNALS:
 
     /**
@@ -791,6 +795,7 @@ Q_SIGNALS:
     void backgroundOpacityChanged();
 
     void readOnlyChanged();
+    void isTextSelectedChanged();
 
 protected:
     bool event(QEvent *) override;
@@ -1136,7 +1141,7 @@ public:
     CustomColorScheme *customColorScheme() const;
     bool readOnly() const;
     void setReadOnly(bool newReadOnly);
-    bool selectedText() const;
+    bool isTextSelected() const;
 };
 
 }

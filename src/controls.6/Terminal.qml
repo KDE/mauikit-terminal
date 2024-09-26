@@ -164,17 +164,46 @@ Maui.Page
     
     Maui.ContextualMenu
     {
-        id: terminalMenu
+        id: terminalMenu        
+        Maui.Controls.component: !kterminal.isTextSelected ? null : _headerComponent
         
+        Component 
+        {
+            id: _headerComponent
+            Pane
+        {
+            width: parent.width
+            implicitHeight: Math.min(80, contentHeight) + topPadding + bottomPadding
+            clip: true
+            
+            background: Rectangle
+            {
+                color: kterminal.backgroundColor()
+                radius: Maui.Style.radiusV
+            }
+            
+            contentItem: Label
+            {
+                text: kterminal.isTextSelected ? kterminal.selectedText() : ""
+                color :kterminal.foregroundColor()
+                wrapMode: Text.WordWrap
+                elide: Text.ElideMiddle 
+            }
+        }
+        }
+       
         MenuItem
         {
             action: _copyAction
+            enabled: kterminal.isTextSelected
         }
         
         MenuItem
         {
             action: _pasteAction
         }
+        
+        MenuSeparator {}
         
         MenuItem
         {

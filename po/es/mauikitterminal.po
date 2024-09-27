@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikitterminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-16 02:09+0000\n"
+"POT-Creation-Date: 2024-09-27 01:53+0000\n"
 "PO-Revision-Date: 2024-02-08 12:27+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -45,22 +45,22 @@ msgstr "Pegar"
 msgid "Find"
 msgstr "Buscar"
 
-#: src/controls.6/Terminal.qml:195
+#: src/controls.6/Terminal.qml:224
 #, kde-format
 msgid "Case Sensitive"
 msgstr "Distinguir mayúsculas"
 
-#: src/controls.6/Terminal.qml:202
+#: src/controls.6/Terminal.qml:231
 #, kde-format
 msgid "Whole Words Only"
 msgstr "Solo palabras completas"
 
-#: src/controls.6/Terminal.qml:212
+#: src/controls.6/Terminal.qml:241
 #, kde-format
 msgid "Find..."
 msgstr "Buscar..."
 
-#: src/controls.6/Terminal.qml:491
+#: src/controls.6/Terminal.qml:520
 #, kde-format
 msgid "Toggle Virtual Keyboard"
 msgstr "Conmutar el teclado virtual"

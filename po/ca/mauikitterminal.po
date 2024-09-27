@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-16 02:09+0000\n"
+"POT-Creation-Date: 2024-09-27 01:53+0000\n"
 "PO-Revision-Date: 2024-02-08 09:24+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -45,22 +45,22 @@ msgstr "Enganxa"
 msgid "Find"
 msgstr "Cerca"
 
-#: src/controls.6/Terminal.qml:195
+#: src/controls.6/Terminal.qml:224
 #, kde-format
 msgid "Case Sensitive"
 msgstr "Distingeix entre majúscules i minúscules"
 
-#: src/controls.6/Terminal.qml:202
+#: src/controls.6/Terminal.qml:231
 #, kde-format
 msgid "Whole Words Only"
 msgstr "Només paraules senceres"
 
-#: src/controls.6/Terminal.qml:212
+#: src/controls.6/Terminal.qml:241
 #, kde-format
 msgid "Find..."
 msgstr "Cerca..."
 
-#: src/controls.6/Terminal.qml:491
+#: src/controls.6/Terminal.qml:520
 #, kde-format
 msgid "Toggle Virtual Keyboard"
 msgstr "Commuta el teclat virtual"

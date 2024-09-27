@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-16 02:09+0000\n"
+"POT-Creation-Date: 2024-09-27 01:53+0000\n"
 "PO-Revision-Date: 2023-03-29 16:24+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -43,22 +43,22 @@ msgstr "Vložit"
 msgid "Find"
 msgstr "Najít"
 
-#: src/controls.6/Terminal.qml:195
+#: src/controls.6/Terminal.qml:224
 #, kde-format
 msgid "Case Sensitive"
 msgstr "Rozlišovat velikost písmen"
 
-#: src/controls.6/Terminal.qml:202
+#: src/controls.6/Terminal.qml:231
 #, kde-format
 msgid "Whole Words Only"
 msgstr "Pouze celá slova"
 
-#: src/controls.6/Terminal.qml:212
+#: src/controls.6/Terminal.qml:241
 #, kde-format
 msgid "Find..."
 msgstr "Najít..."
 
-#: src/controls.6/Terminal.qml:491
+#: src/controls.6/Terminal.qml:520
 #, kde-format
 msgid "Toggle Virtual Keyboard"
 msgstr "Zapnout virtuální klávesnici"

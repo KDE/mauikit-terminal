@@ -137,7 +137,7 @@ Maui.Page
             kterminal.copyClipboard();
             control.forceActiveFocus()
         }
-        //shortcut: "Ctrl+Shift+C"
+        // shortcut: "Ctrl+Shift+C"
     }
     
     Action
@@ -150,7 +150,7 @@ Maui.Page
             kterminal.pasteClipboard()
             control.forceActiveFocus()
         }
-        //         shortcut: "Ctrl+Shift+V"
+                // shortcut: "Ctrl+Shift+V"
     }
     
     Action
@@ -158,7 +158,8 @@ Maui.Page
         id: _findAction
         text: i18nd("mauikitterminal", "Find")
         icon.name: "edit-find"
-        //         shortcut: "Ctrl+Shift+F"
+        checkable: true
+                // shortcut: "Ctrl+Shift+F"
         onTriggered:  toggleSearchBar()
     }
     
@@ -172,7 +173,7 @@ Maui.Page
             id: _headerComponent
             Pane
         {
-            width: parent.width
+            width: ListView.view.width
             implicitHeight: Math.min(80, contentHeight) + topPadding + bottomPadding
             clip: true
             
@@ -187,7 +188,8 @@ Maui.Page
                 text: kterminal.isTextSelected ? kterminal.selectedText() : ""
                 color :kterminal.foregroundColor()
                 wrapMode: Text.WordWrap
-                elide: Text.ElideMiddle 
+                elide: Text.ElideRight 
+                font: kterminal.font
             }
         }
         }
@@ -201,6 +203,32 @@ Maui.Page
         MenuItem
         {
             action: _pasteAction
+        }
+        
+        
+        MenuItem
+        {
+            // height: visible ? implicitHeight : -implicitHeight
+            property string url: kterminal.isTextSelected ? parseUrl() : ""
+            enabled: ksession.isLocalUrl(url) && kterminal.isTextSelected
+            
+            text: "Open"
+            icon.name: "quickopen"
+            
+            function parseUrl() : string
+            {
+                var m_url =  kterminal.selectedText()
+                if(m_url.includes("/"))
+                    return m_url
+                else
+                    return ksession.currentDir + "/" + m_url
+            }
+            
+            onTriggered: 
+            {
+                Qt.openUrlExternally(url)
+            }
+            
         }
         
         MenuSeparator {}
@@ -261,9 +289,8 @@ Maui.Page
             }
         ]
         
-        Keys.enabled: true
-        
-        Keys.onPressed:
+        Keys.enabled: true        
+        Keys.onPressed: (event) =>
         {
             if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
             {

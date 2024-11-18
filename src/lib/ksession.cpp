@@ -29,7 +29,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 
 #include <QDir>
 #include <QDebug>
-#include <QFileInfo>
 
 // Konsole
 #include "KeyboardTranslator.h"
@@ -191,12 +190,6 @@ void KSession::sessionFinished()
 void KSession::selectionChanged(bool textSelected)
 {
     Q_UNUSED(textSelected)
-}
-
-bool KSession::isLocalUrl(const QString &url)
-{
-    QFileInfo file(url);
-    return file.exists();
 }
 
 void KSession::startShellProgram()

@@ -203,33 +203,7 @@ Maui.Page
         MenuItem
         {
             action: _pasteAction
-        }
-        
-        
-        MenuItem
-        {
-            // height: visible ? implicitHeight : -implicitHeight
-            property string url: kterminal.isTextSelected ? parseUrl() : ""
-            enabled: ksession.isLocalUrl(url) && kterminal.isTextSelected
-            
-            text: "Open"
-            icon.name: "quickopen"
-            
-            function parseUrl() : string
-            {
-                var m_url =  kterminal.selectedText()
-                if(m_url.includes("/"))
-                    return m_url
-                else
-                    return ksession.currentDir + "/" + m_url
-            }
-            
-            onTriggered: 
-            {
-                Qt.openUrlExternally(url)
-            }
-            
-        }
+        }               
         
         MenuSeparator {}
         

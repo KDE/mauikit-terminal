@@ -399,8 +399,6 @@ public Q_SLOTS:
     
     void selectionChanged(bool textSelected);
     
-    static bool isLocalUrl(const QString &url);
-
 protected Q_SLOTS:
     void sessionFinished();
     

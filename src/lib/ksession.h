@@ -398,7 +398,7 @@ public Q_SLOTS:
     void search(const QString &regexp, int startLine = 0, int startColumn = 0, bool forwards = true );
     
     void selectionChanged(bool textSelected);
-
+    
 protected Q_SLOTS:
     void sessionFinished();
     

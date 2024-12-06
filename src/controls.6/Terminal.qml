@@ -137,7 +137,7 @@ Maui.Page
             kterminal.copyClipboard();
             control.forceActiveFocus()
         }
-        //shortcut: "Ctrl+Shift+C"
+        // shortcut: "Ctrl+Shift+C"
     }
     
     Action
@@ -150,7 +150,7 @@ Maui.Page
             kterminal.pasteClipboard()
             control.forceActiveFocus()
         }
-        //         shortcut: "Ctrl+Shift+V"
+                // shortcut: "Ctrl+Shift+V"
     }
     
     Action
@@ -158,23 +158,54 @@ Maui.Page
         id: _findAction
         text: i18nd("mauikitterminal", "Find")
         icon.name: "edit-find"
-        //         shortcut: "Ctrl+Shift+F"
+        checkable: true
+                // shortcut: "Ctrl+Shift+F"
         onTriggered:  toggleSearchBar()
     }
     
     Maui.ContextualMenu
     {
-        id: terminalMenu
+        id: terminalMenu        
+        Maui.Controls.component: !kterminal.isTextSelected ? null : _headerComponent
         
+        Component 
+        {
+            id: _headerComponent
+            Pane
+        {
+            width: ListView.view.width
+            implicitHeight: Math.min(80, contentHeight) + topPadding + bottomPadding
+            clip: true
+            
+            background: Rectangle
+            {
+                color: kterminal.backgroundColor()
+                radius: Maui.Style.radiusV
+            }
+            
+            contentItem: Label
+            {
+                text: kterminal.isTextSelected ? kterminal.selectedText() : ""
+                color :kterminal.foregroundColor()
+                wrapMode: Text.WordWrap
+                elide: Text.ElideRight 
+                font: kterminal.font
+            }
+        }
+        }
+       
         MenuItem
         {
             action: _copyAction
+            enabled: kterminal.isTextSelected
         }
         
         MenuItem
         {
             action: _pasteAction
-        }
+        }               
+        
+        MenuSeparator {}
         
         MenuItem
         {
@@ -232,9 +263,8 @@ Maui.Page
             }
         ]
         
-        Keys.enabled: true
-        
-        Keys.onPressed:
+        Keys.enabled: true        
+        Keys.onPressed: (event) =>
         {
             if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
             {

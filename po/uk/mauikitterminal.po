@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikit-terminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-05 02:05+0000\n"
+"POT-Creation-Date: 2024-11-19 01:49+0000\n"
 "PO-Revision-Date: 2024-02-08 09:27+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -44,22 +44,22 @@ msgstr "Вставити"
 msgid "Find"
 msgstr "Знайти"
 
-#: src/controls.6/Terminal.qml:195
+#: src/controls.6/Terminal.qml:226
 #, kde-format
 msgid "Case Sensitive"
 msgstr "З урахуванням регістру"
 
-#: src/controls.6/Terminal.qml:202
+#: src/controls.6/Terminal.qml:233
 #, kde-format
 msgid "Whole Words Only"
 msgstr "Лише цілі слова"
 
-#: src/controls.6/Terminal.qml:212
+#: src/controls.6/Terminal.qml:243
 #, kde-format
 msgid "Find..."
 msgstr "Знайти…"
 
-#: src/controls.6/Terminal.qml:492
+#: src/controls.6/Terminal.qml:521
 #, kde-format
 msgid "Toggle Virtual Keyboard"
 msgstr "Увімкнути/Вимкнути віртуальну клавіатуру"

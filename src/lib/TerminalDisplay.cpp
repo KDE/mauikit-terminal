@@ -105,6 +105,7 @@ void TerminalDisplay::setScreenWindow(ScreenWindow *window)
         connect(_screenWindow, &ScreenWindow::outputChanged, this, &TerminalDisplay::updateLineProperties);
         connect(_screenWindow, &ScreenWindow::outputChanged, this, &TerminalDisplay::updateImage);
         connect(_screenWindow, &ScreenWindow::scrollToEnd, this, &TerminalDisplay::scrollToEnd);
+        connect(_screenWindow, &ScreenWindow::selectionChanged, this, &TerminalDisplay::isTextSelectedChanged);
         window->setWindowLines(_lines);
     }
 }
@@ -127,11 +128,21 @@ void TerminalDisplay::setBackgroundColor(const QColor &color)
     update();
 }
 
+QColor TerminalDisplay::backgroundColor() const
+{
+    return _colorTable[DEFAULT_BACK_COLOR].color;
+}
+
 void TerminalDisplay::setForegroundColor(const QColor &color)
 {
     _colorTable[DEFAULT_FORE_COLOR].color = color;
 
     update();
+}
+
+QColor TerminalDisplay::foregroundColor() const
+{
+    return _colorTable[DEFAULT_FORE_COLOR].color;
 }
 
 void TerminalDisplay::setColorTable(std::array<ColorEntry, TABLE_COLORS> &&table)
@@ -2462,6 +2473,8 @@ void TerminalDisplay::setSelection(const QString &t)
     if (QApplication::clipboard()->supportsSelection()) {
         QApplication::clipboard()->setText(t, QClipboard::Selection);
     }
+    
+    Q_EMIT isTextSelectedChanged();
 }
 
 void TerminalDisplay::copyClipboard()
@@ -3268,9 +3281,20 @@ void TerminalDisplay::setReadOnly(bool newReadOnly)
     Q_EMIT readOnlyChanged();
 }
 
-bool TerminalDisplay::selectedText() const
+bool TerminalDisplay::isTextSelected() const
 {
+    if (!_screenWindow)
+        return false;
+    
     return !_screenWindow->selectedText(false).isEmpty();
+}
+
+QString TerminalDisplay::selectedText() const
+{
+    if (!_screenWindow)
+        return "";
+    
+    return _screenWindow->selectedText(_preserveLineBreaks);
 }
 
 void TerminalDisplay::findNext(const QString& regexp)

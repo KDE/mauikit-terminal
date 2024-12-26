@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf5-trunk/messages/mauikit-terminal/mauikitterminal.pot\n"
-"X-Crowdin-File-ID: 42085\n"
+"X-Crowdin-File: /kf6-trunk/messages/mauikit-terminal/mauikitterminal.pot\n"
+"X-Crowdin-File-ID: 56954\n"
 
 #: src/controls.6/ColorSchemesPage.qml:72
 #: src/controls.6/ColorSchemesPage.qml:78

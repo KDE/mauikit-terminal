@@ -295,7 +295,6 @@ Maui.Page
         {
             id: ksession
             initialWorkingDirectory: "$HOME"
-            shellProgram: "$SHELL"
 
             onFinished:
             {

@@ -41,6 +41,7 @@ KSession::KSession(QObject *parent) : QObject(parent)
     connect(m_session.get(), &Konsole::Session::started, this, &KSession::started);
     connect(m_session.get(), &Konsole::Session::finished, this, &KSession::sessionFinished);
     connect(m_session.get(), &Konsole::Session::titleChanged, this, &KSession::titleChanged);
+    connect(m_session.get(), &Konsole::Session::titleChanged, this, &KSession::currentDirChanged);
     connect(m_session.get(), &Konsole::Session::stateChanged, [this](int state)
             {
                 qDebug() << m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program() << state;

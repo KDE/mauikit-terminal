@@ -1258,7 +1258,7 @@ void TerminalDisplay::drawInputMethodPreeditString(QPainter &painter, const QRec
     const QColor foreground = _colorTable[DEFAULT_FORE_COLOR].color;
     const Character *style = &_image[loc(cursorPos.x(), cursorPos.y())];
     
-    drawBackground(painter, rect, background, true);
+    drawBackground(painter, rect, background, _opacity < 1);
     drawCursor(painter, rect, foreground, background, invertColors);
     drawCharacters(painter, rect, _inputMethodData.preeditString, style, invertColors);
     
@@ -1398,7 +1398,7 @@ QRect TerminalDisplay::calculateTextArea(int topLeftX, int topLeftY, int startCo
 void TerminalDisplay::drawContents(QPainter &paint, const QRect &rect)
 {
     // Draw opaque background
-    drawBackground(paint, contentsRect(), _colorTable[DEFAULT_BACK_COLOR].color, true);
+    drawBackground(paint, contentsRect(), backgroundColor(), _opacity < 1);
     
     QPoint tL = contentsRect().topLeft();
     int tLx = tL.x();

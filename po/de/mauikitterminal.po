@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mauikitterminal\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-26 00:40+0000\n"
+"POT-Creation-Date: 2025-03-01 00:44+0000\n"
 "PO-Revision-Date: 2023-04-15 01:51+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -60,7 +60,7 @@ msgstr "Nur ganze Wörter"
 msgid "Find..."
 msgstr "Suchen ..."
 
-#: src/controls.6/Terminal.qml:520
+#: src/controls.6/Terminal.qml:519
 #, kde-format
 msgid "Toggle Virtual Keyboard"
 msgstr "Virtuelle Tastatur umschalten"

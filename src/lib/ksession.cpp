@@ -44,8 +44,14 @@ KSession::KSession(QObject *parent) : QObject(parent)
     connect(m_session.get(), &Konsole::Session::titleChanged, this, &KSession::currentDirChanged);
     connect(m_session.get(), &Konsole::Session::stateChanged, [this](int state)
             {
-                qDebug() << m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program() << state;
-
+                if(!hasActiveProcess())
+                {
+                      qDebug() <<"Process Finished"<< m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program() << state << getForegroundProcessError();
+                }else
+                {
+                      qDebug() <<"Process started"<< m_session->iconText() << m_session->iconName() << m_session->isMonitorSilence() << m_session->program() << state << getForegroundProcessError();
+                }
+                
                 Q_EMIT hasActiveProcessChanged();
 
                 if(m_processName != m_session->foregroundProcessName())
@@ -56,7 +62,6 @@ KSession::KSession(QObject *parent) : QObject(parent)
             });
 
     // m_session->setMonitorSilence(true);
-    m_session->setMonitorSilenceSeconds(30);
 
     connect(m_session.get(), &Konsole::Session::bellRequest, [this](QString message)
             {
@@ -104,6 +109,12 @@ KSession::~KSession()
         m_session->disconnect();
     }
 }
+
+int KSession::getForegroundProcessError() const
+{
+    return m_session->foregroundProcessError();    
+}
+
 
 void KSession::setMonitorSilence(bool value)
 {
@@ -156,8 +167,9 @@ std::unique_ptr<Session> KSession::createSession(QString name)
 
     session->setFlowControlEnabled(true);
     session->setHistoryType(HistoryTypeBuffer(1000));
-
-    session->setDarkBackground(true);
+    session->setMonitorSilenceSeconds(30);
+    session->setMonitorActivity(true);
+    // session->setDarkBackground(true);
 
     session->setKeyBindings(QString());
 
@@ -296,15 +308,15 @@ void KSession::setTextCodec(QTextCodec *codec)
 
 void KSession::setHistorySize(int lines)
 {
-    if(historySize() != lines )
-    {
-        if (lines < 0)
-            m_session->setHistoryType(HistoryTypeFile());
-        else
-            m_session->setHistoryType(HistoryTypeBuffer(lines));
-
-        Q_EMIT historySizeChanged();
-    }
+    // if(historySize() != lines )
+    // {
+    //     if (lines < 0)
+    //         m_session->setHistoryType(HistoryTypeFile());
+    //     else
+    //         m_session->setHistoryType(HistoryTypeBuffer(lines));
+    // 
+    //     Q_EMIT historySizeChanged();
+    // }
 }
 
 int KSession::historySize() const

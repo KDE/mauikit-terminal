@@ -410,7 +410,7 @@ void Session::monitorTimerDone()
 }
 
 void Session::activityStateSet(int state)
-{
+{    
     if (state == NOTIFYBELL) {
         Q_EMIT bellRequest(tr("Bell in session '%1'").arg(_nameTitle));
     } else if (state == NOTIFYACTIVITY) {
@@ -758,6 +758,18 @@ QString Session::foregroundProcessName()
 
     return name;
 }
+
+int Session::foregroundProcessError()
+{
+    ProcessInfo::Error name = ProcessInfo::Error::UnknownError;
+    
+    if (updateForegroundProcessInfo()) {
+        name = _foregroundProcessInfo->error();
+    }
+    
+    return name;
+}
+
 
 QString Session::currentDir()
 {

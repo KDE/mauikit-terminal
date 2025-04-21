@@ -509,12 +509,17 @@ Maui.Page
             }
         }
         
-        Maui.FloatingButton
+        Loader
         {
-            visible: Maui.Handy.isMobile
+            asynchronous: true
+            active: Maui.Handy.isMobile || Maui.Handy.isTouch
+            visible: active
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.margins: Maui.Style.space.big
+            
+        sourceComponent: Maui.FloatingButton
+        {           
             icon.name: "input-keyboard-virtual"
             text: i18n("Toggle Virtual Keyboard")
             onClicked:
@@ -528,6 +533,7 @@ Maui.Page
                     Qt.inputMethod.show();
                 }
             }
+        }
         }
     }
     

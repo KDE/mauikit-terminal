@@ -94,60 +94,66 @@ Item
         }
 
         maximumTouchPoints: 1
-        onPressed: {
-            touchAreaPressed = true;
-            __moved = false;
-            __multiTouch = false;
-            __prevDragStepsY = 0.0;
-            __prevDragStepsX = 0.0;
-            __dragging = noDragging;
-            __pressPosition = Qt.point(touchPoints[0].x, touchPoints[0].y);
-            pressAndHoldTimer.start();
-            multiTouchTimer.start(); // Detect if this is going to be a multi touch swipe while the timer is running
+        onPressed: (touchPoints)=>
+                   {
+                       touchAreaPressed = true;
+                       __moved = false;
+                       __multiTouch = false;
+                       __prevDragStepsY = 0.0;
+                       __prevDragStepsX = 0.0;
+                       __dragging = noDragging;
+                       __pressPosition = Qt.point(touchPoints[0].x, touchPoints[0].y);
+                       pressAndHoldTimer.start();
+                       multiTouchTimer.start(); // Detect if this is going to be a multi touch swipe while the timer is running
 
-            touchPress(touchPoints[0].x, touchPoints[0].y);
-        }
-        onUpdated: {
-            if (__multiTouch || multiTouchTimer.running) // Do not handle multi touch events here and detect multi touch swipes while the timer is running
-                return;
+                       touchPress(touchPoints[0].x, touchPoints[0].y);
+                   }
 
-            var dragValueY = touchPoints[0].y - __pressPosition.y;
-            var dragValueX = touchPoints[0].x - __pressPosition.x;
-            var dragStepsY = dragValueY / swipeDelta;
-            var dragStepsX = dragValueX / swipeDelta;
+        onUpdated: (touchPoints)=>
+                   {
+                       if (__multiTouch || multiTouchTimer.running) // Do not handle multi touch events here and detect multi touch swipes while the timer is running
+                       return;
 
-            var dragStepsFloorY = absFloor(dragStepsY);
-            var dragStepsFloorX = absFloor(dragStepsX);
+                       var dragValueY = touchPoints[0].y - __pressPosition.y;
+                       var dragValueX = touchPoints[0].x - __pressPosition.x;
+                       var dragStepsY = dragValueY / swipeDelta;
+                       var dragStepsX = dragValueX / swipeDelta;
 
-            if (!__moved && distance(touchPoints[0], __pressPosition) > swipeDelta) {
-                __moved = true;
-                __dragging = (Math.abs(dragValueY) >= Math.abs(dragValueX)) ? yDragging : xDragging;
-            } else if (!__moved) {
-                return;
-            }
+                       var dragStepsFloorY = absFloor(dragStepsY);
+                       var dragStepsFloorX = absFloor(dragStepsX);
 
-            if (__dragging === yDragging && dragStepsFloorY !== __prevDragStepsY) {
-                swipeYDetected(dragStepsFloorY - __prevDragStepsY);
-            } else if (__dragging === xDragging && dragStepsFloorX !== __prevDragStepsX) {
-                swipeXDetected(dragStepsFloorX - __prevDragStepsX);
-            }
+                       if (!__moved && distance(touchPoints[0], __pressPosition) > swipeDelta) {
+                           __moved = true;
+                           __dragging = (Math.abs(dragValueY) >= Math.abs(dragValueX)) ? yDragging : xDragging;
+                       } else if (!__moved) {
+                           return;
+                       }
 
-            __prevDragStepsY = dragStepsFloorY;
-            __prevDragStepsX = dragStepsFloorX;
-        }
-        onReleased: {
-            var timerRunning = pressAndHoldTimer.running;
-            pressAndHoldTimer.stop();
-            touchAreaPressed = false;
+                       if (__dragging === yDragging && dragStepsFloorY !== __prevDragStepsY) {
+                           swipeYDetected(dragStepsFloorY - __prevDragStepsY);
+                       } else if (__dragging === xDragging && dragStepsFloorX !== __prevDragStepsX) {
+                           swipeXDetected(dragStepsFloorX - __prevDragStepsX);
+                       }
 
-            if (!__moved && timerRunning) {
-                touchClick(touchPoints[0].x, touchPoints[0].y);
-            }
+                       __prevDragStepsY = dragStepsFloorY;
+                       __prevDragStepsX = dragStepsFloorX;
+                   }
 
-            touchRelease(touchPoints[0].x, touchPoints[0].y);
-        }
+        onReleased: (touchPoints)=>
+                    {
+                        var timerRunning = pressAndHoldTimer.running;
+                        pressAndHoldTimer.stop();
+                        touchAreaPressed = false;
 
-        MultiPointTouchArea {
+                        if (!__moved && timerRunning) {
+                            touchClick(touchPoints[0].x, touchPoints[0].y);
+                        }
+
+                        touchRelease(touchPoints[0].x, touchPoints[0].y);
+                    }
+
+        MultiPointTouchArea
+        {
             property point __pressPosition: Qt.point(0, 0);
             property real __prevDragSteps: 0
 
@@ -157,36 +163,38 @@ Item
 
             maximumTouchPoints: 2
             minimumTouchPoints: 2
-            onPressed: {
-                if (!multiTouchTimer.running) // Already recognized as single touch swipe
-                    return;
+            onPressed: (touchPoints)=>
+                       {
+                           if (!multiTouchTimer.running) // Already recognized as single touch swipe
+                           return;
 
-                __pressPosition = avg(touchPoints[0], touchPoints[1]);
-                __prevDragSteps = 0;
+                           __pressPosition = avg(touchPoints[0], touchPoints[1]);
+                           __prevDragSteps = 0;
 
-                singleTouchTouchArea.__moved = true;
-                singleTouchTouchArea.__multiTouch = true;
-            }
-            onUpdated: {
-                // WORKAROUND: filter bad events that somehow get here during release.
-                if (touchPoints.length !== 2)
-                    return;
+                           singleTouchTouchArea.__moved = true;
+                           singleTouchTouchArea.__multiTouch = true;
+                       }
+            onUpdated: (touchPoints)=>
+                       {
+                           // WORKAROUND: filter bad events that somehow get here during release.
+                           if (touchPoints.length !== 2)
+                           return;
 
-                if (!singleTouchTouchArea.__multiTouch)
-                    return;
+                           if (!singleTouchTouchArea.__multiTouch)
+                           return;
 
-                var touchPoint = avg(touchPoints[0], touchPoints[1]);
-                var dragValue = touchPoint.y - __pressPosition.y;
-                var dragSteps = dragValue / swipeDelta;
+                           var touchPoint = avg(touchPoints[0], touchPoints[1]);
+                           var dragValue = touchPoint.y - __pressPosition.y;
+                           var dragSteps = dragValue / swipeDelta;
 
-                var dragStepsFloorY = absFloor(dragSteps);
+                           var dragStepsFloorY = absFloor(dragSteps);
 
-                if (dragStepsFloorY !== __prevDragSteps) {
-                    twoFingerSwipeYDetected(dragStepsFloorY - __prevDragSteps);
-                }
+                           if (dragStepsFloorY !== __prevDragSteps) {
+                               twoFingerSwipeYDetected(dragStepsFloorY - __prevDragSteps);
+                           }
 
-                __prevDragSteps = dragStepsFloorY;
-            }
+                           __prevDragSteps = dragStepsFloorY;
+                       }
 
             mouseEnabled: false
         }
@@ -194,7 +202,8 @@ Item
         mouseEnabled: false
     }
 
-    MouseArea {
+    MouseArea
+    {
         id: mouseArea
         anchors.fill: parent
         enabled: !parent.touchAreaPressed
@@ -204,24 +213,24 @@ Item
         z: parent.z
 
         onDoubleClicked: (mouse) => {
-            doubleClickDetected(mouse.x, mouse.y, mouse.button, mouse.buttons, mouse.modifiers);
-        }
+                             doubleClickDetected(mouse.x, mouse.y, mouse.button, mouse.buttons, mouse.modifiers);
+                         }
         onPositionChanged: (mouse) => {
-            mouseMoveDetected(mouse.x, mouse.y, mouse.button, mouse.buttons, mouse.modifiers);
-        }
+                               mouseMoveDetected(mouse.x, mouse.y, mouse.button, mouse.buttons, mouse.modifiers);
+                           }
         onPressed: (mouse) => {
-            // Do not handle the right click if the terminal needs them.
-            if (mouse.button === Qt.RightButton ) {
-                alternateAction(mouse.x, mouse.y);
-            } else {
-                mousePressDetected(mouse.x, mouse.y, mouse.button, mouse.buttons, mouse.modifiers);
-            }
-        }
+                       // Do not handle the right click if the terminal needs them.
+                       if (mouse.button === Qt.RightButton ) {
+                           alternateAction(mouse.x, mouse.y);
+                       } else {
+                           mousePressDetected(mouse.x, mouse.y, mouse.button, mouse.buttons, mouse.modifiers);
+                       }
+                   }
         onReleased: (mouse) => {
-            mouseReleaseDetected(mouse.x, mouse.y, mouse.button, mouse.buttons, mouse.modifiers);
-        }
+                        mouseReleaseDetected(mouse.x, mouse.y, mouse.button, mouse.buttons, mouse.modifiers);
+                    }
         onWheel: (wheel) => {
-            mouseWheelDetected(wheel.x, wheel.y, wheel.buttons, wheel.modifiers, wheel.angleDelta);
-        }
+                     mouseWheelDetected(wheel.x, wheel.y, wheel.buttons, wheel.modifiers, wheel.angleDelta);
+                 }
     }
 }

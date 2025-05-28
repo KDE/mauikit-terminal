@@ -21,36 +21,36 @@ import "private" as Private
  *
  * @code
  * import QtQuick
-import QtQuick.Controls
-
-import org.mauikit.controls as Maui
-
-import org.mauikit.terminal as Term
-
-Maui.ApplicationWindow
-{
-    id: root
-
-    Maui.Page
-    {
-        Maui.Controls.showCSD: true
-        anchors.fill: parent
-
-        Term.Terminal
-        {
-            anchors.fill: parent
-        }
-    }
-}
+ * import QtQuick.Controls
+ * 
+ * import org.mauikit.controls as Maui
+ * 
+ * import org.mauikit.terminal as Term
+ * 
+ * Maui.ApplicationWindow
+ * {
+ *    id: root
+ * 
+ *    Maui.Page
+ *    {
+ *        Maui.Controls.showCSD: true
+ *        anchors.fill: parent
+ * 
+ *        Term.Terminal
+ *        {
+ *            anchors.fill: parent
+ *        }
+ *    }
+ * }
  * @endcode
  */
 Maui.Page
 {
     id: control
-
+    
     Maui.Theme.colorSet: Maui.Theme.Header
     Maui.Theme.inherit: false
-
+    
     title: ksession.title
     showTitle: false
     
@@ -68,7 +68,7 @@ Maui.Page
      * @brief The resolution size of the emulated terminal display
      */
     readonly property size virtualResolution: Qt.size(kterminal.width, kterminal.height)
-
+    
     /**
      * @brief Alias to the terminal display object
      * @property Konsole::TerminalDisplay Terminal::kterminal
@@ -125,7 +125,7 @@ Maui.Page
      * @brief Emitted when the terminal control area has been clicked
      */
     signal clicked()
-
+    
     //Actions
     Action
     {
@@ -150,7 +150,7 @@ Maui.Page
             kterminal.pasteClipboard()
             control.forceActiveFocus()
         }
-                // shortcut: "Ctrl+Shift+V"
+        // shortcut: "Ctrl+Shift+V"
     }
     
     Action
@@ -159,7 +159,7 @@ Maui.Page
         text: i18nd("mauikitterminal", "Find")
         icon.name: "edit-find"
         checkable: true
-                // shortcut: "Ctrl+Shift+F"
+        // shortcut: "Ctrl+Shift+F"
         onTriggered:  toggleSearchBar()
     }
     
@@ -172,28 +172,28 @@ Maui.Page
         {
             id: _headerComponent
             Pane
-        {
-            width: ListView.view.width
-            implicitHeight: Math.min(80, contentHeight) + topPadding + bottomPadding
-            clip: true
-            
-            background: Rectangle
             {
-                color: kterminal.backgroundColor()
-                radius: Maui.Style.radiusV
-            }
-            
-            contentItem: Label
-            {
-                text: kterminal.isTextSelected ? kterminal.selectedText() : ""
-                color :kterminal.foregroundColor()
-                wrapMode: Text.WordWrap
-                elide: Text.ElideRight 
-                font: kterminal.font
+                width: ListView.view.width
+                implicitHeight: Math.min(80, contentHeight) + topPadding + bottomPadding
+                clip: true
+                
+                background: Rectangle
+                {
+                    color: kterminal.backgroundColor
+                    radius: Maui.Style.radiusV
+                }
+                
+                contentItem: Label
+                {
+                    text: kterminal.isTextSelected ? kterminal.selectedText() : ""
+                    color :kterminal.foregroundColor
+                    wrapMode: Text.WordWrap
+                    elide: Text.ElideRight 
+                    font: kterminal.font
+                }
             }
         }
-        }
-       
+        
         MenuItem
         {
             action: _copyAction
@@ -295,8 +295,6 @@ Maui.Page
         {
             id: ksession
             initialWorkingDirectory: "$HOME"
-            shellProgram: "$SHELL"
-
             onFinished:
             {
                 console.log("Terminal finished")
@@ -310,20 +308,20 @@ Maui.Page
             {
                 previousColumnSearch = startColumn
                 previousLineSearch = startLine
-
-
+                
+                
                 _scrollBarLoader.item.highlightLine = startLine
-
+                
                 kterminal.matchFound(startColumn, startLine, endColumn, endLine)
                 console.log("found at: %1 %2 %3 %4".arg(startColumn).arg(startLine).arg(endColumn).arg(endLine));
             }
-
+            
             onNoMatchFound:
             {
                 previousColumnSearch = 0
                 previousLineSearch = 0
                 _scrollBarLoader.item.highlightLine = -1
-
+                
                 kterminal.noMatchFound();
                 console.log("not found");
             }
@@ -333,51 +331,51 @@ Maui.Page
         {
             backgroundColor: Maui.Theme.backgroundColor
             foregroundColor: Maui.Theme.textColor
-            color2: Maui.Theme.disabledTextColor
-            color3: Maui.Theme.negativeBackgroundColor
-            color4: Maui.Theme.positiveBackgroundColor
-            color5: Maui.Theme.neutralBackgroundColor
-            color6: Maui.Theme.linkColor
-            color7: Maui.Theme.visitedLinkColor
-            color8: Maui.Theme.highlightColor
-            color9: Maui.Theme.highlightedTextColor
+                color2: Maui.Theme.disabledTextColor
+                color3: Maui.Theme.negativeBackgroundColor
+                color4: Maui.Theme.positiveBackgroundColor
+                color5: Maui.Theme.neutralBackgroundColor
+                color6: Maui.Theme.linkColor
+                color7: Maui.Theme.visitedLinkColor
+                color8: Maui.Theme.highlightColor
+                color9: Maui.Theme.highlightedTextColor
         }
-
+        
         Keys.enabled: true
-
+        
         Keys.onPressed: (event) =>
-                        {
-                            if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
-                            {
-                                kterminal.selectAll()
-                                event.accepted = true
-                                return
-                            }
-
-                            if ((event.key === Qt.Key_C) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
-                            {
-                                _copyAction.trigger()
-                                event.accepted = true
-                                return
-                            }
-
-                            if ((event.key === Qt.Key_V) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
-                            {
-                                _pasteAction.trigger()
-                                event.accepted = true
-                                return
-                            }
-
-
-                            if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
-                            {
-                                control.toggleSearchBar()
-                                return
-                            }
-
-                            control.keyPressed(event)
-                        }
-
+        {
+            if ((event.key === Qt.Key_A) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+            {
+                kterminal.selectAll()
+                event.accepted = true
+                return
+            }
+            
+            if ((event.key === Qt.Key_C) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+            {
+                _copyAction.trigger()
+                event.accepted = true
+                return
+            }
+            
+            if ((event.key === Qt.Key_V) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+            {
+                _pasteAction.trigger()
+                event.accepted = true
+                return
+            }
+            
+            
+            if ((event.key == Qt.Key_F) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+            {
+                control.toggleSearchBar()
+                return
+            }
+            
+            control.keyPressed(event)
+        }
+        
         Loader
         {
             asynchronous: true
@@ -399,57 +397,57 @@ Maui.Page
                 onMouseMoveDetected:(x, y, button, buttons, modifiers) => kterminal.simulateMouseMove(x, y, button, buttons, modifiers);
                 onDoubleClickDetected:(x, y, button, buttons, modifiers) => kterminal.simulateMouseDoubleClick(x, y, button, buttons, modifiers);
                 onMousePressDetected:(x, y, button, buttons, modifiers) =>
-                                     {
-                                         kterminal.forceActiveFocus();
-                                         kterminal.simulateMousePress(x, y, button, buttons, modifiers);
-                                         control.clicked()
-                                     }
+                {
+                    kterminal.forceActiveFocus();
+                    kterminal.simulateMousePress(x, y, button, buttons, modifiers);
+                    control.clicked()
+                }
                 onMouseReleaseDetected: (x, y, button, buttons, modifiers) => kterminal.simulateMouseRelease(x, y, button, buttons, modifiers);
                 onMouseWheelDetected: (x, y, buttons, modifiers, angleDelta) => kterminal.simulateWheel(x, y, buttons, modifiers, angleDelta);
                 
                 // Touch actions
                 onTouchPress: (x, y) =>
-                              {
-                                  // kterminal.forceActiveFocus()
-                                  // control.clicked()
-                              }
+                {
+                    // kterminal.forceActiveFocus()
+                    // control.clicked()
+                }
                 
                 onTouchClick: (x, y) =>
-                              {
-                                  kterminal.forceActiveFocus()
-                                  // kterminal.simulateKeyPress(Qt.Key_Tab, Qt.NoModifier, true, 0, "");
-                                  control.clicked()
-                              }
+                {
+                    kterminal.forceActiveFocus()
+                    // kterminal.simulateKeyPress(Qt.Key_Tab, Qt.NoModifier, true, 0, "");
+                    control.clicked()
+                }
                 
                 onTouchPressAndHold: (x, y) =>
-                                     {
-                                         alternateAction(x, y);
-                                     }
+                {
+                    alternateAction(x, y);
+                }
                 
                 // Swipe actions
                 onSwipeYDetected: (steps) => {
-                                      if (steps > 0) {
-                                          simulateSwipeDown(steps);
-                                      } else {
-                                          simulateSwipeUp(-steps);
-                                      }
-                                  }
-
+                    if (steps > 0) {
+                        simulateSwipeDown(steps);
+                    } else {
+                        simulateSwipeUp(-steps);
+                    }
+                }
+                
                 onSwipeXDetected: (steps) => {
-                                      if (steps > 0) {
-                                          simulateSwipeRight(steps);
-                                      } else {
-                                          simulateSwipeLeft(-steps);
-                                      }
-                                  }
-
+                    if (steps > 0) {
+                        simulateSwipeRight(steps);
+                    } else {
+                        simulateSwipeLeft(-steps);
+                    }
+                }
+                
                 onTwoFingerSwipeYDetected: (steps) => {
-                                               if (steps > 0) {
-                                                   simulateDualSwipeDown(steps);
-                                               } else {
-                                                   simulateDualSwipeUp(-steps);
-                                               }
-                                           }
+                    if (steps > 0) {
+                        simulateDualSwipeDown(steps);
+                    } else {
+                        simulateDualSwipeUp(-steps);
+                    }
+                }
                 
                 function simulateSwipeUp(steps) {
                     while(steps > 0) {
@@ -490,12 +488,12 @@ Maui.Page
                 
                 // Semantic actions
                 onAlternateAction:  (x, y) => {
-                                        // Force the hiddenButton in the event position.
-                                        //hiddenButton.x = x;
-                                        //hiddenButton.y = y;
-                                        terminalMenu.show()
-
-                                    }
+                    // Force the hiddenButton in the event position.
+                    //hiddenButton.x = x;
+                    //hiddenButton.y = y;
+                    terminalMenu.show()
+                    
+                }
             }
         }
         
@@ -511,12 +509,17 @@ Maui.Page
             }
         }
         
-        Maui.FloatingButton
+        Loader
         {
-            visible: Maui.Handy.isMobile
+            asynchronous: true
+            active: Maui.Handy.isMobile || Maui.Handy.isTouch
+            visible: active
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.margins: Maui.Style.space.big
+            
+        sourceComponent: Maui.FloatingButton
+        {           
             icon.name: "input-keyboard-virtual"
             text: i18n("Toggle Virtual Keyboard")
             onClicked:
@@ -531,6 +534,7 @@ Maui.Page
                 }
             }
         }
+        }
     }
     
     opacity: _dropArea.containsDrag ? 0.5 : 1
@@ -540,12 +544,12 @@ Maui.Page
         id: _dropArea
         anchors.fill: parent
         onDropped: (drop) =>
-                   {
-                       if(drop.hasUrls)
-                       control.urlsDropped(drop.urls)
-                   }
+        {
+            if(drop.hasUrls)
+                control.urlsDropped(drop.urls)
+        }
     }
-
+    
     Component.onCompleted:
     {
         ksession.startShellProgram();

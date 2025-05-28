@@ -399,6 +399,8 @@ public Q_SLOTS:
     
     void selectionChanged(bool textSelected);
     
+    int getForegroundProcessError() const;
+    
 protected Q_SLOTS:
     void sessionFinished();
     

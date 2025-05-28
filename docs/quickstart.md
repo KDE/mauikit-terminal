@@ -58,7 +58,7 @@ The next step is to setup the main entry point with the information about the ap
     #include <KLocalizedString>
     #include <KAboutData>
 
-    #include <MauiKit3/Core/mauiapp.h>
+    #include <MauiKit4/Core/mauiapp.h>
 
     int main(int argc, char *argv[])
     {

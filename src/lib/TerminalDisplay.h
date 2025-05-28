@@ -193,7 +193,10 @@ class KONSOLEPRIVATE_EXPORT TerminalDisplay : public QQuickPaintedItem
      * A read only mode prevents the user from sending keyevents 
      */
     Q_PROPERTY(bool readOnly READ readOnly WRITE setReadOnly NOTIFY readOnlyChanged)
-
+    
+    Q_PROPERTY(QColor foregroundColor READ foregroundColor NOTIFY foregroundColorChanged)
+    Q_PROPERTY(QColor backgroundColor READ backgroundColor NOTIFY backgroundColorChanged)
+    
 public:
     /** Constructs a new terminal display widget with the specified parent. */
     TerminalDisplay(QQuickItem *parent = nullptr);
@@ -793,7 +796,8 @@ Q_SIGNALS:
     void blinkingCursorStateChanged();
     void boldIntenseChanged();
     void backgroundOpacityChanged();
-
+void backgroundColorChanged();
+void foregroundColorChanged();
     void readOnlyChanged();
     void isTextSelectedChanged();
 
@@ -1130,10 +1134,8 @@ private:
 
     bool _drawLineChars;
 
-    qreal m_backgroundOpacity;
-
     CustomColorScheme *m_customColorScheme = nullptr;
-    const Konsole::ColorScheme *m_scheme = nullptr;
+    mutable const Konsole::ColorScheme *m_scheme = nullptr;
     bool m_readOnly = false;
 
 public:

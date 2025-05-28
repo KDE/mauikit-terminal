@@ -335,7 +335,7 @@ public:
      * Returns the name of the terminal's foreground process.
      */
     QString foregroundProcessName();
-
+    int foregroundProcessError();
     /**
      * Returns the current working directory of the process.
      */

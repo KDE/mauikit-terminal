@@ -24,7 +24,7 @@ msgstr "Farebná schéma"
 #: src/controls.6/ColorSchemesPage.qml:79
 #, kde-format
 msgid "Change the color scheme of the terminal."
-msgstr ""
+msgstr "Zmeniť farebnú schému terminálu."
 
 #: src/controls.6/Terminal.qml:133
 #, kde-format
